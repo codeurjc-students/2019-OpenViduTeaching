@@ -29,7 +29,8 @@ public class User {
 		this.roles = new ArrayList<>(Arrays.asList(roles));
 	}
 
-	protected User() {}
+	protected User() {
+	}
 
 	public Long getId() {
 		return id;
@@ -55,8 +56,8 @@ public class User {
 		return roles;
 	}
 
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
+	public void addRole(String role) {
+		this.roles.add(role);
 	}
 
 	@ElementCollection(fetch = FetchType.EAGER)
