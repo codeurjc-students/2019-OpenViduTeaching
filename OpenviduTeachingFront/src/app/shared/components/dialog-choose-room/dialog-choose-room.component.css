@@ -1,0 +1,201 @@
+h1,
+h3,
+#imgText,
+mat-select,
+mat-option,
+input,
+button {
+  font-family: 'Ubuntu', sans-serif;
+}
+
+#dialogChooseRoom {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#dialogChooseRoom h1 {
+  text-align: center;
+}
+
+#card-content {
+  max-width: 95%;
+  height: fit-content;
+  margin: auto;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+#videoContainer {
+  position: relative;
+}
+
+#closeButton {
+  position: absolute;
+  top: 0;
+  right: 7px;
+}
+
+.volumeSlider {
+  position: absolute;
+  height: 60%;
+  z-index: 99999;
+  bottom: 0;
+  pointer-events: none;
+}
+
+#ovVideoScreen,
+#ovVideo {
+  display: inline-block;
+}
+
+.smallVideo {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50%;
+  border: 1px solid;
+  border-color: #ffffff;
+}
+
+#img_content {
+  position: absolute;
+  top: 3px;
+  left: 0;
+}
+
+#header_img {
+  max-width: 165px;
+}
+
+#sessionInfo {
+  margin-top: 0;
+}
+
+#camDeviceButton,
+#micDeviceButton,
+#nicknameButton {
+  margin: 0px 10px;
+}
+
+#joinButtonDiv {
+  text-align: center
+}
+#joinButton {
+  margin: 15px;
+  width: 80%;
+}
+
+#photoButton {
+  margin: 10px;
+  text-align: center;
+}
+
+#avatarContainer {
+  border: 1px solid;
+  border-color: rgb(182, 182, 182);
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+}
+
+#devicesSection {
+  margin: 15px 0px;
+}
+
+#avatarSection,
+#devicesSection {
+  height: fit-content !important;
+  min-height: auto !important;
+}
+
+#imgText {
+  display: table;
+}
+
+#avatarImg,
+#imgText {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+#avatarImg {
+  height: 88%;
+  width: 88%;
+}
+
+#avatarContainer,
+#avatarImg {
+  border-radius: 50%;
+}
+
+#optionsContent {
+  position: initial;
+}
+
+mat-form-field,
+#nicknameDialog {
+  width: 100%;
+}
+
+mat-card {
+  max-width: 85% !important;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 90%;
+  margin: auto;
+  padding: 20px;
+  overflow-y: auto;
+  border: 2px solid #ffffff;
+  border-right: 4px solid #ffffff;
+}
+
+@media only screen and (max-width: 959px) {
+  mat-card {
+    max-width: 80% !important;
+    max-height: 80% !important;
+  }
+}
+
+::ng-deep .mat-option-text {
+  color: black !important;
+}
+
+::ng-deep .mat-slider-thumb {
+  visibility: hidden;
+}
+
+::ng-deep .mat-slider-vertical .mat-slider-track-fill,
+::ng-deep .mat-slider-vertical .mat-slider-track-background,
+::ng-deep .mat-slider-vertical .mat-slider-track-wrapper {
+  width: 10px !important;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b8afaf;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888888;
+}
+
+::-webkit-scrollbar-track {
+  background: #e1e1e1;
+  border-radius: 4px;
+}
+

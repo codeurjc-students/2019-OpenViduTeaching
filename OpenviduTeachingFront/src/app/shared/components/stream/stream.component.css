@@ -1,0 +1,100 @@
+.nickname {
+  padding: 5px !important;
+  position: absolute;
+  z-index: 999;
+  border-radius: 5px; 
+  color: #313131;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+#dialogNickname {
+  background-color:  #fffffffb;
+  border-radius: 8px;
+}
+
+#closeButton {
+  position: absolute;
+  top: -3px;
+  right: 0;
+  z-index: 999;
+}
+
+#nicknameForm {
+  padding: 10px;
+}
+.fullscreen {
+  top: 40px;
+}
+
+mat-error {
+  text-align: center;
+  color: #353535;
+}
+
+video {
+  -o-object-fit: cover;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+}
+
+.statusIcons {
+  bottom: 0;
+  left: 5px;
+  width: 40px;
+  height: fit-content;
+  position: absolute;
+  color: #ffffff;
+}
+
+.statusIcons mat-icon {
+  padding: 8px;
+}
+
+#camStatus {
+  bottom: 43px;
+}
+
+#statusCam, #statusMic { 
+  border-radius: 50%;
+  background: #c71100;
+  margin: 5px 0px;
+}
+
+.streamButtons {
+  position: absolute;
+  z-index: 1000;
+  background-color: #000000c4;
+  right: 1px;
+}
+
+#fullscreenButton {
+  bottom: 1px;
+}
+#volumeButton {
+  bottom: 45px;
+}
+/* Contains the video element, used to fix video letter-boxing */
+.OT_widget-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  overflow: hidden;
+}
+
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-label {
+  color: #696969;
+}
+
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-underline{
+  background-color: #444444 !important;
+}
+
+::ng-deep .mat-form-field.mat-focused .mat-form-field-ripple{
+  background-color: #696969 !important;
+}
