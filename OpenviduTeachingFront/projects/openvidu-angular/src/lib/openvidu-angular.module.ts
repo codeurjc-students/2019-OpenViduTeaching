@@ -24,21 +24,21 @@ import {
   MatSidenavModule,
   MatChipsModule
 } from '@angular/material';
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule } from '../../../../src/app/app-routing.module';
 
 // Components
-import { VideoRoomComponent } from './video-room/video-room.component';
-import { StreamComponent } from './shared/components/stream/stream.component';
-import { ChatComponent } from './shared/components/chat/chat.component';
-import { DialogExtensionComponent } from './shared/components/dialog-extension/dialog-extension.component';
-import { OpenViduVideoComponent } from './shared/components/stream/ov-video.component';
-import { DialogErrorComponent } from './shared/components/dialog-error/dialog-error.component';
-import { ToolbarComponent } from './shared/components/toolbar/toolbar.component';
-import { OpenViduService } from './shared/services/open-vidu.service';
-import { ApiService } from './shared/services/api.service';
-import { LinkifyPipe } from './shared/pipes/linkfy';
+import { VideoRoomComponent } from '../../../../src/app/video-room/video-room.component';
+import { StreamComponent } from '../../../../src/app/shared/components/stream/stream.component';
+import { ChatComponent } from '../../../../src/app/shared/components/chat/chat.component';
+import { DialogExtensionComponent } from '../../../../src/app/shared/components/dialog-extension/dialog-extension.component';
+import { OpenViduVideoComponent } from '../../../../src/app/shared/components/stream/ov-video.component';
+import { DialogErrorComponent } from '../../../../src/app/shared/components/dialog-error/dialog-error.component';
+import { ToolbarComponent } from '../../../../src/app/shared/components/toolbar/toolbar.component';
+import { OpenViduService } from '../../../../src/app/shared/services/open-vidu.service';
+import { ApiService } from '../../../../src/app/shared/services/api.service';
+import { LinkifyPipe } from '../../../../src/app/shared/pipes/linkfy';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
-import { DialogChooseRoomComponent } from './shared/components/dialog-choose-room/dialog-choose-room.component';
+import { DialogChooseRoomComponent } from '../../../../src/app/shared/components/dialog-choose-room/dialog-choose-room.component';
 
 @NgModule({
   imports: [

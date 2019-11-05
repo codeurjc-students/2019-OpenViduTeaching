@@ -1,9 +1,9 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { VideoRoomComponent } from './video-room/video-room.component';
+import { VideoRoomComponent } from '../../../../src/app/video-room/video-room.component';
 import { Session } from 'openvidu-browser';
-import { UserModel } from './shared/models/user-model';
-import { OpenViduLayout, OpenViduLayoutOptions } from './shared/layout/openvidu-layout';
-import { OvSettings } from './shared/models/ov-settings';
+import { UserModel } from '../../../../src/app/shared/models/user-model';
+import { OpenViduLayout, OpenViduLayoutOptions } from '../../../../src/app/shared/layout/openvidu-layout';
+import { OvSettings } from '../../../../src/app/shared/models/ov-settings';
 
 @Component({
   selector: 'opv-session',
