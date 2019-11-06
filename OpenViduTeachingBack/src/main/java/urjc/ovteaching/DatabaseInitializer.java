@@ -21,13 +21,17 @@ public class DatabaseInitializer {
 
 	@PostConstruct
 	public void init() {
+		Room roomA = new Room("roomA");
+		Room roomB = new Room("roomB");
+		roomServ.save(roomA);
+		roomServ.save(roomB);
+		
 		userServ.save(new User("student1", "pass", "ROLE_USER"));
 		userServ.save(new User("student2", "pass", "ROLE_USER"));
 		User teacher = new User("teacher", "pass", "ROLE_USER", "ROLE_ADMIN");
+		teacher.addModdedRoom(roomA);
+		teacher.addModdedRoom(roomB);
 		userServ.save(teacher);
-		
-		roomServ.save(new Room(teacher,"roomA"));
-		roomServ.save(new Room(teacher,"roomB"));
 	}
 
 }

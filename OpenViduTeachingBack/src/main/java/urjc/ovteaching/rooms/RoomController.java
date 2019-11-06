@@ -24,35 +24,35 @@ public class RoomController {
 	@Autowired
 	private UserComponent userComponent;
 
-	@PostMapping("/api/createNewRoom/{roomName}")
+	@PostMapping("/api/room/{roomName}")
 	public ResponseEntity<String> createNewRoom(@PathVariable String roomName, HttpServletRequest request) {
+		if (roomServ.findByName(roomName)!=null) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
 		if (!request.isUserInRole("ADMIN")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		} else {
 			User currentUser = userComponent.getLoggedUser();
-			Room room = new Room(currentUser, roomName);
-			roomServ.save(room);
+			Room room = new Room(roomName);
+			roomServ.addRoomWithMod(room, currentUser);
 			return new ResponseEntity<>(room.getName(), HttpStatus.CREATED);
 		}
 	}
 
-	@GetMapping("/api/getParticipantInviteURL/{roomName}")
-	public ResponseEntity<String> getParticipantInviteURL(@PathVariable String roomName) {
+	@GetMapping("/api/room/{roomName}/inviteURL/{role}")
+	public ResponseEntity<String> getModeratorInviteURL(@PathVariable String roomName, @PathVariable String role) {
 		Room room = roomServ.findByName(roomName);
-		if (!room.isModerator(userComponent.getLoggedUser())) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		} else {
-			return new ResponseEntity<>(room.getParticipantInviteCode(), HttpStatus.OK);
+		if (room != null) {
+			if (!room.isModerator(userComponent.getLoggedUser())) {
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			} else {
+				if (role.equals("participant")) {
+					return new ResponseEntity<>(room.getParticipantInviteCode(), HttpStatus.OK);
+				} else if (role.equals("moderator")) {
+					return new ResponseEntity<>(room.getModeratorInviteCode(), HttpStatus.OK);
+				}
+			}
 		}
-	}
-
-	@GetMapping("/api/getModeratorInviteURL/{roomName}")
-	public ResponseEntity<String> getModeratorInviteURL(@PathVariable String roomName) {
-		Room room = roomServ.findByName(roomName);
-		if (!room.isModerator(userComponent.getLoggedUser())) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		} else {
-			return new ResponseEntity<>(room.getModeratorInviteCode(), HttpStatus.OK);
-		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 	}
 }

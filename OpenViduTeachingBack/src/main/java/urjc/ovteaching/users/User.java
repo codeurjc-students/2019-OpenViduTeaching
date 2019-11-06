@@ -10,8 +10,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import urjc.ovteaching.rooms.Room;
 
 @Entity
 public class User {
@@ -22,11 +27,18 @@ public class User {
 
 	private String name;
 	private String passwordHash;
+	@ElementCollection(fetch = FetchType.EAGER)
+	private List<String> roles;
+	
+	@JsonIgnore
+	@ManyToMany
+	private List<Room> moddedRooms;
 
 	public User(String name, String password, String... roles) {
 		this.name = name;
 		this.passwordHash = new BCryptPasswordEncoder().encode(password);
 		this.roles = new ArrayList<>(Arrays.asList(roles));
+		this.moddedRooms = new ArrayList<>();
 	}
 
 	protected User() {
@@ -59,8 +71,9 @@ public class User {
 	public void addRole(String role) {
 		this.roles.add(role);
 	}
-
-	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> roles;
+	
+	public void addModdedRoom(Room room) {
+		this.moddedRooms.add(room);
+	}
 
 }

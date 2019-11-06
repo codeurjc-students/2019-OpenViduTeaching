@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,11 +25,11 @@ public class Room {
 	private String name;
 	
 	@JsonIgnore
+	@ManyToMany(mappedBy = "moddedRooms")
 	private List<User> mods;
 	
-	public Room(User mod, String name) {
+	public Room(String name) {
 		this.mods = new ArrayList<>();
-		mods.add(mod);
 		this.uuidParticipant = UUID.randomUUID();
 		this.uuidModerator = UUID.randomUUID();
 		this.name = name;
