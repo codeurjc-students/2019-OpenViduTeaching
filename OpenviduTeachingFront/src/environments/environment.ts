@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  openvidu_url: '',
-  openvidu_secret: ''
+  openvidu_url: 'https://' + location.hostname + ':4443',
+  openvidu_secret: 'MY_SECRET'
 };
 
 /*

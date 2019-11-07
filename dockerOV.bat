@@ -1,1 +1,1 @@
-docker run -p 4443:4443 --rm -e openvidu.secret=secret -e openvidu.publicurl=https://192.168.99.100:4443/ openvidu/openvidu-server-kms:2.11.0
+docker run -p 4443:4443 --rm -e openvidu.secret=MY_SECRET openvidu/openvidu-server-kms:2.11.0

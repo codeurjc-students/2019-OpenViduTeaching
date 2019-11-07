@@ -9,8 +9,8 @@ import { OvSettings } from '../models/ov-settings';
   providedIn: 'root',
 })
 export class OpenViduService {
-  private URL_OV = 'https://192.168.99.100:4443';
-  private MY_SECRET = 'secret';
+  private URL_OV = 'https://' + location.hostname + ':4443';
+  private MY_SECRET = 'MY_SECRET';
   private SETTINGS_FILE_NAME = 'ov-settings.json';
 
   private ovSettings: OvSettings = {
