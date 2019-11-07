@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
+import urjc.ovteaching.users.UserService;
 
 @CrossOrigin
 @RestController
@@ -21,6 +22,9 @@ public class RoomController {
 	@Autowired
 	private RoomService roomServ;
 
+	@Autowired
+	private UserService userServ;
+	
 	@Autowired
 	private UserComponent userComponent;
 
@@ -40,7 +44,7 @@ public class RoomController {
 	}
 
 	@GetMapping("/api/room/{roomName}/inviteURL/{role}")
-	public ResponseEntity<String> getModeratorInviteURL(@PathVariable String roomName, @PathVariable String role) {
+	public ResponseEntity<String> getInviteURL(@PathVariable String roomName, @PathVariable String role) {
 		Room room = roomServ.findByName(roomName);
 		if (room != null) {
 			if (!room.isModerator(userComponent.getLoggedUser())) {
@@ -54,5 +58,36 @@ public class RoomController {
 			}
 		}
 		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
+	
+	@PostMapping("/api/room/{roomName}/inviteURL/{role}/user/{userName}")
+	public ResponseEntity<String> newUserInRoom(@PathVariable String roomName, @PathVariable String role, @PathVariable String userName) { 
+		Room room = roomServ.findByName(roomName);
+		User user;
+		if(!userComponent.isLoggedUser()) {
+			user = new User(userName, "pass"); //TODO change pass
+		} else {
+			user = userComponent.getLoggedUser();
+		}
+		if(room.isModerator(user)) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+		if (role.equals("participant")) {
+			if(room.isParticipant(user)) {
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
+			}
+			room.addParticipant(user);
+			return new ResponseEntity<>(user.getName(), HttpStatus.OK);
+		} else if (role.equals("moderator")) {
+			room.addModerator(user);
+			if(!user.getRoles().contains("ADMIN")) {
+				user.addRole("ROLE_ADMIN");
+			}
+			roomServ.save(room);
+		} else {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		userServ.save(user);
+		return new ResponseEntity<>(user.getName(), HttpStatus.OK);
 	}
 }

@@ -28,8 +28,13 @@ public class Room {
 	@ManyToMany(mappedBy = "moddedRooms")
 	private List<User> mods;
 	
+	@JsonIgnore
+	@ManyToMany(mappedBy = "participatedRooms")
+	private List<User> participants;
+	
 	public Room(String name) {
 		this.mods = new ArrayList<>();
+		this.participants = new ArrayList<>();
 		this.uuidParticipant = UUID.randomUUID();
 		this.uuidModerator = UUID.randomUUID();
 		this.name = name;
@@ -50,9 +55,17 @@ public class Room {
 	public boolean isModerator(User user) {
 		return this.mods.contains(user);
 	}
+	
+	public boolean isParticipant(User user) {
+		return this.participants.contains(user);
+	}
 
 	public void addModerator(User mod) {
 		this.mods.add(mod);
+	}
+	
+	public void addParticipant(User participant) {
+		this.participants.add(participant);
 	}
 
 	public String getName() {

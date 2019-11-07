@@ -33,12 +33,17 @@ public class User {
 	@JsonIgnore
 	@ManyToMany
 	private List<Room> moddedRooms;
+	
+	@JsonIgnore
+	@ManyToMany
+	private List<Room> participatedRooms;
 
 	public User(String name, String password, String... roles) {
 		this.name = name;
 		this.passwordHash = new BCryptPasswordEncoder().encode(password);
 		this.roles = new ArrayList<>(Arrays.asList(roles));
 		this.moddedRooms = new ArrayList<>();
+		this.participatedRooms = new ArrayList<>();
 	}
 
 	protected User() {
@@ -74,6 +79,10 @@ public class User {
 	
 	public void addModdedRoom(Room room) {
 		this.moddedRooms.add(room);
+	}
+	
+	public void addParticipatedRoom(Room room) {
+		this.participatedRooms.add(room);
 	}
 
 }

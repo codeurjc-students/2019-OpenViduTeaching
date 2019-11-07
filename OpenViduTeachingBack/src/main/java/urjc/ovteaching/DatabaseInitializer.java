@@ -26,11 +26,16 @@ public class DatabaseInitializer {
 		roomServ.save(roomA);
 		roomServ.save(roomB);
 		
-		userServ.save(new User("student1", "pass", "ROLE_USER"));
-		userServ.save(new User("student2", "pass", "ROLE_USER"));
+		User student1 = new User("student1", "pass", "ROLE_USER");
+		User student2 = new User("student2", "pass", "ROLE_USER");
 		User teacher = new User("teacher", "pass", "ROLE_USER", "ROLE_ADMIN");
 		teacher.addModdedRoom(roomA);
 		teacher.addModdedRoom(roomB);
+		student1.addParticipatedRoom(roomA);
+		student2.addParticipatedRoom(roomB);
+		
+		userServ.save(student1);
+		userServ.save(student2);
 		userServ.save(teacher);
 	}
 
