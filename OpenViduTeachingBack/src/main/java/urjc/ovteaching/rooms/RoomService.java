@@ -14,7 +14,7 @@ public class RoomService {
 
 	@Autowired
 	private RoomRepository roomRep;
-	
+
 	@Autowired
 	private UserService userServ;
 
@@ -33,11 +33,11 @@ public class RoomService {
 	public void delete(long id) {
 		roomRep.deleteById(id);
 	}
-	
+
 	public Room findByName(String name) {
 		return roomRep.findByName(name);
 	}
-	
+
 	public void addRoomWithMod(Room room, User mod) {
 		room.addModerator(mod);
 		mod.addModdedRoom(room);
@@ -45,4 +45,3 @@ public class RoomService {
 		userServ.save(mod);
 	}
 }
-

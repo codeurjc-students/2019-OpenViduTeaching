@@ -30,12 +30,12 @@ public class RoomController {
 
 	@PostMapping("/api/room/{roomName}")
 	public ResponseEntity<String> createNewRoom(@PathVariable String roomName, HttpServletRequest request) {
-		if (roomServ.findByName(roomName)!=null) {
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
-		}
 		if (!request.isUserInRole("ADMIN")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		} else {
+			if (roomServ.findByName(roomName)!=null) {
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
+			}
 			User currentUser = userComponent.getLoggedUser();
 			Room room = new Room(roomName);
 			roomServ.addRoomWithMod(room, currentUser);
