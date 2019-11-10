@@ -20,8 +20,8 @@ public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	private UUID uuidParticipant;
-	private UUID uuidModerator;
+	private String codeParticipant;
+	private String codeModerator;
 	private String name;
 
 	@JsonIgnore
@@ -35,8 +35,8 @@ public class Room {
 	public Room(String name) {
 		this.mods = new ArrayList<>();
 		this.participants = new ArrayList<>();
-		this.uuidParticipant = UUID.randomUUID();
-		this.uuidModerator = UUID.randomUUID();
+		this.codeParticipant = UUID.randomUUID().toString();
+		this.codeModerator = UUID.randomUUID().toString();
 		this.name = name;
 	}
 
@@ -48,11 +48,11 @@ public class Room {
 	}
 
 	public String getParticipantInviteCode() {
-		return uuidParticipant.toString();
+		return codeParticipant.toString();
 	}
 
 	public String getModeratorInviteCode() {
-		return uuidModerator.toString();
+		return codeModerator.toString();
 	}
 
 	public boolean isModerator(User user) {
@@ -61,14 +61,6 @@ public class Room {
 
 	public boolean isParticipant(User user) {
 		return this.participants.contains(user);
-	}
-
-	public void addModerator(User mod) {
-		this.mods.add(mod);
-	}
-
-	public void addParticipant(User participant) {
-		this.participants.add(participant);
 	}
 
 	public String getName() {

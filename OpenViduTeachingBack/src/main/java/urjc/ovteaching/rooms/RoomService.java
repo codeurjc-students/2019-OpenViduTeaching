@@ -39,9 +39,24 @@ public class RoomService {
 	}
 
 	public void addRoomWithMod(Room room, User mod) {
-		room.addModerator(mod);
-		mod.addModdedRoom(room);
 		roomRep.save(room);
+		mod.addModdedRoom(room);
 		userServ.save(mod);
+	}
+	
+	public void makeModerator(User user, Room room) {
+		user.addModdedRoom(room);
+		user.removeParticipatedRoom(room);
+		roomRep.save(room);
+		userServ.save(user);
+	}
+
+	public Room findByInviteCode(String code) {
+		Room room = roomRep.findByCodeModerator(code);
+		if (room != null) {
+			return room;
+		} else {
+			return roomRep.findByCodeParticipant(code);
+		}
 	}
 }

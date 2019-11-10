@@ -84,5 +84,8 @@ public class User {
 	public void addParticipatedRoom(Room room) {
 		this.participatedRooms.add(room);
 	}
-
+	
+	public void removeParticipatedRoom(Room room) {
+		this.participatedRooms.remove(room);
+	}
 }

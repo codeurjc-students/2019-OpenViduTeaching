@@ -1,4 +1,4 @@
-package urjc.ovteaching;
+package urjc.ovteaching.configurations;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,15 +13,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.antMatcher("/api/**");
 
-		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/createNewRoom/*").hasAnyRole("ADMIN");
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/getParticipantInviteURL/*").hasAnyRole("ADMIN");
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/getModeratorInviteURL/*").hasAnyRole("ADMIN");
-
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/room/*").hasAnyRole("ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/room/*/inviteCode/*").hasAnyRole("ADMIN");
+		
 		http.authorizeRequests().anyRequest().permitAll();
 
 		http.csrf().disable();
 		http.httpBasic();
-		http.logout().logoutSuccessHandler((rq, rs, a) -> { });
+		http.logout().logoutSuccessHandler((rq, rs, a) -> {	});
 	}
 
 	public void addCorsMappings(CorsRegistry registry) {
