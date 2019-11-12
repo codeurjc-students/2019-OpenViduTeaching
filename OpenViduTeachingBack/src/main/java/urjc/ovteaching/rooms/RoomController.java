@@ -98,14 +98,14 @@ public class RoomController {
 	 * @return the room with either code (participant or moderator)
 	 */
 	@PutMapping("/api/room/{code}/user/{userName}")
-	public ResponseEntity<String> newUserInRoom(HttpSession session, HttpServletRequest request,
+	public ResponseEntity<User> newUserInRoom(HttpSession session, HttpServletRequest request,
 			@PathVariable String code, @PathVariable String userName) {
 		User user = userServ.findByName(userName);
 		String password = "pass"; // TODO change pass
 		Room room = roomServ.findByInviteCode(code);
 
 		if (room == null) {
-			return new ResponseEntity<>("Incorrect invite code", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 		if (user == null) {
 			// Creates user if it doesn't exist
@@ -114,11 +114,11 @@ public class RoomController {
 		} else {
 			if (room.isModerator(user)) {
 				// Cannot enter a room if already a mod of it
-				return new ResponseEntity<>("Already moderator", HttpStatus.CONFLICT);
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
 			if (code.equals(room.getParticipantInviteCode()) && room.isParticipant(user)) {
 				// Cannot enter a room as participant if already in it
-				return new ResponseEntity<>("Already participant", HttpStatus.CONFLICT);
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
 		}
 		try {
@@ -130,10 +130,10 @@ public class RoomController {
 		    */
 			request.login(userName, password);
 		} catch (ServletException e) {
-			return new ResponseEntity<>("Cannot login\n" + e.getLocalizedMessage(), HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		if (!userComponent.isLoggedUser()) {
-			return new ResponseEntity<>("Not logged", HttpStatus.UNAUTHORIZED);
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
 		if (code.equals(room.getParticipantInviteCode())) {
@@ -147,6 +147,6 @@ public class RoomController {
 		}
 		roomServ.save(room);
 		userServ.save(user);
-		return new ResponseEntity<>(user.getName(), HttpStatus.CREATED);
+		return new ResponseEntity<>(user, HttpStatus.CREATED);
 	}
 }

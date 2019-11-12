@@ -1,62 +1,39 @@
+import { UserHandler, User } from './../users/userHandler';
 import { Injectable } from "@angular/core";
-import { map } from "rxjs/operators";
-import { HttpHeaders, HttpClient } from "@angular/common/http";
-import { UserModel } from "../models/user-model";
+import { HttpClient } from "@angular/common/http";
+import 'rxjs/Rx';
+import { Observable } from 'rxjs';
+import { map, catchError } from "rxjs/operators";
 
 @Injectable()
-export class OpenViduService {
-    isLogged = false;
-    isAdmin = false;
-    user: UserModel;
-    auth: string;
+export class RoomService {
 
-    constructor(private http: HttpClient) {
-        let user = JSON.parse(localStorage.getItem('currentUser'));
-        if (user) {
-            this.setCurrentUser(user);
-        }
+    constructor(private http: HttpClient, private userHandler: UserHandler) {
+        
     }
 
-    logIn(user: string, pass: string) {
+    checkRoom(code: string):Observable<string> {
+        return this.http.get<string>("/api/room/" + code).pipe(
+            map(roomName => {return roomName}),
+            catchError((error) => this.handleError(error))
+        );
+    }
+    
+    enterRoom(code: string, userName: string):Observable<User> {
 
-        let auth = window.btoa(user + ':' + pass);
+        let auth = window.btoa(userName + ':pass'); //TODO change pass
 
-        const headers = new HttpHeaders({
-            Authorization: 'Basic ' + auth,
-            'X-Requested-With': 'XMLHttpRequest',
-        });
-
-        return this.http.get<UserModel>('/api/logIn', { headers })
-            .pipe(map(user => {
-
-                if (user) {
-                    this.setCurrentUser(user);
-                    user.authdata = auth;
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                }
-
+        return this.http.put<User>("/api/room/" + code + '/user/' + userName, {}).pipe(
+            map(user => {
+                this.userHandler.saveUser(user,auth);
                 return user;
-            }));
-    }
-
-    logOut() {
-        return this.http.get(URL + '/logOut').pipe(
-            map(response => {
-                this.removeCurrentUser();
-                return response;
             }),
+            catchError((error) => this.handleError(error))
         );
     }
 
-    private setCurrentUser(user: UserModel) {
-        this.isLogged = true;
-        this.user = user;
-        this.isAdmin = this.user.roles.indexOf('ROLE_ADMIN') !== -1;
-    }
-
-    removeCurrentUser() {
-        localStorage.removeItem('currentUser');
-        this.isLogged = false;
-        this.isAdmin = false;
-    }
+    private handleError(error: any) {
+		console.error(error);
+		return Observable.throw("Server error (" + error.status + "): " + error.text())
+	}
 }

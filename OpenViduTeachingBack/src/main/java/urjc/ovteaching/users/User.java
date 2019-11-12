@@ -23,9 +23,11 @@ public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@JsonIgnore
 	private Long id;
 
 	private String name;
+	@JsonIgnore
 	private String passwordHash;
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<String> roles;
