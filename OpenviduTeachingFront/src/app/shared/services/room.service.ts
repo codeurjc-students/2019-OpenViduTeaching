@@ -20,7 +20,7 @@ export class RoomService {
         );
     }
 
-    getRoomCode(roomName: string, role:string) {
+    getRoomCode(roomName: string, role:string): Observable<string> {
         return this.http.get(this.baseURL + '/room/' + roomName + '/inviteCode/' + role, {responseType: 'text'}).pipe(
             map(code => { return code }),
             catchError((error) => this.handleError(error))
@@ -28,7 +28,7 @@ export class RoomService {
     }
 
     checkRoom(code: string): Observable<string> {
-        return this.http.get<string>(this.baseURL + '/room/' + code).pipe(
+        return this.http.get(this.baseURL + '/room/' + code, {responseType: 'text'}).pipe(
             map(roomName => { return roomName }),
             catchError((error) => this.handleError(error))
         );

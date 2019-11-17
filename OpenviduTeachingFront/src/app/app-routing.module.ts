@@ -1,3 +1,4 @@
+import { InviteComponent } from './shared/components/invite/invite.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -5,7 +6,8 @@ import { VideoRoomComponent } from './video-room/video-room.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
-  { path: ':roomName', component: VideoRoomComponent }
+  { path: ':roomName', component: VideoRoomComponent },
+  { path: 'invite/:code', component: InviteComponent }
 ];
 
 @NgModule({

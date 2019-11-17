@@ -29,9 +29,6 @@ export class ToolbarComponent implements OnInit {
   @Output() chatButtonClicked = new EventEmitter<any>();
   @Output() stopScreenSharingClicked = new EventEmitter<any>();
 
-  participantURL:string;
-  moderatorURL:string;
-
   constructor(
     private apiSrv: ApiService,
     private userHandler:UserHandler,
@@ -79,7 +76,7 @@ export class ToolbarComponent implements OnInit {
   getInvideURL(role:string){
     this.roomSrv.getRoomCode(this.mySessionId, role).subscribe(
       code => {
-        let url:string = 'https://' + location.hostname + ':4200/' + code;
+        let url:string = 'https://' + location.hostname + ':4200/invite/' + code;
         this.urlSnackBar.open(url, 'Close');
       },
       error => console.log(error)

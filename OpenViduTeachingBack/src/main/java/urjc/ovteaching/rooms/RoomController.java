@@ -80,7 +80,7 @@ public class RoomController {
 	}
 
 	/**
-	 * Returns a room if the code exists
+	 * Returns a room name if the code exists
 	 * 
 	 * @return the room with either code (participant or moderator)
 	 */

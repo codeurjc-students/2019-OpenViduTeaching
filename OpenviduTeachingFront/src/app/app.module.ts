@@ -43,6 +43,7 @@ import { ApiService } from './shared/services/api.service';
 import { LinkifyPipe } from './shared/pipes/linkfy';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { InviteComponent } from './shared/components/invite/invite.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     DialogChooseRoomComponent,
     WebComponentComponent,
     ToolbarComponent,
-    LinkifyPipe
+    LinkifyPipe,
+    InviteComponent
   ],
   imports: [
     FormsModule,
