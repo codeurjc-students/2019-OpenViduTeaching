@@ -34,5 +34,7 @@
     <button mat-icon-button id="navChatButton" (click)="toggleChat()" *ngIf="!this.ovSettings || (this.ovSettings && this.ovSettings.chat)">
         <mat-icon matBadge="{{newMessagesNum}}" [matBadgeHidden]="newMessagesNum === 0"  matBadgePosition="above before" matTooltip="Chat" matBadgeColor="accent">chat</mat-icon>
     </button>
+    <button mat-raised-button color="accent" (click)="getInvideURL('participant')" *ngIf=this.userHandler.isAdmin>Invite URL for participants</button>
+    <button mat-raised-button color="primary" (click)="getInvideURL('moderator')" *ngIf=this.userHandler.isAdmin>Invite URL for moderator</button>
   </div>
 </mat-toolbar>

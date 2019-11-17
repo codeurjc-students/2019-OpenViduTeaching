@@ -1,3 +1,4 @@
+import { RoomService } from './shared/services/room.service';
 import { UserHandler } from './shared/users/user.handler';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
@@ -19,7 +20,8 @@ import {
   MatProgressSpinnerModule,
   MatSliderModule,
   MatSidenavModule,
-  MatChipsModule
+  MatChipsModule,
+  MatSnackBarModule
 } from '@angular/material';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
@@ -81,13 +83,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     HttpClientModule,
     FlexLayoutModule,
     MatChipsModule,
+    MatSnackBarModule,
     NgxLinkifyjsModule.forRoot()
   ],
   entryComponents: [
     DialogErrorComponent,
     WebComponentComponent,
   ],
-  providers: [OpenViduService, ApiService, UserHandler],
+  providers: [OpenViduService, ApiService, RoomService, UserHandler],
   bootstrap: [AppComponent],
 })
 export class AppModule {

@@ -1,7 +1,10 @@
+import { RoomService } from './../../services/room.service';
+import { UserHandler } from './../../users/user.handler';
 import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@angular/core';
 import { UserModel } from '../../models/user-model';
 import { ApiService } from '../../services/api.service';
 import { OvSettings } from '../../models/ov-settings';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-toolbar',
@@ -12,7 +15,7 @@ export class ToolbarComponent implements OnInit {
   fullscreenIcon = 'fullscreen';
 
   @Input() lightTheme: boolean;
-  @Input() mySessionId: boolean;
+  @Input() mySessionId: string;
   @Input() localUser: UserModel;
   @Input() compact: boolean;
   @Input() showNotification: boolean;
@@ -26,7 +29,15 @@ export class ToolbarComponent implements OnInit {
   @Output() chatButtonClicked = new EventEmitter<any>();
   @Output() stopScreenSharingClicked = new EventEmitter<any>();
 
-  constructor(private apiSrv: ApiService) {}
+  participantURL:string;
+  moderatorURL:string;
+
+  constructor(
+    private apiSrv: ApiService,
+    private userHandler:UserHandler,
+    private roomSrv:RoomService,
+    private urlSnackBar: MatSnackBar
+  ) {}
 
   @HostListener('window:resize', ['$event'])
   sizeChange(event) {
@@ -63,6 +74,16 @@ export class ToolbarComponent implements OnInit {
 
   toggleChat() {
     this.chatButtonClicked.emit();
+  }
+
+  getInvideURL(role:string){
+    this.roomSrv.getRoomCode(this.mySessionId, role).subscribe(
+      code => {
+        let url:string = 'https://' + location.hostname + ':4200/' + code;
+        this.urlSnackBar.open(url, 'Close');
+      },
+      error => console.log(error)
+    );
   }
 
   toggleFullscreen() {

@@ -20,8 +20,8 @@ export class RoomService {
         );
     }
 
-    getRoomCode(roomName: string, role:string): Observable<string>{
-        return this.http.post<string>(this.baseURL + '/room/' + roomName + '/inviteCode/' + role, {}).pipe(
+    getRoomCode(roomName: string, role:string) {
+        return this.http.get(this.baseURL + '/room/' + roomName + '/inviteCode/' + role, {responseType: 'text'}).pipe(
             map(code => { return code }),
             catchError((error) => this.handleError(error))
         );
