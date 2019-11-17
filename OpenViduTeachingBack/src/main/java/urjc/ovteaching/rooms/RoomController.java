@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
 import urjc.ovteaching.users.UserService;
 
+@RequestMapping("/ovTeachingApi")
 @CrossOrigin
 @RestController
 public class RoomController {
@@ -30,13 +32,13 @@ public class RoomController {
 
 	@Autowired
 	private UserComponent userComponent;
-
+	
 	/**
 	 * Creates a new room
 	 * 
 	 * @return the room name
 	 */
-	@PostMapping("/api/room/{roomName}")
+	@PostMapping("/room/{roomName}")
 	public ResponseEntity<String> createNewRoom(@PathVariable String roomName, HttpServletRequest request) {
 		if (!request.isUserInRole("ADMIN")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -44,8 +46,7 @@ public class RoomController {
 			if (roomServ.findByName(roomName) != null) {
 				return new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
-			User currentUser = userComponent.getLoggedUser();
-			currentUser = userServ.findByName(request.getUserPrincipal().getName());
+			User currentUser = userServ.findByName(request.getUserPrincipal().getName());
 			Room room = new Room(roomName);
 			roomServ.addRoomWithMod(room, currentUser);
 			return new ResponseEntity<>(room.getName(), HttpStatus.CREATED);
@@ -59,7 +60,7 @@ public class RoomController {
 	 * @param role     participant or moderator
 	 * @return the invite code
 	 */
-	@GetMapping("/api/room/{roomName}/inviteCode/{role}")
+	@GetMapping("/room/{roomName}/inviteCode/{role}")
 	public ResponseEntity<String> getInviteCode(HttpServletRequest request, @PathVariable String roomName,
 			@PathVariable String role) {
 		Room room = roomServ.findByName(roomName);
@@ -83,11 +84,11 @@ public class RoomController {
 	 * 
 	 * @return the room with either code (participant or moderator)
 	 */
-	@GetMapping("/api/room/{code}")
+	@GetMapping("/room/{code}")
 	public ResponseEntity<String> getRoomByInviteCode(@PathVariable String code) {
 		Room room = roomServ.findByInviteCode(code);
 		if (room == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(room.getName(), HttpStatus.OK);
 	}
@@ -97,7 +98,7 @@ public class RoomController {
 	 * 
 	 * @return the room with either code (participant or moderator)
 	 */
-	@PutMapping("/api/room/{code}/user/{userName}")
+	@PutMapping("/room/{code}/user/{userName}")
 	public ResponseEntity<User> newUserInRoom(HttpSession session, HttpServletRequest request,
 			@PathVariable String code, @PathVariable String userName) {
 		User user = userServ.findByName(userName);
@@ -105,7 +106,7 @@ public class RoomController {
 		Room room = roomServ.findByInviteCode(code);
 
 		if (room == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		if (user == null) {
 			// Creates user if it doesn't exist
@@ -130,12 +131,14 @@ public class RoomController {
 		    */
 			request.login(userName, password);
 		} catch (ServletException e) {
+			e.toString();
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+		/*
 		if (!userComponent.isLoggedUser()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-
+		*/
 		if (code.equals(room.getParticipantInviteCode())) {
 			user.addParticipatedRoom(room);
 		} else {

@@ -1,3 +1,4 @@
+import { UserHandler } from './../shared/users/user.handler';
 import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
@@ -73,6 +74,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     private router: Router,
     public dialog: MatDialog,
     private apiSrv: ApiService,
+    private userHandler:UserHandler
   ) {}
 
   @HostListener('window:beforeunload')

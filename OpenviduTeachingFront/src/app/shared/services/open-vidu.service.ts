@@ -25,6 +25,7 @@ export class OpenViduService {
     },
   };
 
+  //TODO Do in backend
   constructor(private http: HttpClient) {}
 
   getToken(mySessionId: string, openviduServerUrl: string, openviduSecret: string): Promise<string> {

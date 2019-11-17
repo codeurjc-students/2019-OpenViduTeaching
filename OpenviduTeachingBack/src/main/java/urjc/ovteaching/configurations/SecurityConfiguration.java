@@ -11,10 +11,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.antMatcher("/api/**");
+		http.antMatcher("/ovTeachingApi/**");
 
-		http.authorizeRequests().antMatchers(HttpMethod.POST, "/api/room/*").hasAnyRole("ADMIN");
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "/api/room/*/inviteCode/*").hasAnyRole("ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/ovTeachingApi/room/*").hasAnyRole("ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/room/*/inviteCode/*").hasAnyRole("ADMIN");
 		
 		http.authorizeRequests().anyRequest().permitAll();
 

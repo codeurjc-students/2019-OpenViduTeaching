@@ -1,4 +1,4 @@
-import { UserHandler, User } from './../users/userHandler';
+import { UserHandler, User } from '../users/user.handler';
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import 'rxjs/Rx';
@@ -8,24 +8,38 @@ import { map, catchError } from "rxjs/operators";
 @Injectable()
 export class RoomService {
 
+    baseURL: string = '/ovTeachingApi';
+
     constructor(private http: HttpClient, private userHandler: UserHandler) {
-        
     }
 
-    checkRoom(code: string):Observable<string> {
-        return this.http.get<string>("/api/room/" + code).pipe(
-            map(roomName => {return roomName}),
+    createRoom(roomName: string): Observable<string> {
+        return this.http.post<string>(this.baseURL + '/room/' + roomName, {}).pipe(
+            map(roomName => { return roomName }),
             catchError((error) => this.handleError(error))
         );
     }
-    
-    enterRoom(code: string, userName: string):Observable<User> {
 
-        let auth = window.btoa(userName + ':pass'); //TODO change pass
+    getRoomCode(roomName: string, role:string): Observable<string>{
+        return this.http.post<string>(this.baseURL + '/room/' + roomName + '/inviteCode/' + role, {}).pipe(
+            map(code => { return code }),
+            catchError((error) => this.handleError(error))
+        );
+    }
 
-        return this.http.put<User>("/api/room/" + code + '/user/' + userName, {}).pipe(
+    checkRoom(code: string): Observable<string> {
+        return this.http.get<string>(this.baseURL + '/room/' + code).pipe(
+            map(roomName => { return roomName }),
+            catchError((error) => this.handleError(error))
+        );
+    }
+
+    enterRoom(code: string, userName: string): Observable<User> {
+
+        return this.http.put<User>(this.baseURL + '/room/' + code + '/user/' + userName, {}).pipe(
             map(user => {
-                this.userHandler.saveUser(user,auth);
+                let auth = window.btoa(userName + ':pass'); //TODO change pass
+                this.userHandler.saveUser(user, auth);
                 return user;
             }),
             catchError((error) => this.handleError(error))
@@ -33,7 +47,7 @@ export class RoomService {
     }
 
     private handleError(error: any) {
-		console.error(error);
-		return Observable.throw("Server error (" + error.status + "): " + error.text())
-	}
+        console.error(error);
+        return Observable.throw("Server error (" + error.status + "): " + error.text())
+    }
 }

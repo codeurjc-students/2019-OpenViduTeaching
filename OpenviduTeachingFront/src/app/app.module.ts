@@ -1,3 +1,4 @@
+import { UserHandler } from './shared/users/user.handler';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -86,7 +87,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     DialogErrorComponent,
     WebComponentComponent,
   ],
-  providers: [OpenViduService, ApiService],
+  providers: [OpenViduService, ApiService, UserHandler],
   bootstrap: [AppComponent],
 })
 export class AppModule {
