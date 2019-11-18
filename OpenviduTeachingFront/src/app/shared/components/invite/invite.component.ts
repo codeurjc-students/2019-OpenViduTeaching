@@ -23,6 +23,23 @@ export class InviteComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.code = params.get("code");
     });
+    this.checkRoom();
+  }
+
+  enterRoom() {
+    if (this.userName !== undefined) {
+      this.roomSrv.enterRoom(this.code, this.userName).subscribe(
+        (_) => {
+          this.router.navigate(['/', this.roomName]);
+        },
+        error => {
+          console.log(error)
+        }
+      );
+    }
+  }
+
+  checkRoom() {
     this.roomSrv.checkRoom(this.code).subscribe(
       roomName => {
         this.roomName = roomName;
@@ -33,18 +50,4 @@ export class InviteComponent implements OnInit {
       }
     );
   }
-
-  enterRoom() {
-    if (this.userName !== undefined) {
-      this.roomSrv.enterRoom(this.code, this.userName).subscribe(
-        (_) => {
-          this.router.navigate(['/',this.roomName]);
-        },
-        error => {
-          console.log(error)
-        }
-      );
-    }
-  }
-
 }
