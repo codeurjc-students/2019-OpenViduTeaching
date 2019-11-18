@@ -1,4 +1,3 @@
-import { RoomService } from './shared/services/room.service';
 import { UserHandler } from './shared/users/user.handler';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
@@ -92,7 +91,7 @@ import { InviteComponent } from './shared/components/invite/invite.component';
     DialogErrorComponent,
     WebComponentComponent,
   ],
-  providers: [OpenViduService, ApiService, RoomService, UserHandler],
+  providers: [OpenViduService, ApiService, UserHandler],
   bootstrap: [AppComponent],
 })
 export class AppModule {

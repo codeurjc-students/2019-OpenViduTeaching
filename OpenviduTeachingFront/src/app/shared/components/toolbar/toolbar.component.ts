@@ -76,7 +76,7 @@ export class ToolbarComponent implements OnInit {
   getInvideURL(role:string){
     this.roomSrv.getRoomCode(this.mySessionId, role).subscribe(
       code => {
-        let url:string = 'https://' + location.hostname + ':4200/invite/' + code;
+        let url:string = 'http://' + location.hostname + ':4200/#/invite/' + code;
         this.urlSnackBar.open(url, 'Close');
       },
       error => console.log(error)

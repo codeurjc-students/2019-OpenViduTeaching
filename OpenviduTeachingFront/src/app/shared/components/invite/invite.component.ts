@@ -1,6 +1,7 @@
-import { RoomService } from './../../services/room.service';
+import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RoomService } from '../../services/room.service';
 
 @Component({
   selector: 'app-invite',
@@ -13,8 +14,12 @@ export class InviteComponent implements OnInit {
   roomName: string;
   userName: string;
 
+  nameTaken: boolean = false;
+  inputErrorMsg: string;
+
   constructor(
     private roomSrv: RoomService,
+    private userSrv: UserService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -27,16 +32,30 @@ export class InviteComponent implements OnInit {
   }
 
   enterRoom() {
-    if (this.userName !== undefined) {
-      this.roomSrv.enterRoom(this.code, this.userName).subscribe(
+    if(this.userName == null || this.userName == '') {
+      this.inputErrorMsg = 'You must enter a username';
+    } else {
+      this.userSrv.checkUserName(this.userName).subscribe(
         (_) => {
-          this.router.navigate(['/', this.roomName]);
+          this.inputErrorMsg = 'Username already taken';
         },
         error => {
-          console.log(error)
+          //Only enters when the username isn't taken
+          this.goToRoom();
         }
       );
     }
+  }
+
+  goToRoom() {
+    this.roomSrv.enterRoom(this.code, this.userName).subscribe(
+      (_) => {
+        this.router.navigate(['/', this.roomName]);
+      },
+      error => {
+        console.log(error)
+      }
+    );
   }
 
   checkRoom() {

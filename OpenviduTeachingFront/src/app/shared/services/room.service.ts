@@ -5,49 +5,54 @@ import 'rxjs/Rx';
 import { Observable } from 'rxjs';
 import { map, catchError } from "rxjs/operators";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
+
 export class RoomService {
 
-    baseURL: string = '/ovTeachingApi';
+  baseURL: string = '/ovTeachingApi';
 
-    constructor(private http: HttpClient, private userHandler: UserHandler) {
-    }
+  constructor(
+    private http: HttpClient,
+    private userHandler: UserHandler
+  ) { }
 
-    createRoom(roomName: string): Observable<string> {
-        return this.http.post<string>(this.baseURL + '/room/' + roomName, {}).pipe(
-            map(roomName => { return roomName }),
-            catchError((error) => this.handleError(error))
-        );
-    }
+  createRoom(roomName: string): Observable<string> {
+    return this.http.post<string>(this.baseURL + '/room/' + roomName, {}).pipe(
+      map(roomName => { return roomName }),
+      catchError((error) => this.handleError(error))
+    );
+  }
 
-    getRoomCode(roomName: string, role:string): Observable<string> {
-        return this.http.get(this.baseURL + '/room/' + roomName + '/inviteCode/' + role, {responseType: 'text'}).pipe(
-            map(code => { return code }),
-            catchError((error) => this.handleError(error))
-        );
-    }
+  getRoomCode(roomName: string, role: string): Observable<string> {
+    return this.http.get(this.baseURL + '/room/' + roomName + '/inviteCode/' + role, { responseType: 'text' }).pipe(
+      map(code => { return code }),
+      catchError((error) => this.handleError(error))
+    );
+  }
 
-    checkRoom(code: string): Observable<string> {
-        return this.http.get(this.baseURL + '/room/' + code, {responseType: 'text'}).pipe(
-            map(roomName => { return roomName }),
-            catchError((error) => this.handleError(error))
-        );
-    }
+  checkRoom(code: string): Observable<string> {
+    return this.http.get(this.baseURL + '/room/' + code, { responseType: 'text' }).pipe(
+      map(roomName => { return roomName }),
+      catchError((error) => this.handleError(error))
+    );
+  }
 
-    enterRoom(code: string, userName: string): Observable<User> {
+  enterRoom(code: string, userName: string): Observable<User> {
 
-        return this.http.put<User>(this.baseURL + '/room/' + code + '/user/' + userName, {}).pipe(
-            map(user => {
-                let auth = window.btoa(userName + ':pass'); //TODO change pass
-                this.userHandler.saveUser(user, auth);
-                return user;
-            }),
-            catchError((error) => this.handleError(error))
-        );
-    }
+    return this.http.put<User>(this.baseURL + '/room/' + code + '/user/' + userName, {}).pipe(
+      map(user => {
+        let auth = window.btoa(userName + ':pass'); //TODO change pass
+        this.userHandler.saveUser(user, auth);
+        return user;
+      }),
+      catchError((error) => this.handleError(error))
+    );
+  }
 
-    private handleError(error: any) {
-        console.error(error);
-        return Observable.throw("Server error (" + error.status + "): " + error.text())
-    }
+  private handleError(error: any) {
+    console.error(error);
+    return Observable.throw("Server error (" + error.status + "): " + error.text())
+  }
 }
