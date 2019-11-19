@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
 import urjc.ovteaching.users.UserService;
+import urjc.ovteaching.users.User.WithRooms;
 
 @RequestMapping("/ovTeachingApi")
 @CrossOrigin
@@ -99,6 +102,7 @@ public class RoomController {
 	 * @return the room with either code (participant or moderator)
 	 */
 	@PutMapping("/room/{code}/user/{userName}")
+	@JsonView(User.WithRooms.class)
 	public ResponseEntity<User> newUserInRoom(HttpSession session, HttpServletRequest request,
 			@PathVariable String code, @PathVariable String userName) {
 		User user = userServ.findByName(userName);

@@ -1,5 +1,5 @@
 import { RoomService } from './../../services/room.service';
-import { UserHandler } from './../../users/user.handler';
+import { UserHandler } from '../../users/user.module';
 import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@angular/core';
 import { UserModel } from '../../models/user-model';
 import { ApiService } from '../../services/api.service';

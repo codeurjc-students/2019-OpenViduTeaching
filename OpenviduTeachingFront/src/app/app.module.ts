@@ -1,4 +1,4 @@
-import { UserHandler } from './shared/users/user.handler';
+import { UserHandler } from './shared/users/user.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

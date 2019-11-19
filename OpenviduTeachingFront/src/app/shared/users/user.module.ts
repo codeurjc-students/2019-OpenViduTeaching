@@ -1,9 +1,12 @@
+import { Room } from './../models/room-model';
 import { Injectable } from "@angular/core";
 
 export interface User {
     name: string;
     roles: string[];
     authdata: string;
+    moddedRooms: Room[];
+    participatedRooms: Room[];
 }
 
 @Injectable()
@@ -19,8 +22,8 @@ export class UserHandler {
             this.setCurrentUser(user);
         }
     }
-    
-    public saveUser(user:User, auth:string) {
+
+    public saveUser(user: User, auth: string) {
         if (user) {
             this.setCurrentUser(user);
             user.authdata = auth;
@@ -32,11 +35,16 @@ export class UserHandler {
         this.isLogged = true;
         this.user = user;
         this.isAdmin = this.user.roles.indexOf('ROLE_ADMIN') !== -1;
+        console.log(user);
     }
 
     public removeCurrentUser() {
         localStorage.removeItem('currentUser');
         this.isLogged = false;
         this.isAdmin = false;
+    }
+
+    public isModOfRoom(roomName: string): boolean {
+        return this.user.moddedRooms.some((room) => room.name === roomName);
     }
 }

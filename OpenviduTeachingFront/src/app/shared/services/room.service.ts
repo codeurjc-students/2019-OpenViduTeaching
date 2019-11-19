@@ -1,4 +1,4 @@
-import { UserHandler, User } from '../users/user.handler';
+import { UserHandler, User } from '../users/user.module';
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import 'rxjs/Rx';

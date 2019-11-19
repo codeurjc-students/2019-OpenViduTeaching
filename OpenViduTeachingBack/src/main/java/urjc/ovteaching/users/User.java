@@ -14,29 +14,31 @@ import javax.persistence.ManyToMany;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import urjc.ovteaching.rooms.Room;
 
 @Entity
 public class User {
 
+	public interface WithRooms extends Room.NameOnly {}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@JsonIgnore
 	private Long id;
 
+	@JsonView(WithRooms.class)
 	private String name;
-	@JsonIgnore
 	private String passwordHash;
+	@JsonView(WithRooms.class)
 	@ElementCollection(fetch = FetchType.EAGER)
 	private List<String> roles;
-	
-	@JsonIgnore
+
+	@JsonView(WithRooms.class)
 	@ManyToMany
 	private List<Room> moddedRooms;
-	
-	@JsonIgnore
+
+	@JsonView(WithRooms.class)
 	@ManyToMany
 	private List<Room> participatedRooms;
 
@@ -78,15 +80,15 @@ public class User {
 	public void addRole(String role) {
 		this.roles.add(role);
 	}
-	
+
 	public void addModdedRoom(Room room) {
 		this.moddedRooms.add(room);
 	}
-	
+
 	public void addParticipatedRoom(Room room) {
 		this.participatedRooms.add(room);
 	}
-	
+
 	public void removeParticipatedRoom(Room room) {
 		this.participatedRooms.remove(room);
 	}

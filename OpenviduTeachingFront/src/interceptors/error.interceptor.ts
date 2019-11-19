@@ -1,4 +1,4 @@
-import { UserHandler } from './../app/shared/users/user.handler';
+import { UserHandler } from '../app/shared/users/user.module';
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';

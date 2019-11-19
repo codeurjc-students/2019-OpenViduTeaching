@@ -1,4 +1,4 @@
-import { UserHandler } from './../shared/users/user.handler';
+import { UserHandler } from '../shared/users/user.module';
 import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';

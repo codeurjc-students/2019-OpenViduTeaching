@@ -10,25 +10,26 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import urjc.ovteaching.users.User;
 
 @Entity
 public class Room {
 
+	public interface NameOnly {}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private String codeParticipant;
 	private String codeModerator;
+	@JsonView(NameOnly.class)
 	private String name;
 
-	@JsonIgnore
 	@ManyToMany(mappedBy = "moddedRooms")
 	private List<User> mods;
 
-	@JsonIgnore
 	@ManyToMany(mappedBy = "participatedRooms")
 	private List<User> participants;
 
