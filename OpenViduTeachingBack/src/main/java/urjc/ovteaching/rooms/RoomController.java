@@ -1,5 +1,7 @@
 package urjc.ovteaching.rooms;
 
+import java.util.HashMap;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -17,10 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import io.openvidu.java.client.Session;
+import urjc.ovteaching.OpenViduComponent;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
 import urjc.ovteaching.users.UserService;
-import urjc.ovteaching.users.User.WithRooms;
 
 @RequestMapping("/ovTeachingApi")
 @CrossOrigin
@@ -36,6 +39,9 @@ public class RoomController {
 	@Autowired
 	private UserComponent userComponent;
 	
+	@Autowired
+	private OpenViduComponent openViduComponent;
+	
 	/**
 	 * Creates a new room
 	 * 
@@ -48,11 +54,20 @@ public class RoomController {
 		} else {
 			if (roomServ.findByName(roomName) != null) {
 				return new ResponseEntity<>(HttpStatus.CONFLICT);
+			}	
+			try {
+				User currentUser = userServ.findByName(request.getUserPrincipal().getName());
+				//User currentUser = this.userComponent.getLoggedUser();
+				Room room = new Room(roomName);
+				roomServ.addRoomWithMod(room, currentUser);
+				
+				Session session = this.openViduComponent.getOpenVidu().createSession();
+				this.openViduComponent.getLessonIdSession().put(room.getId(), session);
+				this.openViduComponent.getSessionIdUserIdToken().put(session.getSessionId(), new HashMap<>());
+				return new ResponseEntity<>(room.getName(), HttpStatus.CREATED);
+			} catch (Exception e) {
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
-			User currentUser = userServ.findByName(request.getUserPrincipal().getName());
-			Room room = new Room(roomName);
-			roomServ.addRoomWithMod(room, currentUser);
-			return new ResponseEntity<>(room.getName(), HttpStatus.CREATED);
 		}
 	}
 
@@ -68,6 +83,7 @@ public class RoomController {
 			@PathVariable String role) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(request.getUserPrincipal().getName());
+		//User user = this.userComponent.getLoggedUser(); 
 		if (room != null) {
 			if (!room.isModerator(user)) {
 				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
