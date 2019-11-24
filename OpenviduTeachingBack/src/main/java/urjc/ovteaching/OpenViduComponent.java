@@ -1,5 +1,6 @@
 package urjc.ovteaching;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -7,7 +8,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
+import io.openvidu.java.client.OpenViduRole;
 import io.openvidu.java.client.Session;
+import io.openvidu.java.client.TokenOptions;
+import urjc.ovteaching.rooms.Room;
+import urjc.ovteaching.users.User;
 
 @Component
 public class OpenViduComponent {
@@ -15,10 +22,10 @@ public class OpenViduComponent {
 	private OpenVidu openVidu;
 	private String OPENVIDU_URL;
 	private String SECRET;
-	
+
 	private Map<Long, Session> roomIdSession;
 	private Map<String, Map<Long, String>> sessionIdUserIdToken;
-	
+
 	public OpenViduComponent(@Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl) {
 		this.SECRET = secret;
 		this.OPENVIDU_URL = openviduUrl;
@@ -39,11 +46,51 @@ public class OpenViduComponent {
 		return SECRET;
 	}
 
-	public Map<Long, Session> getLessonIdSession() {
-		return roomIdSession;
+	public boolean isSessionCreated(Room room) {
+		return this.roomIdSession.get(room.getId()) != null;
 	}
 
-	public Map<String, Map<Long, String>> getSessionIdUserIdToken() {
-		return sessionIdUserIdToken;
+	public void createSession(Room room) throws OpenViduJavaClientException, OpenViduHttpException {
+		Session session = this.openVidu.createSession();
+		this.roomIdSession.put(room.getId(), session);
+		this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
+	}
+
+	public void addUserWithTokenToRoom(Room room, User user, String token) {
+		Session session = this.roomIdSession.get(room.getId());
+		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), token);
+	}
+
+	public String generateToken(Room room, OpenViduRole role, User user)throws OpenViduJavaClientException, OpenViduHttpException {
+		Session session = this.roomIdSession.get(room.getId());
+		TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
+		return session.generateToken(tokenOpts);
+	}
+
+	public String replaceSession(Room room, OpenViduRole role, User user) throws OpenViduJavaClientException, OpenViduHttpException {
+		Session session = this.roomIdSession.get(room.getId());
+		this.sessionIdUserIdToken.remove(session.getSessionId());
+		session = this.openVidu.createSession();
+		this.roomIdSession.put(room.getId(), session);
+		this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
+		TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
+		String token = session.generateToken(tokenOpts);
+		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), token);
+		return token;
+	}
+	
+	public String removeUser(Room room, User user) {
+		Session session = this.roomIdSession.get(room.getId());
+		return this.sessionIdUserIdToken.get(session.getSessionId()).remove(user.getId());
+	}
+	
+	public boolean isSessionEmpty(Room room) {
+		Session session = this.roomIdSession.get(room.getId());
+		return this.sessionIdUserIdToken.get(session.getSessionId()).isEmpty();
+	}
+	
+	public void removeSession(Room room) {
+		Session session = this.roomIdSession.remove(room.getId());
+		this.sessionIdUserIdToken.remove(session.getSessionId());
 	}
 }
