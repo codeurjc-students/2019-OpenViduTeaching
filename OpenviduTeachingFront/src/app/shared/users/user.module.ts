@@ -9,7 +9,9 @@ export interface User {
     participatedRooms: Room[];
 }
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class UserHandler {
     isLogged = false;
     isAdmin = false;
@@ -45,6 +47,6 @@ export class UserHandler {
     }
 
     public isModOfRoom(roomName: string): boolean {
-        return this.user.moddedRooms.some((room) => room.name === roomName);
+        return this.isLogged && this.user.moddedRooms.some((room) => room.name === roomName);
     }
 }

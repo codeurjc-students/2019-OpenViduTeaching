@@ -40,7 +40,6 @@ export class RoomService {
   }
 
   enterRoom(code: string, userName: string): Observable<User> {
-
     return this.http.put<User>(this.baseURL + '/room/' + code + '/user/' + userName, {}).pipe(
       map(user => {
         let auth = window.btoa(userName + ':pass'); //TODO change pass
@@ -49,6 +48,20 @@ export class RoomService {
       }),
       catchError((error) => this.handleError(error))
     );
+  }
+
+  generateToken(roomName: string): Observable<User> {
+    return this.http.put<User>(this.baseURL + '/room/' + roomName + '/token', {}).pipe(
+      map(token => { return token; }),
+      catchError((error) => this.handleError(error))
+    );
+  }
+
+  removeUser(roomName: number) {
+    return this.http.post(this.baseURL + '/room/' + roomName + '/user/', {})
+      .pipe(
+        catchError(error => this.handleError(error))
+      );
   }
 
   private handleError(error: any) {

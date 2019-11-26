@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
-import io.openvidu.java.client.OpenViduRole;
 import urjc.ovteaching.OpenViduComponent;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
@@ -72,9 +71,9 @@ public class RoomController {
 	}
 
 	/**
-	 * Creates token for user
+	 * Creates token for user in a room
 	 * 
-	 * @return JSONObject with the token
+	 * @return The token
 	 */
 	@GetMapping("/room/{roomName}/token")
 	public ResponseEntity<String> generateToken(@PathVariable String roomName, HttpServletRequest request) {
@@ -85,7 +84,7 @@ public class RoomController {
 		if (!request.isUserInRole("USER")) { // User not logged
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		if (roomServ.findByName(roomName) == null) { // No room with that name
+		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		if ((!room.isParticipant(user)) && (!room.isModerator(user))) { // User not in that room
@@ -100,15 +99,10 @@ public class RoomController {
 			}
 		}
 		
-		//TODO role depending on role for that room
-		OpenViduRole role = request.isUserInRole("ADMIN") ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
-		//JSONObject responseJson = new JSONObject();
 		try {
-			String token = this.openViduComponent.generateToken(room, role, user);
+			String token = this.openViduComponent.generateToken(room, user);
 			this.openViduComponent.addUserWithTokenToRoom(room, user, token);
 			return new ResponseEntity<>(token, HttpStatus.OK);
-			//responseJson.put(0, token);
-			//return new ResponseEntity<>(responseJson, HttpStatus.OK);
 		} catch (OpenViduJavaClientException e1) {
 			// Internal error generate
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -117,10 +111,8 @@ public class RoomController {
 				// Invalid sessionId (user left unexpectedly). Session object is not valid
 				// anymore. Must clean invalid session and create a new one
 				try {
-					String token = this.openViduComponent.replaceSession(room, role, user);
+					String token = this.openViduComponent.replaceSession(room, user);
 					return new ResponseEntity<>(token, HttpStatus.OK);
-					//responseJson.put(0, token);
-					//return new ResponseEntity<>(responseJson, HttpStatus.OK);
 				} catch (OpenViduJavaClientException | OpenViduHttpException e3) {
 					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 				}
@@ -146,7 +138,7 @@ public class RoomController {
 		if (!request.isUserInRole("USER")) { // User not logged
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		if (roomServ.findByName(roomName) == null) { // No room with that name
+		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		if ((!room.isParticipant(currentUser)) && (!room.isModerator(currentUser))) { // User not in that room

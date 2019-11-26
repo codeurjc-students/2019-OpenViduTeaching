@@ -61,18 +61,20 @@ public class OpenViduComponent {
 		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), token);
 	}
 
-	public String generateToken(Room room, OpenViduRole role, User user)throws OpenViduJavaClientException, OpenViduHttpException {
+	public String generateToken(Room room, User user)throws OpenViduJavaClientException, OpenViduHttpException {
 		Session session = this.roomIdSession.get(room.getId());
+		OpenViduRole role = room.isModerator(user) ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
 		TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
 		return session.generateToken(tokenOpts);
 	}
 
-	public String replaceSession(Room room, OpenViduRole role, User user) throws OpenViduJavaClientException, OpenViduHttpException {
+	public String replaceSession(Room room, User user) throws OpenViduJavaClientException, OpenViduHttpException {
 		Session session = this.roomIdSession.get(room.getId());
 		this.sessionIdUserIdToken.remove(session.getSessionId());
 		session = this.openVidu.createSession();
 		this.roomIdSession.put(room.getId(), session);
 		this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
+		OpenViduRole role = room.isModerator(user) ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
 		TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
 		String token = session.generateToken(tokenOpts);
 		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), token);
