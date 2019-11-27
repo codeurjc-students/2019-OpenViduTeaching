@@ -1,9 +1,10 @@
-package urjc.ovteaching.rooms;
+package urjc.ovteaching.rooms.controllers;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
 import urjc.ovteaching.OpenViduComponent;
+import urjc.ovteaching.rooms.Room;
+import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
 import urjc.ovteaching.users.UserService;
@@ -51,22 +54,38 @@ public class RoomController {
 	public ResponseEntity<String> createNewRoom(@PathVariable String roomName, HttpServletRequest request) {
 		if (!request.isUserInRole("ADMIN")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		} else {
-			if (roomServ.findByName(roomName) != null) {
-				return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+		if (roomServ.findByName(roomName) != null) {
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+		User currentUser = userServ.findByName(request.getUserPrincipal().getName());
+		// User currentUser = this.userComponent.getLoggedUser();
+		Room room = new Room(roomName);
+		roomServ.addRoomWithMod(room, currentUser);
+		return new ResponseEntity<>(room.getName(), HttpStatus.CREATED);
+	}
+
+	/**
+	 * Creates a session for a room
+	 * 
+	 * @return the session's id
+	 */
+	@PostMapping("/room/{roomName}/session")
+	public ResponseEntity<String> createSession(@PathVariable String roomName, HttpServletRequest request) {
+		Room room = roomServ.findByName(roomName);
+		if (room == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		try {
+			String sessionId;
+			if (!this.openViduComponent.isSessionCreated(room)) {
+				sessionId = this.openViduComponent.createSession(room);
+			} else {
+				sessionId = this.openViduComponent.getSession(room);
 			}
-			try {
-				User currentUser = userServ.findByName(request.getUserPrincipal().getName());
-				// User currentUser = this.userComponent.getLoggedUser();
-				Room room = new Room(roomName);
-				roomServ.addRoomWithMod(room, currentUser);
-				if (!this.openViduComponent.isSessionCreated(room)) {
-					this.openViduComponent.createSession(room);
-				}
-				return new ResponseEntity<>(room.getName(), HttpStatus.CREATED);
-			} catch (OpenViduJavaClientException | OpenViduHttpException e) {
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
+			return new ResponseEntity<>(sessionId, HttpStatus.CREATED);
+		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
@@ -76,11 +95,11 @@ public class RoomController {
 	 * @return The token
 	 */
 	@GetMapping("/room/{roomName}/token")
-	public ResponseEntity<String> generateToken(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<JSONObject> generateToken(@PathVariable String roomName, HttpServletRequest request) {
 
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(request.getUserPrincipal().getName());
-		// User currentUser = this.userComponent.getLoggedUser();
+		// User user = this.userComponent.getLoggedUser();
 		if (!request.isUserInRole("USER")) { // User not logged
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -90,7 +109,8 @@ public class RoomController {
 		if ((!room.isParticipant(user)) && (!room.isModerator(user))) { // User not in that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-
+		
+		JSONObject json = new JSONObject();
 		if (!this.openViduComponent.isSessionCreated(room)) { // Create session if there isn't
 			try {
 				this.openViduComponent.createSession(room);
@@ -98,11 +118,12 @@ public class RoomController {
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
-		
+
 		try {
 			String token = this.openViduComponent.generateToken(room, user);
 			this.openViduComponent.addUserWithTokenToRoom(room, user, token);
-			return new ResponseEntity<>(token, HttpStatus.OK);
+			json.put("token", token);
+			return new ResponseEntity<>(json, HttpStatus.OK);
 		} catch (OpenViduJavaClientException e1) {
 			// Internal error generate
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,7 +133,8 @@ public class RoomController {
 				// anymore. Must clean invalid session and create a new one
 				try {
 					String token = this.openViduComponent.replaceSession(room, user);
-					return new ResponseEntity<>(token, HttpStatus.OK);
+					json.put("token", token);
+					return new ResponseEntity<>(json, HttpStatus.OK);
 				} catch (OpenViduJavaClientException | OpenViduHttpException e3) {
 					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 				}
@@ -189,15 +211,18 @@ public class RoomController {
 	}
 
 	/**
-	 * Returns a room name if the code exists
+	 * Checks whether a room with that name or code exists
 	 * 
-	 * @return the room with either code (participant or moderator)
+	 * @return the room with either code (participant or moderator) or name
 	 */
-	@GetMapping("/room/{code}")
-	public ResponseEntity<String> getRoomByInviteCode(@PathVariable String code) {
-		Room room = roomServ.findByInviteCode(code);
+	@GetMapping("/room/{codeOrName}")
+	public ResponseEntity<String> getRoomByInviteCode(@PathVariable String codeOrName) {
+		Room room = roomServ.findByName(codeOrName);
 		if (room == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			room = roomServ.findByInviteCode(codeOrName);
+			if (room == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
 		}
 		return new ResponseEntity<>(room.getName(), HttpStatus.OK);
 	}

@@ -1,3 +1,4 @@
+import { RoomService } from './../shared/services/room.service';
 import { UserHandler } from '../shared/users/user.module';
 import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
@@ -71,6 +72,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
   constructor(
     private openViduSrv: OpenViduService,
+    private roomSrv: RoomService,
     private router: Router,
     public dialog: MatDialog,
     private apiSrv: ApiService,
@@ -575,8 +577,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
   private getToken(): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.openViduSrv
-        .getToken(this.mySessionId, this.openviduServerUrl, this.openviduSecret)
+      this.roomSrv.getToken(this.mySessionId)
         .then((token) => {
           resolve(token);
         })

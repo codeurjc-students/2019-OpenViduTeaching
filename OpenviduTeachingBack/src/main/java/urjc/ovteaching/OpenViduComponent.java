@@ -12,6 +12,7 @@ import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.OpenViduRole;
 import io.openvidu.java.client.Session;
+import io.openvidu.java.client.SessionProperties;
 import io.openvidu.java.client.TokenOptions;
 import urjc.ovteaching.rooms.Room;
 import urjc.ovteaching.users.User;
@@ -50,10 +51,16 @@ public class OpenViduComponent {
 		return this.roomIdSession.get(room.getId()) != null;
 	}
 
-	public void createSession(Room room) throws OpenViduJavaClientException, OpenViduHttpException {
-		Session session = this.openVidu.createSession();
+	public String createSession(Room room) throws OpenViduJavaClientException, OpenViduHttpException {
+		SessionProperties sp = new SessionProperties.Builder().customSessionId(room.getName()).build();
+		Session session = this.openVidu.createSession(sp);
 		this.roomIdSession.put(room.getId(), session);
 		this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
+		return session.getSessionId();
+	}
+	
+	public String getSession(Room room) {
+		return this.roomIdSession.get(room.getId()).getSessionId();
 	}
 
 	public void addUserWithTokenToRoom(Room room, User user, String token) {
@@ -71,7 +78,8 @@ public class OpenViduComponent {
 	public String replaceSession(Room room, User user) throws OpenViduJavaClientException, OpenViduHttpException {
 		Session session = this.roomIdSession.get(room.getId());
 		this.sessionIdUserIdToken.remove(session.getSessionId());
-		session = this.openVidu.createSession();
+		SessionProperties sp = new SessionProperties.Builder().customSessionId(room.getName()).build();
+		session = this.openVidu.createSession(sp);
 		this.roomIdSession.put(room.getId(), session);
 		this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
 		OpenViduRole role = room.isModerator(user) ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
