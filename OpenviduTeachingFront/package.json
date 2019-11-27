@@ -65,7 +65,7 @@
         "lint": "ng lint",
         "ng": "ng",
         "pack:openvidu-angular": "cd dist/openvidu-angular && npm pack",
-        "start": "ng serve --open --proxy-config proxy.conf.json",
+        "start": "ng serve --proxy-config proxy.conf.json",
         "test": "ng test"
     },
     "version": "2.11.0"

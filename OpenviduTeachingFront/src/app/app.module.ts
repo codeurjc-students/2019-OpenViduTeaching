@@ -28,7 +28,7 @@ import { VideoRoomComponent } from './video-room/video-room.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { OpenViduService } from './shared/services/open-vidu.service';
 import { StreamComponent } from './shared/components/stream/stream.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ChatComponent } from './shared/components/chat/chat.component';
 import { DialogExtensionComponent } from './shared/components/dialog-extension/dialog-extension.component';
 import { OpenViduVideoComponent } from './shared/components/stream/ov-video.component';
@@ -43,6 +43,8 @@ import { LinkifyPipe } from './shared/pipes/linkfy';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { InviteComponent } from './shared/components/invite/invite.component';
+import { BasicAuthInterceptor } from 'src/interceptors/auth.interceptor';
+import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 
 @NgModule({
   declarations: [
@@ -91,7 +93,10 @@ import { InviteComponent } from './shared/components/invite/invite.component';
     DialogErrorComponent,
     WebComponentComponent,
   ],
-  providers: [OpenViduService, ApiService, UserHandler],
+  providers: [OpenViduService, ApiService, UserHandler,
+    { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {
