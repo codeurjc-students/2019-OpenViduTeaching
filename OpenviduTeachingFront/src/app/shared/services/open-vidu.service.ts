@@ -10,7 +10,6 @@ import { OvSettings } from '../models/ov-settings';
 })
 export class OpenViduService {
   private URL_OV = 'https://' + location.hostname + ':4443';
-  private MY_SECRET = 'MY_SECRET';
   private SETTINGS_FILE_NAME = 'ov-settings.json';
 
   private ovSettings: OvSettings = {
@@ -25,7 +24,6 @@ export class OpenViduService {
     },
   };
 
-  //TODO Do in backend
   constructor(private http: HttpClient) {}
 
   getOvSettingsData(): Promise<OvSettings> {
@@ -37,7 +35,6 @@ export class OpenViduService {
           this.ovSettings = data.openviduSettings ? data.openviduSettings : this.ovSettings;
           if (data.openviduCredentials) {
             this.URL_OV = data.openviduCredentials.openvidu_url ? data.openviduCredentials.openvidu_url : this.URL_OV;
-            this.MY_SECRET = data.openviduCredentials.openvidu_secret ? data.openviduCredentials.openvidu_secret : this.MY_SECRET;
           }
           console.log('URL Environment', this.URL_OV);
           resolve(data.openviduSettings);
@@ -47,7 +44,6 @@ export class OpenViduService {
           if (environment.openvidu_url) {
             console.warn('Getting from environment ');
             this.URL_OV = environment.openvidu_url;
-            this.MY_SECRET = environment.openvidu_secret;
           }
           console.log('URL Environment', this.URL_OV);
           resolve(this.ovSettings);

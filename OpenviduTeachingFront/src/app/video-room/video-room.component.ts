@@ -32,7 +32,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   @Input() sessionName: string;
   @Input() user: string;
   @Input() openviduServerUrl: string;
-  @Input() openviduSecret: string;
   @Input() tokens: string[];
   @Input() theme: string;
   @Input() isWebComponent: boolean;

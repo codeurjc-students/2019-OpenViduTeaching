@@ -25,7 +25,7 @@ public class OpenViduComponent {
 	private String SECRET;
 
 	private Map<Long, Session> roomIdSession;
-	private Map<String, Map<Long, String>> sessionIdUserIdToken;
+	private Map<String, Map<Long, String[]>> sessionIdUserIdToken;
 
 	public OpenViduComponent(@Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl) {
 		this.SECRET = secret;
@@ -58,17 +58,24 @@ public class OpenViduComponent {
 		this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
 		return session.getSessionId();
 	}
-	
+
 	public String getSession(Room room) {
 		return this.roomIdSession.get(room.getId()).getSessionId();
 	}
 
 	public void addUserWithTokenToRoom(Room room, User user, String token) {
 		Session session = this.roomIdSession.get(room.getId());
-		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), token);
+		String[] tokens = new String[2];
+		if (this.sessionIdUserIdToken.get(session.getSessionId()).get(user.getId()) == null) {
+			tokens[0] = token; // Cam token
+		} else {
+			tokens[0] = this.sessionIdUserIdToken.get(session.getSessionId()).get(user.getId())[0];
+			tokens[1] = token; // Scrennshare token
+		}
+		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), tokens);
 	}
 
-	public String generateToken(Room room, User user)throws OpenViduJavaClientException, OpenViduHttpException {
+	public String generateToken(Room room, User user) throws OpenViduJavaClientException, OpenViduHttpException {
 		Session session = this.roomIdSession.get(room.getId());
 		OpenViduRole role = room.isModerator(user) ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
 		TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
@@ -85,20 +92,22 @@ public class OpenViduComponent {
 		OpenViduRole role = room.isModerator(user) ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
 		TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
 		String token = session.generateToken(tokenOpts);
-		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), token);
+		String[] tokens = new String[2];
+		tokens[0] = token; // Cam token
+		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), tokens);
 		return token;
 	}
-	
-	public String removeUser(Room room, User user) {
+
+	public String[] removeUser(Room room, User user) {
 		Session session = this.roomIdSession.get(room.getId());
 		return this.sessionIdUserIdToken.get(session.getSessionId()).remove(user.getId());
 	}
-	
+
 	public boolean isSessionEmpty(Room room) {
 		Session session = this.roomIdSession.get(room.getId());
 		return this.sessionIdUserIdToken.get(session.getSessionId()).isEmpty();
 	}
-	
+
 	public void removeSession(Room room) {
 		Session session = this.roomIdSession.remove(room.getId());
 		this.sessionIdUserIdToken.remove(session.getSessionId());

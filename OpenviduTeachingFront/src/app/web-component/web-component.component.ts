@@ -13,7 +13,6 @@ import { OvSettings } from '../shared/models/ov-settings';
       [sessionName]="_sessionName"
       [user]="_user"
       [openviduServerUrl]="openviduServerUrl"
-      [openviduSecret]="openviduSecret"
       [tokens]="_tokens"
       [ovSettings]="ovSettings"
       [isWebComponent]="true"
@@ -31,7 +30,6 @@ export class WebComponentComponent implements OnInit {
   _tokens: string[];
 
   @Input() openviduServerUrl: string;
-  @Input() openviduSecret: string;
   @Input() theme: string;
   @Input() ovSettings: OvSettings;
   @Output() joinSession = new EventEmitter<any>();
@@ -84,7 +82,7 @@ export class WebComponentComponent implements OnInit {
   validateParameters(): boolean {
     console.log('TOKENS', this._tokens);
     if (
-      (this._sessionName && this.openviduServerUrl && this.openviduSecret && this._user) ||
+      (this._sessionName && this.openviduServerUrl && this._user) ||
       (this._tokens && this._tokens.length > 0 && this._user)
     ) {
       if (this._tokens && this._tokens.length === 1) {
