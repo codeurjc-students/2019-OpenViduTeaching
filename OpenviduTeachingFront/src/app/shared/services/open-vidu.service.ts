@@ -1,9 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError as observableThrowError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { OvSettings } from '../models/ov-settings';
+import { Observable, throwError } from 'rxjs';
+import { User } from '../users/user.module';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,8 @@ import { OvSettings } from '../models/ov-settings';
 export class OpenViduService {
   private URL_OV = 'https://' + location.hostname + ':4443';
   private SETTINGS_FILE_NAME = 'ov-settings.json';
+
+  baseURL: string = '/ovTeachingApi';
 
   private ovSettings: OvSettings = {
     chat: true,
@@ -25,6 +28,71 @@ export class OpenViduService {
   };
 
   constructor(private http: HttpClient) {}
+
+  generateToken(roomName: string): Observable<User> {
+    return this.http.put<any>(this.baseURL + '/room/' + roomName + '/token', {}).pipe(
+      map(token => { return token; }),
+      catchError((error) => this.handleError(error))
+    );
+  }
+
+  removeUser(roomName: number) {
+    return this.http.post(this.baseURL + '/room/' + roomName + '/user/', {})
+      .pipe(
+        catchError(error => this.handleError(error))
+      );
+  }
+
+  getToken(mySessionId: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.createSession(mySessionId)
+        .then((sessionId: string) => {
+          this.createToken(sessionId)
+            .then((token) => resolve(token))
+            .catch((error) => reject(error));
+        })
+        .catch((error) => reject(error));
+    });
+  }
+
+  createSession(roomName: string) {
+    return new Promise((resolve, reject) => {
+      return this.http.post<any>(this.baseURL + '/room/' + roomName + '/session', { responseType: 'text' })
+        .pipe(
+          catchError((error) => {
+            error.status === 404 || error.status === 500 ? reject(error) : resolve(roomName);
+            if(error.status === 404 || error.status === 500) {
+              return throwError(error);
+            }
+          }),
+        )
+        .subscribe((response) => {
+          console.log(response);
+          resolve(response);
+        });
+    });
+  }
+
+  createToken(roomName: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      return this.http.get<any>(this.baseURL + '/room/' + roomName + '/token')
+        .pipe(
+          catchError((error) => {
+            reject(error);
+            return throwError(error);
+          }),
+        )
+        .subscribe((response) => {
+          console.log(response);
+          resolve(response.token);
+        });
+    });
+  }
+
+  private handleError(error: any) {
+    console.error(error);
+    return Observable.throw("Server error (" + error.status + "): " + error.text())
+  }
 
   getOvSettingsData(): Promise<OvSettings> {
     return new Promise((resolve) => {

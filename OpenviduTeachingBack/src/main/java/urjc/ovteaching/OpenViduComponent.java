@@ -70,7 +70,7 @@ public class OpenViduComponent {
 			tokens[0] = token; // Cam token
 		} else {
 			tokens[0] = this.sessionIdUserIdToken.get(session.getSessionId()).get(user.getId())[0];
-			tokens[1] = token; // Scrennshare token
+			tokens[1] = token; // Screenshare token
 		}
 		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), tokens);
 	}

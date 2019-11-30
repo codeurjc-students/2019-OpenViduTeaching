@@ -71,7 +71,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
   constructor(
     private openViduSrv: OpenViduService,
-    private roomSrv: RoomService,
     private router: Router,
     public dialog: MatDialog,
     private apiSrv: ApiService,
@@ -576,7 +575,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
   private getToken(): Promise<string> {
     return new Promise((resolve, reject) => {
-      this.roomSrv.getToken(this.mySessionId)
+      this.openViduSrv.getToken(this.mySessionId)
         .then((token) => {
           resolve(token);
         })
