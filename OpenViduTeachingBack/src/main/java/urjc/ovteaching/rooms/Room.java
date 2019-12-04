@@ -1,7 +1,8 @@
 package urjc.ovteaching.rooms;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Entity;
@@ -28,14 +29,14 @@ public class Room {
 	private String name;
 
 	@ManyToMany(mappedBy = "moddedRooms")
-	private List<User> mods;
+	private Set<User> mods;
 
 	@ManyToMany(mappedBy = "participatedRooms")
-	private List<User> participants;
+	private Set<User> participants;
 
 	public Room(String name) {
-		this.mods = new ArrayList<>();
-		this.participants = new ArrayList<>();
+		this.mods = new HashSet<>();
+		this.participants = new HashSet<>();
 		this.codeParticipant = UUID.randomUUID().toString();
 		this.codeModerator = UUID.randomUUID().toString();
 		this.name = name;
@@ -62,6 +63,14 @@ public class Room {
 
 	public boolean isParticipant(User user) {
 		return this.participants.contains(user);
+	}
+	
+	public Collection<User> getModerators(){
+		return this.mods;
+	}
+	
+	public Collection<User> getParticipants(){
+		return this.participants;
 	}
 
 	public String getName() {

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import io.openvidu.java.client.OpenViduHttpException;
-import io.openvidu.java.client.OpenViduJavaClientException;
-import urjc.ovteaching.OpenViduComponent;
 import urjc.ovteaching.rooms.Room;
 import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;
@@ -158,7 +154,7 @@ public class RoomController {
 			user.addParticipatedRoom(room);
 		} else {
 			roomServ.makeModerator(user, room);
-			if (!user.getRoles().contains("ADMIN")) {
+			if (!user.getRoles().contains("ROLE_ADMIN")) {
 				// Makes user admin if they weren't
 				user.addRole("ROLE_ADMIN");
 			}
@@ -166,5 +162,33 @@ public class RoomController {
 		roomServ.save(room);
 		userServ.save(user);
 		return new ResponseEntity<>(user, HttpStatus.CREATED);
+	}
+
+	/**
+	 * Gets the users from a room
+	 * 
+	 * @return the users from the room, with their role
+	 */
+	@SuppressWarnings("unchecked")
+	@JsonView(User.NameOnly.class)
+	@GetMapping("/room/{roomName}/users")
+	public ResponseEntity<JSONObject> getUsersFromRoom(@PathVariable String roomName, HttpServletRequest request) {
+		if (!request.isUserInRole("USER")) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		Room room = roomServ.findByName(roomName);
+		User user = userServ.findByName(request.getUserPrincipal().getName());
+		// User user = this.userComponent.getLoggedUser();
+		if (room == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		if (room.isModerator(user) || room.isParticipant(user)) {
+			JSONObject json = new JSONObject();
+			json.put("moderators", room.getModerators());
+			json.put("participants", room.getParticipants());
+			return new ResponseEntity<>(json, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 	}
 }
