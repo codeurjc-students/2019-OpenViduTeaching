@@ -1,40 +1,44 @@
 <mat-toolbar id="header" role="heading" [class.headerLight]="lightTheme">
 
-  <div id="navSessionInfo">
-    <a>
-      <img id="header_img" *ngIf="!lightTheme" alt="OpenVidu Logo" src="https://raw.githubusercontent.com/OpenVidu/openvidu-call/master/front/openvidu-call/src/assets/images/openvidu_logo.png">
-      <img id="header_img" *ngIf="lightTheme" alt="OpenVidu Logo" src="https://raw.githubusercontent.com/OpenVidu/openvidu-call/master/front/openvidu-call/src/assets/images/openvidu_logo_grey.png">
-    </a>
-    <div id="titleContent" *ngIf="!compact && mySessionId" [class.titleContentLight]="lightTheme">
-      <span id="session-title">{{mySessionId}}</span>
+    <div id="navSessionInfo">
+        <a>
+            <img id="header_img" *ngIf="!lightTheme" alt="OpenVidu Logo" src="https://raw.githubusercontent.com/OpenVidu/openvidu-call/master/front/openvidu-call/src/assets/images/openvidu_logo.png">
+            <img id="header_img" *ngIf="lightTheme" alt="OpenVidu Logo" src="https://raw.githubusercontent.com/OpenVidu/openvidu-call/master/front/openvidu-call/src/assets/images/openvidu_logo_grey.png">
+        </a>
+        <div id="titleContent" *ngIf="!compact && mySessionId" [class.titleContentLight]="lightTheme">
+            <span id="session-title">{{mySessionId}}</span>
+        </div>
     </div>
-  </div>
 
-  <div id="navButtons" align="center">
-    <button mat-icon-button (click)="micStatusChanged()" id="navMicButton"  *ngIf="(!this.ovSettings || (this.ovSettings && this.ovSettings.toolbarButtons.audio)) && this.userHandler.isModOfRoom(this.mySessionId)">
+    <div id="navButtons" align="center">
+        <button mat-icon-button (click)="micStatusChanged()" id="navMicButton" *ngIf="(!this.ovSettings || (this.ovSettings && this.ovSettings.toolbarButtons.audio)) && this.userHandler.isModOfRoom(this.mySessionId)">
       <mat-icon *ngIf="localUser && localUser.isAudioActive()" matTooltip="Mute your audio">mic</mat-icon>
       <mat-icon *ngIf="localUser && !localUser.isAudioActive()" color="warn" matTooltip="Unmute your audio">mic_off</mat-icon>
     </button>
-    <button mat-icon-button (click)="camStatusChanged()" id="navCamButton" *ngIf="(!this.ovSettings || (this.ovSettings && this.ovSettings.toolbarButtons.video)) && this.userHandler.isModOfRoom(this.mySessionId)">
+        <button mat-icon-button (click)="camStatusChanged()" id="navCamButton" *ngIf="(!this.ovSettings || (this.ovSettings && this.ovSettings.toolbarButtons.video)) && this.userHandler.isModOfRoom(this.mySessionId)">
       <mat-icon *ngIf="localUser && localUser.isLocal() && localUser.isVideoActive()" matTooltip="Mute your cam">videocam</mat-icon>
       <mat-icon *ngIf="(localUser && localUser.isLocal() && !localUser.isVideoActive()) || localUser && localUser.isScreen()" color="warn" matTooltip="Unmute your cam">videocam_off</mat-icon>
     </button>
-    <button mat-icon-button (click)="screenShare()" id="navScreenButton" *ngIf="(localUser && !localUser.isScreenShareActive() && (!this.ovSettings || (this.ovSettings && this.ovSettings.toolbarButtons.screenShare))) && this.userHandler.isModOfRoom(this.mySessionId)">
+        <button mat-icon-button (click)="screenShare()" id="navScreenButton" *ngIf="(localUser && !localUser.isScreenShareActive() && (!this.ovSettings || (this.ovSettings && this.ovSettings.toolbarButtons.screenShare))) && this.userHandler.isModOfRoom(this.mySessionId)">
       <mat-icon matTooltip="Screen share" color="warn">stop_screen_share</mat-icon>
     </button>
-    <button mat-icon-button (click)="stopScreenSharing()" *ngIf="(localUser && localUser.isScreenShareActive()) && this.userHandler.isModOfRoom(this.mySessionId)">
+        <button mat-icon-button (click)="stopScreenSharing()" *ngIf="(localUser && localUser.isScreenShareActive()) && this.userHandler.isModOfRoom(this.mySessionId)">
       <mat-icon matTooltip="Stop sharing">screen_share</mat-icon>
     </button>
-    <button mat-icon-button (click)="toggleFullscreen()" *ngIf="localUser && (!this.ovSettings || (this.ovSettings && this.ovSettings.toolbarButtons.fullscreen))">
+        <button mat-icon-button (click)="toggleFullscreen()" *ngIf="localUser && (!this.ovSettings || (this.ovSettings && this.ovSettings.toolbarButtons.fullscreen))">
       <mat-icon matTooltip="Fullscreen">{{fullscreenIcon}}</mat-icon>
     </button>
-    <button mat-icon-button (click)="exitSession()" id="navLeaveButton" *ngIf="!this.ovSettings || (this.ovSettings && this.ovSettings.toolbarButtons.exit)">
+        <button mat-icon-button (click)="exitSession()" id="navLeaveButton" *ngIf="!this.ovSettings || (this.ovSettings && this.ovSettings.toolbarButtons.exit)">
       <mat-icon color="warn" matTooltip="Leave the session">power_settings_new</mat-icon>
     </button>
-    <button mat-icon-button id="navChatButton" (click)="toggleChat()" *ngIf="!this.ovSettings || (this.ovSettings && this.ovSettings.chat)">
+        <button mat-icon-button id="navChatButton" (click)="toggleChat()" *ngIf="!this.ovSettings || (this.ovSettings && this.ovSettings.chat)">
         <mat-icon matBadge="{{newMessagesNum}}" [matBadgeHidden]="newMessagesNum === 0"  matBadgePosition="above before" matTooltip="Chat" matBadgeColor="accent">chat</mat-icon>
     </button>
-    <button mat-raised-button color="accent" (click)="getInvideURL('participant')" *ngIf=this.userHandler.isModOfRoom(this.mySessionId)>Invite URL for participants</button>
-    <button mat-raised-button color="primary" (click)="getInvideURL('moderator')" *ngIf=this.userHandler.isModOfRoom(this.mySessionId)>Invite URL for moderator</button>
-  </div>
+        <button mat-icon-button (click)="getInvideURL('moderator')" *ngIf="localUser && this.userHandler.isModOfRoom(this.mySessionId)">
+        <mat-icon matTooltip="Invite URL for moderator">people</mat-icon>
+    </button>
+        <button mat-icon-button (click)="getInvideURL('participant')" *ngIf="localUser && this.userHandler.isModOfRoom(this.mySessionId)">
+        <mat-icon matTooltip="Invite URL for participants">people_outline</mat-icon>
+    </button>
+    </div>
 </mat-toolbar>

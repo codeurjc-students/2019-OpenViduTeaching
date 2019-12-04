@@ -13,7 +13,6 @@ export class InviteComponent implements OnInit {
   code: string;
   roomName: string;
   userName: string;
-
   nameTaken: boolean = false;
   inputErrorMsg: string;
 

@@ -1,6 +1,17 @@
-<p>{{roomName}}</p>
-<mat-form-field>
-    <input matInput placeholder="Username" [(ngModel)]="userName">
-</mat-form-field>
-<p id="inputErrorMsg">{{inputErrorMsg}}</p>
-<button mat-raised-button color="primary" (click)="enterRoom()">Access room</button>
+<div id="background">
+    <div id="component">
+        <div id="ov_info">
+            <img id="ov_img" alt="OpenVidu Logo" src="assets/images/openvidu_vert_white_bg_trans_cropped.png">
+        </div>
+        <div id="roomName">Joining "{{roomName}}"</div>
+        <div>
+            <mat-form-field appearance="outline" color="primary">
+                <mat-label>Username</mat-label>
+                <input matInput [(ngModel)]="userName">
+                <mat-hint *ngIf=this.inputErrorMsg id="inputErrorMsg">{{inputErrorMsg}}</mat-hint>
+            </mat-form-field>
+            <div></div>
+            <button mat-raised-button color="accent" (click)="enterRoom()">Access room</button>
+        </div>
+    </div>
+</div>

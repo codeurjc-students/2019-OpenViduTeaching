@@ -27,7 +27,7 @@ import urjc.ovteaching.users.UserService;
 @CrossOrigin
 @RestController
 public class OpenViduController {
-	
+
 	@Autowired
 	private RoomService roomServ;
 
@@ -39,7 +39,7 @@ public class OpenViduController {
 
 	@Autowired
 	private OpenViduComponent openViduComponent;
-	
+
 	/**
 	 * Creates a session for a room
 	 * 
@@ -63,7 +63,7 @@ public class OpenViduController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	/**
 	 * Creates token for user in a room
 	 * 
@@ -72,7 +72,9 @@ public class OpenViduController {
 	@SuppressWarnings("unchecked")
 	@GetMapping("/room/{roomName}/token")
 	public ResponseEntity<JSONObject> generateToken(@PathVariable String roomName, HttpServletRequest request) {
-
+		if (!request.isUserInRole("USER")) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(request.getUserPrincipal().getName());
 		// User user = this.userComponent.getLoggedUser();
@@ -85,7 +87,7 @@ public class OpenViduController {
 		if ((!room.isParticipant(user)) && (!room.isModerator(user))) { // User not in that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		
+
 		JSONObject json = new JSONObject();
 		if (!this.openViduComponent.isSessionCreated(room)) { // Create session if there isn't
 			try {
@@ -119,7 +121,7 @@ public class OpenViduController {
 			}
 		}
 	}
-	
+
 	/**
 	 * Logs user out of a session
 	 * 
@@ -128,7 +130,9 @@ public class OpenViduController {
 	@DeleteMapping("/room/{roomName}/user")
 	public ResponseEntity<String> removeUser(@PathVariable String roomName, HttpServletRequest request)
 			throws Exception {
-
+		if (!request.isUserInRole("USER")) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 		Room room = roomServ.findByName(roomName);
 		User currentUser = userServ.findByName(request.getUserPrincipal().getName());
 		// User currentUser = this.userComponent.getLoggedUser();

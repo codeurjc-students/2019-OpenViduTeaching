@@ -72,6 +72,9 @@ public class RoomController {
 	@GetMapping("/room/{roomName}/inviteCode/{role}")
 	public ResponseEntity<String> getInviteCode(HttpServletRequest request, @PathVariable String roomName,
 			@PathVariable String role) {
+		if (!request.isUserInRole("ADMIN")) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(request.getUserPrincipal().getName());
 		// User user = this.userComponent.getLoggedUser();

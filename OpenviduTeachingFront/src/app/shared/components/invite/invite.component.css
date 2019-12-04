@@ -1,3 +1,59 @@
+#background {
+    background-color: #333333;
+    width: 100%;
+    height: 100%;
+}
+
+#component {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    text-align: center;
+    color: #dfdfdf;
+}
+
+#ov_info {
+    color: #ffffff;
+    padding-bottom: 20%;
+}
+
+#ov_img {
+    max-width: 80%;
+}
+
 #inputErrorMsg {
-    color:red;
+    color: red;
+}
+
+#roomName {
+    display: inline-block;
+    font-family: 'Ubuntu', sans-serif;
+    background-color: #494949;
+    font-size: 180%;
+    margin-bottom: 5%;
+    padding-right: 2%;
+    padding-left: 2%;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    color: #dfdfdf;
+    opacity: 1;
+}
+
+.ng-star-inserted {
+    color: #dfdfdf;
+}
+
+mat-hint {
+    font-size: 110%;
+}
+
+button {
+    margin-top: 2%;
+    padding-right: 10%;
+    padding-left: 10%;
+    display: inline-block;
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 120%;
 }
