@@ -50,6 +50,12 @@ public class RoomService {
 		roomRep.save(room);
 		userServ.save(user);
 	}
+	
+	public void leaveRoom(User user, Room room) {
+		user.leaveRoom(room);
+		roomRep.save(room);
+		userServ.save(user);
+	}
 
 	public Room findByInviteCode(String code) {
 		Room room = roomRep.findByCodeModerator(code);

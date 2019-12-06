@@ -130,16 +130,13 @@ public class OpenViduController {
 	@DeleteMapping("/room/{roomName}/user")
 	public ResponseEntity<String> removeUser(@PathVariable String roomName, HttpServletRequest request)
 			throws Exception {
-		if (!request.isUserInRole("USER")) {
+		if (!request.isUserInRole("USER")) { // User not logged
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Room room = roomServ.findByName(roomName);
 		User currentUser = userServ.findByName(request.getUserPrincipal().getName());
 		// User currentUser = this.userComponent.getLoggedUser();
 
-		if (!request.isUserInRole("USER")) { // User not logged
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -149,7 +146,8 @@ public class OpenViduController {
 		if (!this.openViduComponent.isSessionCreated(room)) { // No session created for that room
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
-
+		
+		this.roomServ.leaveRoom(currentUser, room);
 		if (this.openViduComponent.removeUser(room, currentUser) != null) {
 			// This user has left the lesson
 			if (this.openViduComponent.isSessionEmpty(room)) {

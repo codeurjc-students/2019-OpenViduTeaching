@@ -36,8 +36,8 @@ export class OpenViduService {
     );
   }
 
-  removeUser(roomName: number) {
-    return this.http.post(this.baseURL + '/room/' + roomName + '/user/', {})
+  removeUser(roomName: string) {
+    return this.http.delete(this.baseURL + '/room/' + roomName + '/user', {})
       .pipe(
         catchError(error => this.handleError(error))
       );

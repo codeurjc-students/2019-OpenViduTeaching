@@ -21,9 +21,12 @@ import urjc.ovteaching.rooms.Room;
 @Entity
 public class User {
 
-	public interface WithRooms extends Room.NameOnly, User.NameOnly {}
-	public interface NameOnly {};
-	
+	public interface WithRooms extends Room.NameOnly, User.NameOnly {
+	}
+
+	public interface NameOnly {
+	};
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -92,5 +95,10 @@ public class User {
 
 	public void removeParticipatedRoom(Room room) {
 		this.participatedRooms.remove(room);
+	}
+
+	public void leaveRoom(Room room) {
+		this.participatedRooms.remove(room);
+		this.moddedRooms.remove(room);
 	}
 }

@@ -147,16 +147,19 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     if (this.session) {
       this.session.disconnect();
     }
-    this.OV = null;
-    this.OVScreen = null;
-    this.session = null;
-    this.sessionScreen = null;
-    this.userCamDeleted = null;
-    this.localUsers = [];
-    this.remoteUsers = [];
-    this.openviduLayout = null;
-    this.router.navigate(['']);
-    this.leaveSession.emit();
+    if(this.OV != null) {
+      this.OV = null;
+      this.OVScreen = null;
+      this.session = null;
+      this.sessionScreen = null;
+      this.userCamDeleted = null;
+      this.localUsers = [];
+      this.remoteUsers = [];
+      this.openviduLayout = null;
+      this.userHandler.removeCurrentUser(this.mySessionId);
+      this.router.navigate(['']);
+      this.leaveSession.emit();
+    }
   }
 
   nicknameChanged(nickname: string): void {

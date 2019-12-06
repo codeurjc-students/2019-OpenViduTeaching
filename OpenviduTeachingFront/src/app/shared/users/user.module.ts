@@ -1,3 +1,5 @@
+import { OpenViduService } from './../services/open-vidu.service';
+import { RoomService } from './../services/room.service';
 import { Room } from './../models/room-model';
 import { Injectable } from "@angular/core";
 
@@ -18,7 +20,9 @@ export class UserHandler {
     user: User;
     auth: string;
 
-    constructor() {
+    constructor(
+        private openviduSrv: OpenViduService
+    ) {
         let user = JSON.parse(localStorage.getItem('currentUser'));
         if (user) {
             this.setCurrentUser(user);
@@ -40,10 +44,21 @@ export class UserHandler {
         console.log(user);
     }
 
-    public removeCurrentUser() {
-        localStorage.removeItem('currentUser');
-        this.isLogged = false;
-        this.isAdmin = false;
+    public removeCurrentUser(sessionId?: string) {
+        if(sessionId) {
+            this.openviduSrv.removeUser(sessionId).subscribe(
+                (_) => {
+                    localStorage.removeItem('currentUser');
+                    this.isLogged = false;
+                    this.isAdmin = false;
+                },
+                error => console.log(error)
+            );
+        } else {
+            localStorage.removeItem('currentUser');
+            this.isLogged = false;
+            this.isAdmin = false;
+        }
     }
 
     public isModOfRoom(roomName: string): boolean {

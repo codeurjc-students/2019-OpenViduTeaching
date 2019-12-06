@@ -50,6 +50,13 @@ export class RoomService {
     );
   }
 
+  removeUser(roomName: string) {
+    return this.http.delete<any>(this.baseURL + '/room/' + roomName + '/user/session').pipe(
+      map((_) => {}),
+      catchError((error) => this.handleError(error))
+    );
+  }
+
   private handleError(error: any) {
     console.error(error);
     return Observable.throw("Server error (" + error.status + "): " + error.text())
