@@ -68,4 +68,11 @@ export class InviteComponent implements OnInit {
       }
     );
   }
+
+  eventKeyPress(event) {
+    if (event && event.keyCode === 13) {
+      // Press Enter
+      this.enterRoom();
+    }
+  }
 }

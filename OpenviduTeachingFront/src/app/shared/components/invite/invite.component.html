@@ -7,7 +7,7 @@
         <div>
             <mat-form-field appearance="outline" color="primary">
                 <mat-label>Username</mat-label>
-                <input matInput [(ngModel)]="userName">
+                <input matInput [(ngModel)]="userName" (keypress)="eventKeyPress($event)">
                 <mat-hint *ngIf=this.inputErrorMsg id="inputErrorMsg">{{inputErrorMsg}}</mat-hint>
             </mat-form-field>
             <div></div>
