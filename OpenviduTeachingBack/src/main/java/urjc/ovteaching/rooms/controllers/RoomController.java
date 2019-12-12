@@ -171,8 +171,8 @@ public class RoomController {
 	 */
 	@SuppressWarnings("unchecked")
 	@JsonView(User.NameOnly.class)
-	@GetMapping("/room/{roomName}/users")
-	public ResponseEntity<JSONObject> getUsersFromRoom(@PathVariable String roomName, HttpServletRequest request) {
+	@GetMapping("/room/{roomName}/assistants")
+	public ResponseEntity<JSONObject> getAssistants(@PathVariable String roomName, HttpServletRequest request) {
 		if (!request.isUserInRole("USER")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}

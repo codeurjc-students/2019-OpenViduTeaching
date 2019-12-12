@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, HostListener } from '@angular/core';
-import { UserModel } from '../../models/user-model';
+import { UserModel } from '../../../models/user-model';
 import { Session } from 'openvidu-browser';
 
 @Component({
@@ -19,9 +19,9 @@ export class ChatComponent implements OnInit {
   @Input()
   messageList: { connectionId: string; nickname: string; message: string; userAvatar: string }[] = [];
 
-  _chatOpened: boolean;
+  _menuOpened: boolean;
 
-  @Output() closeChat = new EventEmitter<any>();
+  @Output() closeMenu = new EventEmitter<any>();
 
   message: string;
 
@@ -30,17 +30,17 @@ export class ChatComponent implements OnInit {
   @HostListener('document:keydown.escape', ['$event'])
   onKeydownHandler(event: KeyboardEvent) {
     console.log(event);
-    if (this._chatOpened) {
+    if (this._menuOpened) {
       this.close();
     }
   }
 
   ngOnInit() {}
 
-  @Input('chatOpened')
+  @Input('menuOpened')
   set isDisplayed(display: boolean) {
-    this._chatOpened = display;
-    if (this._chatOpened) {
+    this._menuOpened = display;
+    if (this._menuOpened) {
       this.scrollToBottom();
       setTimeout(() => {
         this.chatInput.nativeElement.focus();
@@ -82,6 +82,6 @@ export class ChatComponent implements OnInit {
   }
 
   close() {
-    this.closeChat.emit();
+    this.closeMenu.emit();
   }
 }

@@ -16,7 +16,7 @@ import { DialogErrorComponent } from '../shared/components/dialog-error/dialog-e
 import { OpenViduLayout, OpenViduLayoutOptions } from '../shared/layout/openvidu-layout';
 import { UserModel } from '../shared/models/user-model';
 import { OpenViduService } from '../shared/services/open-vidu.service';
-import { ChatComponent } from '../shared/components/chat/chat.component';
+import { ChatComponent } from '../shared/components/menu/chat/chat.component';
 import { OvSettings } from '../shared/models/ov-settings';
 import { ApiService } from '../shared/services/api.service';
 
@@ -39,7 +39,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   @Output() error = new EventEmitter<any>();
 
   @ViewChild('chatComponent', {static: false}) chatComponent: ChatComponent;
-  @ViewChild('sidenav', {static: false}) chat: any;
+  @ViewChild('sidenav', {static: false}) menu: any;
 
   // Constants
   BIG_ELEMENT_CLASS = 'OV_big';
@@ -50,7 +50,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   compact = false;
   sidenavMode: 'side' | 'over' = 'side';
   lightTheme: boolean;
-  chatOpened: boolean;
+  menuOpened: boolean;
   showDialogExtension = false;
   showDialogChooseRoom = true;
   session: Session;
@@ -113,10 +113,10 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     }, 50);
   }
 
-  toggleChat() {
-    this.chat.toggle().then(() => {
-      this.chatOpened = this.chat.opened;
-      if (this.chatOpened) {
+  toggleMenu() {
+    this.menu.toggle().then(() => {
+      this.menuOpened = this.menu.opened;
+      if (this.menuOpened) {
         this.newMessages = 0;
       }
       const ms = this.isWebComponent ? 300 : 0;
@@ -125,7 +125,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   }
 
   checkNotification() {
-    this.newMessages = this.chatOpened ? 0 : this.newMessages + 1;
+    this.newMessages = this.menuOpened ? 0 : this.newMessages + 1;
   }
 
   joinToSession() {

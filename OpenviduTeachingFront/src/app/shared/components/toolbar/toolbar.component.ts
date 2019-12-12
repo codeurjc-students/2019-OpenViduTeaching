@@ -26,7 +26,7 @@ export class ToolbarComponent implements OnInit {
   @Output() camButtonClicked = new EventEmitter<any>();
   @Output() screenShareClicked = new EventEmitter<any>();
   @Output() exitButtonClicked = new EventEmitter<any>();
-  @Output() chatButtonClicked = new EventEmitter<any>();
+  @Output() menuButtonClicked = new EventEmitter<any>();
   @Output() stopScreenSharingClicked = new EventEmitter<any>();
 
   constructor(
@@ -69,8 +69,8 @@ export class ToolbarComponent implements OnInit {
     this.exitButtonClicked.emit();
   }
 
-  toggleChat() {
-    this.chatButtonClicked.emit();
+  toggleMenu() {
+    this.menuButtonClicked.emit();
   }
 
   getInvideURL(role:string){
@@ -79,7 +79,7 @@ export class ToolbarComponent implements OnInit {
         let url:string = 'http://' + location.hostname + ':4200/#/invite/' + code;
         this.urlSnackBar.open(url, 'Close');
       },
-      error => console.log(error)
+      error => console.error(error)
     );
   }
 

@@ -21,7 +21,7 @@
       (screenShareClicked)="screenShareAndChangeScreen()"
       (stopScreenSharingClicked)="stopScreenSharing()"
       (exitButtonClicked)="exitSession()"
-      (chatButtonClicked)="toggleChat()"
+      (menuButtonClicked)="toggleMenu()"
     ></app-toolbar>
 
     <app-dialog-extension
@@ -34,23 +34,45 @@
         #sidenav
         mode="{{sidenavMode}}"
         position="end"
-        class="sidenav-chat"
+        class="sidenav-menu"
         [class.boundsLight]="lightTheme"
         fixedInViewport="true"
         fixedTopGap="40"
         fixedBottomGap="0"
         *ngIf="localUsers && (localUsers[0].getStreamManager() && (!this.ovSettings || (this.ovSettings && this.ovSettings.chat)))"
       >
-        <chat-component
-          #chatComponent
-          [session]="this.session"
-          [sessionScreen]="this.sessionScreen"
-          [user]="this.localUsers[0]"
-          [chatOpened]="chatOpened"
-          [lightTheme]="lightTheme"
-          [messageList]="messageList"
-          (closeChat)="toggleChat()"
-        ></chat-component>
+      
+        <mat-tab-group class="tab-group" backgroundColor="primary" dynamicHeight>
+          <mat-tab class="tab">
+            <ng-template mat-tab-label>
+              <mat-icon>chat</mat-icon>
+              Chat
+            </ng-template>
+            <ng-template matTabContent>
+              <chat-component
+                #chatComponent
+                [session]="this.session"
+                [sessionScreen]="this.sessionScreen"
+                [user]="this.localUsers[0]"
+                [menuOpened]="menuOpened"
+                [lightTheme]="lightTheme"
+                [messageList]="messageList"
+                (closeMenu)="toggleMenu()"
+              ></chat-component>
+            </ng-template>
+          </mat-tab>
+          <mat-tab class="tab">
+            <ng-template mat-tab-label>
+              <mat-icon>people</mat-icon>
+              Assistants
+            </ng-template>
+            <ng-template matTabContent>
+              <assistants-component
+                [session]="session">
+              </assistants-component>
+            </ng-template>
+          </mat-tab>
+        </mat-tab-group>
       </mat-sidenav>
 
       <mat-sidenav-content class="sidenav-main">
@@ -69,13 +91,13 @@
               [lightTheme]="lightTheme"
               [newMessagesNum]="newMessages"
               [compact]="compact"
-              [chatOpened]="chatOpened"
+              [menuOpened]="menuOpened"
               [canEditNickname]="true"
               (nicknameClicked)="nicknameChanged($event)"
               (camButtonClicked)="toggleCam()"
               (micButtonClicked)="toggleMic()"
               (exitButtonClicked)="exitSession()"
-              (chatButtonClicked)="toggleChat()"
+              (menuButtonClicked)="toggleMenu()"
               (screenShareClicked)="screenShareAndChangeScreen()"
               (stopScreenSharingClicked)="stopScreenSharing()"
             ></stream-component>
@@ -94,12 +116,12 @@
               [lightTheme]="lightTheme"
               [newMessagesNum]="newMessages"
               [compact]="compact"
-              [chatOpened]="chatOpened"
+              [menuOpened]="menuOpened"
               [canEditNickname]="false"
               (camButtonClicked)="toggleCam()"
               (micButtonClicked)="toggleMic()"
               (exitButtonClicked)="exitSession()"
-              (chatButtonClicked)="toggleChat()"
+              (menuButtonClicked)="toggleMenu()"
               (screenShareClicked)="screenShareAndChangeScreen()"
               (stopScreenSharingClicked)="stopScreenSharing()"
             ></stream-component>

@@ -1,0 +1,13 @@
+<div>
+    <p>
+        {{assistantsCount}} assistant<span *ngIf="this.assistantsCount!==1">s</span>
+    </p>
+</div>
+<p>Moderators</p>
+<ul>
+    <li *ngFor="let mod of this.moderators">{{mod.name}}</li>
+</ul>
+<p>Participants</p>
+<ul>
+    <li *ngFor="let part of this.participants">{{part.name}}</li>
+</ul>

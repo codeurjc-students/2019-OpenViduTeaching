@@ -22,7 +22,7 @@ export class StreamComponent implements OnInit {
   @Input() localUser: UserModel;
   @Input() lightTheme: boolean;
   @Input() compact: boolean;
-  @Input() chatOpened: boolean;
+  @Input() menuOpened: boolean;
   @Input() newMessagesNum: number;
   @Input() canEditNickname: boolean;
   @Output() nicknameClicked = new EventEmitter<any>();
@@ -31,7 +31,7 @@ export class StreamComponent implements OnInit {
   @Output() screenShareClicked = new EventEmitter<any>();
   @Output() stopScreenSharingClicked = new EventEmitter<any>();
   @Output() exitButtonClicked = new EventEmitter<any>();
-  @Output() chatButtonClicked = new EventEmitter<any>();
+  @Output() menuButtonClicked = new EventEmitter<any>();
 
   @ViewChild('videoReference', {static: false}) htmlVideoElement: ElementRef;
   @ViewChild('nicknameInput', {static: false}) nicknameInput: ElementRef;
@@ -61,8 +61,8 @@ export class StreamComponent implements OnInit {
     if (state === 'fullscreen') {
       this.isFullscreen = true;
       this.fullscreenIcon = 'fullscreen_exit';
-      if (this.chatOpened) {
-        this.chatButtonClicked.emit();
+      if (this.menuOpened) {
+        this.menuButtonClicked.emit();
       }
     } else {
       this.isFullscreen = false;
@@ -112,10 +112,10 @@ export class StreamComponent implements OnInit {
     this.exitButtonClicked.emit();
   }
 
-  toggleChat() {
+  toggleMenu() {
     this.toggleFullscreen();
-    if (!this.chatOpened) {
-      this.chatButtonClicked.emit();
+    if (!this.menuOpened) {
+      this.menuButtonClicked.emit();
     }
   }
 }

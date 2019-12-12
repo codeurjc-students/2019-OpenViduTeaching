@@ -20,7 +20,8 @@ import {
   MatSliderModule,
   MatSidenavModule,
   MatChipsModule,
-  MatSnackBarModule
+  MatSnackBarModule,
+  MatTabsModule
 } from '@angular/material';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
@@ -29,7 +30,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { OpenViduService } from './shared/services/open-vidu.service';
 import { StreamComponent } from './shared/components/stream/stream.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { ChatComponent } from './shared/components/chat/chat.component';
+import { ChatComponent } from './shared/components/menu/chat/chat.component';
 import { DialogExtensionComponent } from './shared/components/dialog-extension/dialog-extension.component';
 import { OpenViduVideoComponent } from './shared/components/stream/ov-video.component';
 import { createCustomElement } from '@angular/elements';
@@ -45,6 +46,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { InviteComponent } from './shared/components/invite/invite.component';
 import { BasicAuthInterceptor } from 'src/interceptors/auth.interceptor';
 import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
+import { AssistantsComponent } from './shared/components/menu/assistants/assistants.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +62,8 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
     WebComponentComponent,
     ToolbarComponent,
     LinkifyPipe,
-    InviteComponent
+    InviteComponent,
+    AssistantsComponent
   ],
   imports: [
     FormsModule,
@@ -82,6 +85,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
     MatProgressSpinnerModule,
     MatSliderModule,
     MatSidenavModule,
+    MatTabsModule,
     AppRoutingModule,
     HttpClientModule,
     FlexLayoutModule,

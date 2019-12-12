@@ -50,6 +50,13 @@ export class RoomService {
     );
   }
 
+  getAssistants(roomName: string): Observable<any> {
+    return this.http.get<any>(this.baseURL + '/room/' + roomName + '/assistants').pipe(
+      map(users => { return users }),
+      catchError((error) => this.handleError(error))
+    );
+  }
+
   removeUser(roomName: string) {
     return this.http.delete<any>(this.baseURL + '/room/' + roomName + '/user/session').pipe(
       map((_) => {}),

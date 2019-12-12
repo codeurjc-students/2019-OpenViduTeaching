@@ -15,7 +15,8 @@
   min-height: -webkit-fill-available;
   overflow: hidden;
 }
-.sidenav-chat {
+
+.sidenav-menu {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,6 +24,15 @@
   background-color: #494949;
   border-left: none;
   position: absolute;
+}
+
+::ng-deep .mat-tab-body-wrapper {
+  height: 100%;
+}
+
+.tab-group {
+  height: 100%;
+  width: 100%;
 }
 
 .mat-drawer-container {
@@ -881,17 +891,17 @@
 }
 
 @media (min-width: 1440px) {
-  .sidenav-chat{
+  .sidenav-menu{
     width: 33%;
   }
 }
 @media (max-width: 1440px) and (min-width: 1024px){
-  .sidenav-chat{
+  .sidenav-menu{
     width: 30%;
   }
 }
 @media (max-width: 1024px) and (min-width: 790px){
-  .sidenav-chat{
+  .sidenav-menu{
     width: 350px;
   }
 }
