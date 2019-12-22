@@ -77,7 +77,7 @@ public class OpenViduComponent {
 
 	public String generateToken(Room room, User user) throws OpenViduJavaClientException, OpenViduHttpException {
 		Session session = this.roomIdSession.get(room.getId());
-		OpenViduRole role = room.isModerator(user) ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
+		OpenViduRole role = this.getRole(user, room);
 		TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
 		return session.generateToken(tokenOpts);
 	}
@@ -89,7 +89,7 @@ public class OpenViduComponent {
 		session = this.openVidu.createSession(sp);
 		this.roomIdSession.put(room.getId(), session);
 		this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
-		OpenViduRole role = room.isModerator(user) ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
+		OpenViduRole role = this.getRole(user, room);
 		TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
 		String token = session.generateToken(tokenOpts);
 		String[] tokens = new String[2];
@@ -97,7 +97,12 @@ public class OpenViduComponent {
 		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), tokens);
 		return token;
 	}
-
+	
+	private OpenViduRole getRole(User user, Room room) {
+		//OpenViduRole role = room.isModerator(user) ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
+		return OpenViduRole.PUBLISHER;
+	}
+	
 	public String[] removeUser(Room room, User user) {
 		Session session = this.roomIdSession.get(room.getId());
 		return this.sessionIdUserIdToken.get(session.getSessionId()).remove(user.getId());

@@ -1,3 +1,4 @@
+import { UserHandler } from './../../users/user.module';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { UserModel } from '../../models/user-model';
@@ -50,7 +51,10 @@ export class DialogChooseRoomComponent implements OnInit {
   nicknameFormControl = new FormControl('', [Validators.maxLength(25), Validators.required]);
   matcher = new NicknameMatcher();
 
-  constructor(private route: ActivatedRoute, private apiSrv: ApiService) {}
+  constructor(
+    private route: ActivatedRoute,
+    private apiSrv: ApiService
+  ) { }
 
   ngOnInit() {
     this.OV = new OpenVidu();
@@ -105,12 +109,12 @@ export class DialogChooseRoomComponent implements OnInit {
         this.localUsers.unshift(this.userCamDeleted);
         this.initPublisher();
       }
-        this.destroyPublisher(1);
-        this.localUsers.pop();
-        this.localUsers[0].setScreenShareActive(false);
-        this.screenActive = 'None';
-        this.isScreenShareActive = !this.isScreenShareActive;
-        this.localUsers[0].setScreenShareActive(this.isScreenShareActive);
+      this.destroyPublisher(1);
+      this.localUsers.pop();
+      this.localUsers[0].setScreenShareActive(false);
+      this.screenActive = 'None';
+      this.isScreenShareActive = !this.isScreenShareActive;
+      this.localUsers[0].setScreenShareActive(this.isScreenShareActive);
     } else {
       this.initScreenPublisher();
     }
@@ -221,7 +225,7 @@ export class DialogChooseRoomComponent implements OnInit {
         if (device.kind === 'audioinput') {
           this.microphones.push({ label: device.label, device: device.deviceId, type: '' });
         } else {
-          const element  = {label: device.label, device: device.deviceId, type: ''};
+          const element = { label: device.label, device: device.deviceId, type: '' };
           if (device.deviceId === defaultDeviceId) {
             element.type = 'FRONT';
             this.camValue = element;
@@ -244,9 +248,9 @@ export class DialogChooseRoomComponent implements OnInit {
 
   private getRandomAvatar() {
     this.apiSrv.getRandomAvatar().then((avatar: string) => {
-        this.randomAvatar = avatar;
-        this.setAvatar('random');
-      })
+      this.randomAvatar = avatar;
+      this.setAvatar('random');
+    })
       .catch((err) => console.error(err));
   }
 
@@ -280,30 +284,30 @@ export class DialogChooseRoomComponent implements OnInit {
       mirror: false,
     };
 
-    this.OV.initPublisherAsync(undefined, publisherProperties )
-    .then( (publisher: Publisher ) => {
-      this.localUsers.push(new UserModel());
-      this.localUsers[1].setStreamManager(publisher);
-      this.localUsers[1].setScreenShareActive(true);
-      this.localUsers[1].setAudioActive(hasAudio);
-      this.localUsers[1].setType('screen');
-      this.localUsers[1].setUserAvatar(this.randomAvatar);
-      this.isScreenShareActive = !this.isScreenShareActive;
-      this.screenActive = 'Screen';
-      this.localUsers[0].setScreenShareActive(this.isScreenShareActive);
-      if (this.localUsers[0].isLocal() && !this.localUsers[0].isVideoActive()) {
-        this.setAudio(true);
-        this.destroyPublisher(0);
-        this.userCamDeleted = this.localUsers.shift();
-        this.subscribeToVolumeChange(publisher);
-      }
-    }).catch((error) => {
-      if (error && error.name === 'SCREEN_EXTENSION_NOT_INSTALLED') {
-        this.toggleDialogExtension();
-      } else {
-        this.apiSrv.handlerScreenShareError(error);
-      }
-    });
+    this.OV.initPublisherAsync(undefined, publisherProperties)
+      .then((publisher: Publisher) => {
+        this.localUsers.push(new UserModel());
+        this.localUsers[1].setStreamManager(publisher);
+        this.localUsers[1].setScreenShareActive(true);
+        this.localUsers[1].setAudioActive(hasAudio);
+        this.localUsers[1].setType('screen');
+        this.localUsers[1].setUserAvatar(this.randomAvatar);
+        this.isScreenShareActive = !this.isScreenShareActive;
+        this.screenActive = 'Screen';
+        this.localUsers[0].setScreenShareActive(this.isScreenShareActive);
+        if (this.localUsers[0].isLocal() && !this.localUsers[0].isVideoActive()) {
+          this.setAudio(true);
+          this.destroyPublisher(0);
+          this.userCamDeleted = this.localUsers.shift();
+          this.subscribeToVolumeChange(publisher);
+        }
+      }).catch((error) => {
+        if (error && error.name === 'SCREEN_EXTENSION_NOT_INSTALLED') {
+          this.toggleDialogExtension();
+        } else {
+          this.apiSrv.handlerScreenShareError(error);
+        }
+      });
   }
 
   private launchNewPublisher(index: number) {
