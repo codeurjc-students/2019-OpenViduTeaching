@@ -15,9 +15,13 @@ export class AssistantsComponent implements OnInit {
     private roomSrv: RoomService
   ) { }
 
-  moderators: string[];
-  participants: string[];
-  assistantsCount: Number;
+  moderatorsConnected: string[] = [];
+  participantsConnected: string[] = [];
+  assistantsConnectedCount: Number;
+
+  moderatorsDisconnected: string[] = [];
+  participantsDisconnected: string[] = [];
+  assistantsDisconnectedCount: Number;
 
   ngOnInit() {
     this.getParticipants();
@@ -26,10 +30,22 @@ export class AssistantsComponent implements OnInit {
   getParticipants() {
     this.roomSrv.getAssistants(this.session.sessionId).subscribe(
       assistants => {
-        console.log(assistants);
-        this.moderators = assistants.moderators;
-        this.participants = assistants.participants;
-        this.assistantsCount = this.moderators.length + this.participants.length;
+        for(let moderator of assistants.moderators) {
+          if(moderator.connected) {
+            this.moderatorsConnected.push(moderator.name);
+          } else {
+            this.moderatorsDisconnected.push(moderator.name);
+          }
+        }
+        for(let participant of assistants.participants) {
+          if(participant.connected) {
+            this.participantsConnected.push(participant.name);
+          } else {
+            this.participantsDisconnected.push(participant.name);
+          }
+        }
+        this.assistantsConnectedCount = this.moderatorsConnected.length + this.participantsConnected.length;
+        this.assistantsDisconnectedCount = this.moderatorsDisconnected.length + this.participantsDisconnected.length;
       },
       error => console.log(error)
     );

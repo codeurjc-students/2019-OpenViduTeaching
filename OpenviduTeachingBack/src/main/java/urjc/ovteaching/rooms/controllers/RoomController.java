@@ -1,5 +1,9 @@
 package urjc.ovteaching.rooms.controllers;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import urjc.ovteaching.OpenViduComponent;
 import urjc.ovteaching.rooms.Room;
 import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;
@@ -37,6 +42,9 @@ public class RoomController {
 
 	@Autowired
 	private UserComponent userComponent;
+	
+	@Autowired
+	private OpenViduComponent openviduComponent;
 
 	/**
 	 * Creates a new room
@@ -183,9 +191,27 @@ public class RoomController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		if (room.isModerator(user) || room.isParticipant(user)) {
+			Collection<User> connected = openviduComponent.getConnectedAssistants(room);
 			JSONObject json = new JSONObject();
-			json.put("moderators", room.getModerators());
-			json.put("participants", room.getParticipants());
+			
+			Set<JSONObject> moderators = new HashSet<>();
+			for(User mod : room.getModerators()) {
+				JSONObject userJson = new JSONObject();
+				userJson.put("name", mod.getName());
+				userJson.put("connected", connected != null && connected.contains(mod));
+				moderators.add(userJson);
+			}
+			
+			Set<JSONObject> participants = new HashSet<>();
+			for(User part : room.getParticipants()) {
+				JSONObject userJson = new JSONObject();
+				userJson.put("name", part.getName());
+				userJson.put("connected", connected != null && connected.contains(part));
+				participants.add(userJson);
+			}
+			
+			json.put("moderators", moderators);
+			json.put("participants", participants);
 			return new ResponseEntity<>(json, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

@@ -1,13 +1,27 @@
 <div>
     <p>
-        {{assistantsCount}} assistant<span *ngIf="this.assistantsCount!==1">s</span>
+        {{assistantsConnectedCount}} assistant<span *ngIf="this.assistantsConnectedCount!==1">s</span> online
     </p>
 </div>
 <p>Moderators</p>
 <ul>
-    <li *ngFor="let mod of this.moderators">{{mod.name}}</li>
+    <li *ngFor="let mod of this.moderatorsConnected">{{mod}}</li>
 </ul>
 <p>Participants</p>
 <ul>
-    <li *ngFor="let part of this.participants">{{part.name}}</li>
+    <li *ngFor="let part of this.participantsConnected">{{part}}</li>
+</ul>
+
+<div>
+    <p>
+        {{assistantsDisconnectedCount}} assistant<span *ngIf="this.assistantsDisconnectedCount!==1">s</span> offline
+    </p>
+</div>
+<p>Moderators</p>
+<ul>
+    <li *ngFor="let mod of this.moderatorsDisconnected">{{mod}}</li>
+</ul>
+<p>Participants</p>
+<ul>
+    <li *ngFor="let part of this.participantsDisconnected">{{part}}</li>
 </ul>

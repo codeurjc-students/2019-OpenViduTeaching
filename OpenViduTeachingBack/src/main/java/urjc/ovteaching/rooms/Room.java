@@ -2,6 +2,7 @@ package urjc.ovteaching.rooms;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -33,7 +34,7 @@ public class Room {
 
 	@ManyToMany(mappedBy = "participatedRooms")
 	private Set<User> participants;
-
+	
 	public Room(String name) {
 		this.mods = new HashSet<>();
 		this.participants = new HashSet<>();

@@ -1,9 +1,14 @@
 package urjc.ovteaching;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,11 +20,19 @@ import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 import io.openvidu.java.client.TokenOptions;
 import urjc.ovteaching.rooms.Room;
+import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;
+import urjc.ovteaching.users.UserService;
 
 @Component
 public class OpenViduComponent {
 
+	@Autowired
+	RoomService roomService;
+	
+	@Autowired
+	UserService userService;
+	
 	private OpenVidu openVidu;
 	private String OPENVIDU_URL;
 	private String SECRET;
@@ -116,5 +129,19 @@ public class OpenViduComponent {
 	public void removeSession(Room room) {
 		Session session = this.roomIdSession.remove(room.getId());
 		this.sessionIdUserIdToken.remove(session.getSessionId());
+	}
+	
+	public Collection<User> getConnectedAssistants(Room room) {
+		Set<User> set = new HashSet<>();
+		String roomName = room.getName();
+		Map<Long, String[]> userIdMap = sessionIdUserIdToken.get(roomName);
+		if(userIdMap == null) {
+			return null;
+		}
+		for(Long userId: userIdMap.keySet()) {
+			User user = userService.findOne(userId).get();
+			set.add(user);
+		}
+		return set;
 	}
 }

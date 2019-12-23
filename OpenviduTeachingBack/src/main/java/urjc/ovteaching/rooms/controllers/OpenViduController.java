@@ -147,7 +147,6 @@ public class OpenViduController {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 		
-		this.roomServ.leaveRoom(currentUser, room);
 		if (this.openViduComponent.removeUser(room, currentUser) != null) {
 			// This user has left the lesson
 			if (this.openViduComponent.isSessionEmpty(room)) {
