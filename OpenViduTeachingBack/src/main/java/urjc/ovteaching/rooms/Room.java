@@ -35,9 +35,13 @@ public class Room {
 	@ManyToMany(mappedBy = "participatedRooms")
 	private Set<User> participants;
 	
+	@ManyToMany(mappedBy = "presentedRooms")
+	private Set<User> presenters;
+	
 	public Room(String name) {
 		this.mods = new HashSet<>();
 		this.participants = new HashSet<>();
+		this.presenters = new HashSet<>();
 		this.codeParticipant = UUID.randomUUID().toString();
 		this.codeModerator = UUID.randomUUID().toString();
 		this.name = name;
@@ -66,12 +70,24 @@ public class Room {
 		return this.participants.contains(user);
 	}
 	
+	public boolean isPresenter(User user) {
+		return this.presenters.contains(user);
+	}
+	
+	public boolean isInRoom(User user) {
+		return isModerator(user) || isParticipant(user) || isPresenter(user);
+	}
+	
 	public Collection<User> getModerators(){
 		return this.mods;
 	}
 	
 	public Collection<User> getParticipants(){
 		return this.participants;
+	}
+	
+	public Collection<User> getPresenters(){
+		return this.presenters;
 	}
 
 	public String getName() {

@@ -138,7 +138,7 @@ public class RoomController {
 				// Cannot enter a room if already a mod of it
 				return new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
-			if (code.equals(room.getParticipantInviteCode()) && room.isParticipant(user)) {
+			if (code.equals(room.getParticipantInviteCode()) && (room.isParticipant(user)) || room.isPresenter(user)) {
 				// Cannot enter a room as participant if already in it
 				return new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
@@ -146,12 +146,10 @@ public class RoomController {
 		try {
 			/*
 			 * Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			 * if (auth != null){ new SecurityContextLogoutHandler().logout(request,
-			 * response, auth); }
+			 * if (auth != null){ new SecurityContextLogoutHandler().logout(request, response, auth); }
 			 */
 			request.login(userName, password);
 		} catch (ServletException e) {
-			e.toString();
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		/*
@@ -190,7 +188,7 @@ public class RoomController {
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		if (room.isModerator(user) || room.isParticipant(user)) {
+		if (room.isInRoom(user)) {
 			Collection<User> connected = openviduComponent.getConnectedAssistants(room);
 			JSONObject json = new JSONObject();
 			
@@ -198,19 +196,28 @@ public class RoomController {
 			for(User mod : room.getModerators()) {
 				JSONObject userJson = new JSONObject();
 				userJson.put("name", mod.getName());
-				userJson.put("connected", connected != null && connected.contains(mod));
+				userJson.put("connected", connected.contains(mod));
 				moderators.add(userJson);
+			}
+			
+			Set<JSONObject> presenters = new HashSet<>();
+			for(User pres : room.getPresenters()) {
+				JSONObject userJson = new JSONObject();
+				userJson.put("name", pres.getName());
+				userJson.put("connected", connected.contains(pres));
+				presenters.add(userJson);
 			}
 			
 			Set<JSONObject> participants = new HashSet<>();
 			for(User part : room.getParticipants()) {
 				JSONObject userJson = new JSONObject();
 				userJson.put("name", part.getName());
-				userJson.put("connected", connected != null && connected.contains(part));
+				userJson.put("connected", connected.contains(part));
 				participants.add(userJson);
 			}
 			
 			json.put("moderators", moderators);
+			json.put("presenters", presenters);
 			json.put("participants", participants);
 			return new ResponseEntity<>(json, HttpStatus.OK);
 		} else {

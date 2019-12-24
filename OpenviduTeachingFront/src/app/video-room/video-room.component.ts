@@ -422,7 +422,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   private connectWebCam(): void {
     this.localUsers[0].setConnectionId(this.session.connection.connectionId);
     this.localUsers[0].setLocalConnectionId(this.session.connection.connectionId);
-    if (this.userHandler.isModOfRoom(this.mySessionId) && this.session.capabilities.publish) {
+    if (this.userHandler.canStream(this.mySessionId) && this.session.capabilities.publish) {
       this.publishSession(this.localUsers[0]).then(() => {
           this.sendSignalUserChanged(this.localUsers[0]);
           this.joinSession.emit();

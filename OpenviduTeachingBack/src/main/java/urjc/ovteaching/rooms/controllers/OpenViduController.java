@@ -84,7 +84,7 @@ public class OpenViduController {
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		if ((!room.isParticipant(user)) && (!room.isModerator(user))) { // User not in that room
+		if (!room.isInRoom(user)) { // User not in that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
@@ -134,20 +134,20 @@ public class OpenViduController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Room room = roomServ.findByName(roomName);
-		User currentUser = userServ.findByName(request.getUserPrincipal().getName());
+		User user = userServ.findByName(request.getUserPrincipal().getName());
 		// User currentUser = this.userComponent.getLoggedUser();
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		if ((!room.isParticipant(currentUser)) && (!room.isModerator(currentUser))) { // User not in that room
+		if (!room.isInRoom(user)) { // User not in that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		if (!this.openViduComponent.isSessionCreated(room)) { // No session created for that room
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 		
-		if (this.openViduComponent.removeUser(room, currentUser) != null) {
+		if (this.openViduComponent.removeUser(room, user) != null) {
 			// This user has left the lesson
 			if (this.openViduComponent.isSessionEmpty(room)) {
 				// The last user has left the lesson

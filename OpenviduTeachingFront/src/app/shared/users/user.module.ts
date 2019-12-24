@@ -8,6 +8,7 @@ export interface User {
     roles: string[];
     authdata: string;
     moddedRooms: Room[];
+    presentedRooms: Room[];
     participatedRooms: Room[];
 }
 
@@ -15,6 +16,7 @@ export interface User {
     providedIn: 'root'
 })
 export class UserHandler {
+
     isLogged = false;
     isAdmin = false;
     user: User;
@@ -61,7 +63,7 @@ export class UserHandler {
         }
     }
 
-    public isModOfRoom(roomName: string): boolean {
-        return this.isLogged && this.user.moddedRooms.some((room) => room.name === roomName);
+    public canStream(roomName: string): boolean {
+        return this.isLogged && (this.user.moddedRooms.some((room) => room.name === roomName) || this.user.presentedRooms.some((room) => room.name === roomName));
     }
 }

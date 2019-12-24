@@ -136,7 +136,7 @@ public class OpenViduComponent {
 		String roomName = room.getName();
 		Map<Long, String[]> userIdMap = sessionIdUserIdToken.get(roomName);
 		if(userIdMap == null) {
-			return null;
+			return set;
 		}
 		for(Long userId: userIdMap.keySet()) {
 			User user = userService.findOne(userId).get();

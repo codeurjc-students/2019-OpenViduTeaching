@@ -45,6 +45,10 @@ public class User {
 	@JsonView(WithRooms.class)
 	@ManyToMany
 	private List<Room> participatedRooms;
+	
+	@JsonView(WithRooms.class)
+	@ManyToMany
+	private List<Room> presentedRooms;
 
 	public User(String name, String password, String... roles) {
 		this.name = name;
@@ -100,14 +104,6 @@ public class User {
 	public void leaveRoom(Room room) {
 		this.participatedRooms.remove(room);
 		this.moddedRooms.remove(room);
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		return result;
 	}
 
 	@Override

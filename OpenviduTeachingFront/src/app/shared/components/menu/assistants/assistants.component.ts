@@ -17,10 +17,12 @@ export class AssistantsComponent implements OnInit {
 
   moderatorsConnected: string[] = [];
   participantsConnected: string[] = [];
+  presentersConnected: string[] = [];
   assistantsConnectedCount: Number;
 
   moderatorsDisconnected: string[] = [];
   participantsDisconnected: string[] = [];
+  presentersDisconnected: string[] = [];
   assistantsDisconnectedCount: Number;
 
   ngOnInit() {
@@ -30,6 +32,7 @@ export class AssistantsComponent implements OnInit {
   getParticipants() {
     this.roomSrv.getAssistants(this.session.sessionId).subscribe(
       assistants => {
+
         for(let moderator of assistants.moderators) {
           if(moderator.connected) {
             this.moderatorsConnected.push(moderator.name);
@@ -37,6 +40,7 @@ export class AssistantsComponent implements OnInit {
             this.moderatorsDisconnected.push(moderator.name);
           }
         }
+
         for(let participant of assistants.participants) {
           if(participant.connected) {
             this.participantsConnected.push(participant.name);
@@ -44,8 +48,17 @@ export class AssistantsComponent implements OnInit {
             this.participantsDisconnected.push(participant.name);
           }
         }
-        this.assistantsConnectedCount = this.moderatorsConnected.length + this.participantsConnected.length;
-        this.assistantsDisconnectedCount = this.moderatorsDisconnected.length + this.participantsDisconnected.length;
+
+        for(let presenter of assistants.presenters) {
+          if(presenter.connected) {
+            this.presentersConnected.push(presenter.name);
+          } else {
+            this.presentersDisconnected.push(presenter.name);
+          }
+        }
+
+        this.assistantsConnectedCount = this.moderatorsConnected.length + this.participantsConnected.length + this.presentersConnected.length;
+        this.assistantsDisconnectedCount = this.moderatorsDisconnected.length + this.participantsDisconnected.length + this.presentersDisconnected.length;
       },
       error => console.log(error)
     );
