@@ -2,6 +2,7 @@ package urjc.ovteaching.users;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.ElementCollection;
@@ -104,6 +105,18 @@ public class User {
 	public void leaveRoom(Room room) {
 		this.participatedRooms.remove(room);
 		this.moddedRooms.remove(room);
+	}
+
+	public Collection<Room> getModdedRooms() {
+		return moddedRooms;
+	}
+
+	public Collection<Room> getParticipatedRooms() {
+		return participatedRooms;
+	}
+
+	public Collection<Room> getPresentedRooms() {
+		return presentedRooms;
 	}
 
 	@Override

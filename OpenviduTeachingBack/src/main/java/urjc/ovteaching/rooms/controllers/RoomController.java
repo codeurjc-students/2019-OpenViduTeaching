@@ -190,7 +190,7 @@ public class RoomController {
 		}
 		if (room.isInRoom(user)) {
 			Collection<User> connected = openviduComponent.getConnectedAssistants(room);
-			JSONObject json = new JSONObject();
+			JSONObject response = new JSONObject();
 			
 			Set<JSONObject> moderators = new HashSet<>();
 			for(User mod : room.getModerators()) {
@@ -216,10 +216,10 @@ public class RoomController {
 				participants.add(userJson);
 			}
 			
-			json.put("moderators", moderators);
-			json.put("presenters", presenters);
-			json.put("participants", participants);
-			return new ResponseEntity<>(json, HttpStatus.OK);
+			response.put("moderators", moderators);
+			response.put("presenters", presenters);
+			response.put("participants", participants);
+			return new ResponseEntity<>(response, HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
