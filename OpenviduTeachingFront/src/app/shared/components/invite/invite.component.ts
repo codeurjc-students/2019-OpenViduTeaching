@@ -1,7 +1,7 @@
-import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoomService } from '../../services/room.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-invite',

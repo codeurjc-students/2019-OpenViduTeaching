@@ -1,4 +1,4 @@
-import { UserHandler } from './../../users/user.module';
+import { UserService } from '../../services/user.service';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { UserModel } from '../../models/user-model';

@@ -1,5 +1,5 @@
 import { RoomService } from './../../services/room.service';
-import { UserHandler } from '../../users/user.module';
+import { UserService } from '../../services/user.service';
 import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@angular/core';
 import { UserModel } from '../../models/user-model';
 import { ApiService } from '../../services/api.service';
@@ -31,7 +31,7 @@ export class ToolbarComponent implements OnInit {
 
   constructor(
     private apiSrv: ApiService,
-    private userHandler:UserHandler,
+    private userHandler:UserService,
     private roomSrv:RoomService,
     private urlSnackBar: MatSnackBar
   ) {}

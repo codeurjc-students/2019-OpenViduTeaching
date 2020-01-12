@@ -1,4 +1,4 @@
-import { UserHandler, User } from '../users/user.module';
+import { UserService, User } from './user.service';
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import 'rxjs/Rx';
@@ -15,7 +15,7 @@ export class RoomService {
 
   constructor(
     private http: HttpClient,
-    private userHandler: UserHandler
+    private userHandler: UserService
   ) { }
 
   createRoom(roomName: string): Observable<string> {

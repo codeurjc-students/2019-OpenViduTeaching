@@ -1,4 +1,4 @@
-import { UserHandler } from './shared/users/user.module';
+import { LoginComponent } from './shared/users/login/login.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -47,6 +47,7 @@ import { InviteComponent } from './shared/components/invite/invite.component';
 import { BasicAuthInterceptor } from 'src/interceptors/auth.interceptor';
 import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 import { AssistantsComponent } from './shared/components/menu/assistants/assistants.component';
+import { UserService } from './shared/services/user.service';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { AssistantsComponent } from './shared/components/menu/assistants/assista
     ToolbarComponent,
     LinkifyPipe,
     InviteComponent,
-    AssistantsComponent
+    AssistantsComponent,
+    LoginComponent
   ],
   imports: [
     FormsModule,
@@ -97,7 +99,7 @@ import { AssistantsComponent } from './shared/components/menu/assistants/assista
     DialogErrorComponent,
     WebComponentComponent,
   ],
-  providers: [OpenViduService, ApiService, UserHandler,
+  providers: [OpenViduService, ApiService, UserService,
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],

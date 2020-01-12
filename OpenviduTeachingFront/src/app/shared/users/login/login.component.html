@@ -1,0 +1,49 @@
+<ng-container *ngIf="!userService.isLogged">
+    <span>
+        <button mat-button (click)='openLoginDialog()'>
+            Login
+        </button>
+    </span>
+</ng-container>
+
+<ng-container *ngIf="userService.isLogged">
+    <span>
+        {{userService.user.name}}
+    </span>
+    <span>
+        <button mat-button (click)='logOut()'>
+            Logout
+        </button>
+    </span>
+</ng-container>
+
+<ng-template #loginDialog let-dialogRef="dialogRef">
+    <div>
+        <div>
+            <mat-card>
+                <mat-card-content>
+                    <form>
+                        <div layout="column">
+                            <mat-form-field>
+                                <mat-label>User</mat-label>
+                                <input #user matInput placeholder="User">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Password</mat-label>
+                                <input #pass matInput placeholder="Password" type="password">
+                            </mat-form-field>
+
+                        </div>
+                    </form>
+                </mat-card-content>
+                <mat-card-actions>
+                    <div layout="column">
+                        <a mat-raised-button (click)="logIn($event, user.value, pass.value)" class="text-upper" color="primary" [routerLink]="['/']">
+                            <span>Access</span>
+                        </a>
+                    </div>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</ng-template>

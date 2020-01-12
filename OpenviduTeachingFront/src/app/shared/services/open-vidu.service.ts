@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { OvSettings } from '../models/ov-settings';
 import { Observable, throwError } from 'rxjs';
-import { User } from '../users/user.module';
+import { User } from './user.service';
 import { map, catchError } from 'rxjs/operators';
 
 @Injectable({

@@ -20,5 +20,6 @@ public class UserComponent {
 	public boolean isLoggedUser() {
 		return this.user != null;
 	}
-	
+
 }
+
