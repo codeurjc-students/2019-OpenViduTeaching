@@ -31,7 +31,7 @@ export class ToolbarComponent implements OnInit {
 
   constructor(
     private apiSrv: ApiService,
-    private userHandler:UserService,
+    private userService:UserService,
     private roomSrv:RoomService,
     private urlSnackBar: MatSnackBar
   ) {}

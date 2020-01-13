@@ -11,7 +11,6 @@
 
   <div id="ov_info">
     <img id="ov_img" alt="OpenVidu Logo" src="assets/images/openvidu_vert_white_bg_trans_cropped.png">
-    <p>Videoconference rooms in one click</p>
   </div>
 
   <login-component></login-component>
@@ -35,7 +34,7 @@
           </mat-list-item>
         </div>
 
-        <mat-divider *ngIf="this.presentedRooms!==undefined && this.presentedRooms.length>0 && this.participatedRooms!==undefined && this.participatedRooms.length>0"></mat-divider>
+        <mat-divider *ngIf="((this.moddedRooms!==undefined && this.moddedRooms.length>0) || (this.presentedRooms!==undefined && this.presentedRooms.length>0)) && this.participatedRooms!==undefined && this.participatedRooms.length>0"></mat-divider>
 
         <div *ngIf="this.participatedRooms!==undefined && this.participatedRooms.length>0">
           <h3 mat-subheader>PARTICIPATED ROOMS</h3>

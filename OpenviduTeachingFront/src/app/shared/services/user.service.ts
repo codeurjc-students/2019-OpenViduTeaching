@@ -113,10 +113,10 @@ export class UserService {
     }
 
     public isModOfRoom(roomName: string): boolean {
-        return this.isLogged && (this.user.moddedRooms.some((room) => room.name === roomName));
+        return this.isLogged && this.user.moddedRooms!=null && (this.user.moddedRooms.some((room) => room.name === roomName));
     }
 
     public canStream(roomName: string): boolean {
-        return this.isLogged && (this.user.moddedRooms.some((room) => room.name === roomName) || this.user.presentedRooms.some((room) => room.name === roomName));
+        return this.isLogged && ((this.user.moddedRooms!=null && this.user.moddedRooms.some((room) => room.name === roomName)) || (this.user.presentedRooms!=null && this.user.presentedRooms.some((room) => room.name === roomName)));
     }
 }

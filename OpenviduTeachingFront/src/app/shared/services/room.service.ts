@@ -15,7 +15,7 @@ export class RoomService {
 
   constructor(
     private http: HttpClient,
-    private userHandler: UserService
+    private userService: UserService
   ) { }
 
   createRoom(roomName: string): Observable<string> {
@@ -43,7 +43,7 @@ export class RoomService {
     return this.http.put<User>(this.baseURL + '/room/' + code + '/user/' + userName, {}).pipe(
       map(user => {
         let auth = window.btoa(userName + ':pass'); //TODO change pass
-        this.userHandler.saveUser(user, auth);
+        this.userService.saveUser(user, auth);
         return user;
       }),
       catchError((error) => this.handleError(error))
