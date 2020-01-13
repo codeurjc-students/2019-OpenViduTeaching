@@ -21,7 +21,8 @@ import {
   MatSidenavModule,
   MatChipsModule,
   MatSnackBarModule,
-  MatTabsModule
+  MatTabsModule,
+  MatListModule
 } from '@angular/material';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './/app-routing.module';
@@ -93,6 +94,7 @@ import { UserService } from './shared/services/user.service';
     FlexLayoutModule,
     MatChipsModule,
     MatSnackBarModule,
+    MatListModule,
     NgxLinkifyjsModule.forRoot()
   ],
   entryComponents: [

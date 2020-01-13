@@ -47,11 +47,7 @@ export class UserService {
 
         return this.http.get<User>(this.baseURL + '/logIn', { headers }).pipe(
             map(user => {
-                if (user) {
-                    this.setCurrentUser(user);
-                    user.authdata = auth;
-                    localStorage.setItem('currentUser', JSON.stringify(user));
-                }
+                this.saveUser(user, auth);
                 return user;
             })
         );
@@ -69,6 +65,13 @@ export class UserService {
     checkUserName(userName: string): Observable<string> {
         return this.http.get(this.baseURL + '/user/' + userName, { responseType: 'text' }).pipe(
             map(userName => { return userName }),
+            catchError((error) => this.handleError(error))
+        );
+    }
+
+    getRoomsForUser(): Observable<any> {
+        return this.http.get<any>(this.baseURL + '/user/rooms').pipe(
+            map(rooms => { return rooms }),
             catchError((error) => this.handleError(error))
         );
     }

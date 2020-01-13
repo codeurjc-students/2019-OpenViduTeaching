@@ -14,18 +14,37 @@
     <p>Videoconference rooms in one click</p>
   </div>
 
-  <div id="card_content">
+  <login-component></login-component>
+
+  <div id="card_content" *ngIf="this.userSrv.isLogged">
     <mat-card id="room_card">
-      <h3>Create an OpenVidu videoconference</h3>
-      <form [formGroup]="roomForm" novalidate (ngSubmit)="goToVideoCall()">
-        <mat-form-field appearance="outline">
-          <mat-label>Insert your room name</mat-label>
-          <input matInput formControlName="roomName" placeholder="Openvidu_call_room" autocomplete="off">
-        </mat-form-field>
-        <div>
-          <button mat-stroked-button color="secondary" type="submit">Create Room</button>
+      <mat-list>
+        <div *ngIf="this.moddedRooms!==undefined && this.moddedRooms.length>0">
+          <h3 mat-subheader>MODDED ROOMS</h3>
+          <mat-list-item *ngFor="let mod of this.moddedRooms">
+            <a mat-line mat-button routerLink="{{mod.name}}">{{mod.name}}</a>
+          </mat-list-item>
         </div>
-      </form>
+
+        <mat-divider *ngIf="this.moddedRooms!==undefined && this.moddedRooms.length>0 && this.presentedRooms!==undefined && this.presentedRooms.length>0"></mat-divider>
+
+        <div *ngIf="this.presentedRooms!==undefined && this.presentedRooms.length>0">
+          <h3 mat-subheader>PRESENTED ROOMS</h3>
+          <mat-list-item *ngFor="let pres of this.presentedRooms">
+            <a mat-line mat-button routerLink="{{pres.name}}">{{pres.name}}</a>
+          </mat-list-item>
+        </div>
+
+        <mat-divider *ngIf="this.presentedRooms!==undefined && this.presentedRooms.length>0 && this.participatedRooms!==undefined && this.participatedRooms.length>0"></mat-divider>
+
+        <div *ngIf="this.participatedRooms!==undefined && this.participatedRooms.length>0">
+          <h3 mat-subheader>PARTICIPATED ROOMS</h3>
+          <mat-list-item *ngFor="let part of this.participatedRooms">
+            <a mat-line mat-button routerLink="{{part.name}}">{{part.name}}</a>
+          </mat-list-item>
+        </div>
+      </mat-list>
+
     </mat-card>
   </div>
 </div>

@@ -1,6 +1,7 @@
+import { UserService } from './../shared/services/user.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Room } from '../shared/models/room-model';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,21 +9,32 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent implements OnInit {
-  public roomForm: FormGroup;
+
   public version = require('../../../package.json').version;
 
-  constructor(private router: Router, public formBuilder: FormBuilder) {}
+  private moddedRooms: Room[] = [];
+  private presentedRooms: Room[] = [];
+  private participatedRooms: Room[] = [];
+
+  constructor(
+    private router: Router,
+    private userSrv: UserService
+  ) {}
 
   ngOnInit() {
-    this.roomForm = this.formBuilder.group({
-      roomName: ['', Validators.compose([Validators.required])],
-    });
+    if(this.userSrv.isLogged) {
+      this.getRooms();
+    }
   }
 
-  public goToVideoCall() {
-    if (this.roomForm.valid) {
-      const roomName = this.roomForm.value.roomName.replace(/ /g, '-'); // replace white spaces by -
-      this.router.navigate(['/', roomName]);
-    }
+  getRooms() {
+    this.userSrv.getRoomsForUser().subscribe(
+      rooms => {
+        this.moddedRooms = rooms.modded;
+        this.presentedRooms = rooms.presented;
+        this.participatedRooms = rooms.participated;
+      },
+      error => console.log(error)
+    );
   }
 }

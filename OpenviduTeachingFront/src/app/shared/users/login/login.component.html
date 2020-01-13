@@ -1,17 +1,17 @@
 <ng-container *ngIf="!userService.isLogged">
     <span>
-        <button mat-button (click)='openLoginDialog()'>
+        <button mat-flat-button color="accent" (click)='openLoginDialog()'>
             Login
         </button>
     </span>
 </ng-container>
 
 <ng-container *ngIf="userService.isLogged">
-    <span>
+    <span id="username">
         {{userService.user.name}}
     </span>
     <span>
-        <button mat-button (click)='logOut()'>
+        <button mat-flat-button color="warn" (click)='logOut()'>
             Logout
         </button>
     </span>
@@ -24,21 +24,25 @@
                 <mat-card-content>
                     <form>
                         <div layout="column">
-                            <mat-form-field>
-                                <mat-label>User</mat-label>
-                                <input #user matInput placeholder="User">
-                            </mat-form-field>
-                            <mat-form-field>
-                                <mat-label>Password</mat-label>
-                                <input #pass matInput placeholder="Password" type="password">
-                            </mat-form-field>
-
+                            <div>
+                                <mat-form-field>
+                                    <mat-label>User</mat-label>
+                                    <input #user matInput placeholder="User">
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <mat-label>Password</mat-label>
+                                    <input #pass matInput placeholder="Password" type="password">
+                                </mat-form-field>
+                            </div>
                         </div>
                     </form>
                 </mat-card-content>
                 <mat-card-actions>
                     <div layout="column">
-                        <a mat-raised-button (click)="logIn($event, user.value, pass.value)" class="text-upper" color="primary" [routerLink]="['/']">
+                        <a mat-raised-button (click)="logIn($event, user.value, pass.value)" class="text-upper"
+                            color="primary" [routerLink]="['/']">
                             <span>Access</span>
                         </a>
                     </div>

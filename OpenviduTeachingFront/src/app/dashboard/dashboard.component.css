@@ -29,8 +29,15 @@
   max-width: 50%;
   margin: auto;
 }
+
+login-component {
+  max-width: 200%;
+  max-height: 200%;
+}
+
 #card_content {
   height: 50%;
+  margin-top: 10px;
 }
 
 #room_card {
