@@ -1,0 +1,24 @@
+#username {
+    color: #ffffff;
+}
+
+.mat-card {
+    background-color: #696969;
+}
+
+::ng-deep .mat-dialog-container {
+    background-color: #494949;
+    height: fit-content !important;
+}
+
+::ng-deep .mat-focused .mat-form-field-label {
+    color: #ffffff !important;
+   }
+  
+   ::ng-deep.mat-form-field-underline {
+    background-color: #ffffff !important;
+  } 
+  
+  ::ng-deep.mat-form-field-ripple {
+   background-color: #ffffff !important;;
+  }

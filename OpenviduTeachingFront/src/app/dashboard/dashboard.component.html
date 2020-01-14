@@ -13,7 +13,9 @@
     <img id="ov_img" alt="OpenVidu Logo" src="assets/images/openvidu_vert_white_bg_trans_cropped.png">
   </div>
 
-  <login-component></login-component>
+  <login-component
+    (loggedIn)="getRooms()">
+  </login-component>
 
   <div id="card_content" *ngIf="this.userSrv.isLogged">
     <mat-card id="room_card">

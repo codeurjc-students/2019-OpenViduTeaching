@@ -47,6 +47,7 @@ public class UserController {
 	/**
 	 * @return Rooms where the current user is
 	 */
+	@SuppressWarnings("unchecked")
 	@GetMapping("/user/rooms")
 	@JsonView(Room.NameOnly.class)
 	public ResponseEntity<JSONObject> getRooms(HttpServletRequest request) {

@@ -1,7 +1,7 @@
-import { UserService } from '../../services/user.service';
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component, ViewChild, TemplateRef, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatSnackBar, MatDialogRef } from '@angular/material';
 import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'login-component',
@@ -12,6 +12,8 @@ export class LoginComponent {
 
   @ViewChild('loginDialog', {static: false}) loginDialog: TemplateRef<any>;
   dialogRef: MatDialogRef<any, any>;
+
+  @Output() loggedIn = new EventEmitter<any>();
 
   constructor(public dialog: MatDialog,private snackBar: MatSnackBar, public userService:UserService, private router:Router) { 
   }
@@ -35,6 +37,8 @@ export class LoginComponent {
     this.userService.logIn(user, pass).subscribe(
         (_) => {
             this.dialogRef.close();
+            this.router.navigate(['/']);
+            this.loggedIn.emit();
         },
         (error) => alert('Invalid user or password'),
     );
@@ -49,4 +53,10 @@ export class LoginComponent {
       );
   }
 
+  eventKeyPress(event: any, user: string, pass: string) {
+    if (event && event.keyCode === 13) {
+      // Press Enter
+      this.logIn(event, user, pass);
+    }
+  }
 }
