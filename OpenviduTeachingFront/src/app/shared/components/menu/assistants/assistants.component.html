@@ -9,8 +9,10 @@
         <div *ngIf="this.moderatorsConnected.length>0">
             <h1 mat-subheader>Moderators</h1>
             <mat-list-item *ngFor="let mod of this.moderatorsConnected">
-                <mat-icon matListIcon>person</mat-icon>
-                {{mod}}
+                <mat-icon matListIcon *ngIf="mod===userName">person</mat-icon>
+                <b *ngIf="mod===userName">{{mod}}</b>
+                <mat-icon matListIcon *ngIf="mod!==userName">person_outline</mat-icon>
+                <p *ngIf="mod!==userName">{{mod}}</p>
             </mat-list-item>
         </div>
 
@@ -19,8 +21,10 @@
         <div *ngIf="this.presentersConnected.length>0">
             <h1 mat-subheader>Presenters</h1>
             <mat-list-item *ngFor="let pres of this.presentersConnected">
-                <mat-icon matListIcon>person_outline</mat-icon>
-                {{pres}}
+                <mat-icon matListIcon *ngIf="pres===userName">person</mat-icon>
+                <b *ngIf="pres===userName">{{pres}}</b>
+                <mat-icon matListIcon *ngIf="pres!==userName">person_outline</mat-icon>
+                <p *ngIf="pres!==userName">{{pres}}</p>
             </mat-list-item>
         </div>
 
@@ -31,8 +35,10 @@
         <div *ngIf="this.participantsConnected.length>0">
             <h1 mat-subheader>Participants</h1>
             <mat-list-item *ngFor="let part of this.participantsConnected">
-                <mat-icon matListIcon>person_outline</mat-icon>
-                {{part}}
+                <mat-icon matListIcon *ngIf="part===userName">person</mat-icon>
+                <b *ngIf="part===userName">{{part}}</b>
+                <mat-icon matListIcon *ngIf="part!==userName">person_outline</mat-icon>
+                <p *ngIf="part!==userName">{{part}}</p>
             </mat-list-item>
         </div>
     </mat-list>
@@ -49,7 +55,7 @@
         <div *ngIf="this.moderatorsDisconnected.length>0">
             <h1 mat-subheader>Moderators</h1>
             <mat-list-item *ngFor="let mod of this.moderatorsDisconnected">
-                <mat-icon matListIcon>person</mat-icon>
+                <mat-icon matListIcon>person_outline</mat-icon>
                 {{mod}}
             </mat-list-item>
         </div>

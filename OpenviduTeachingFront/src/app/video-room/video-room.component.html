@@ -61,6 +61,7 @@
               ></chat-component>
             </ng-template>
           </mat-tab>
+
           <mat-tab class="tab">
             <ng-template mat-tab-label>
               <mat-icon>people</mat-icon>
@@ -68,7 +69,8 @@
             </ng-template>
             <ng-template matTabContent>
               <assistants-component
-                [session]="session">
+                [session]="session"
+                [userName]="userService.user.name">
               </assistants-component>
             </ng-template>
           </mat-tab>

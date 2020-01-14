@@ -10,6 +10,7 @@ import { Session } from 'openvidu-browser';
 export class AssistantsComponent implements OnInit {
 
   @Input() session: Session;
+  @Input() userName: string;
 
   constructor(
     private roomSrv: RoomService
