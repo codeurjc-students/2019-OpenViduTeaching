@@ -1,3 +1,4 @@
+import { AssistantsComponent } from './../shared/components/menu/assistants/assistants.component';
 import { UserService } from '../shared/services/user.service';
 import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
@@ -40,6 +41,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
   @ViewChild('chatComponent', {static: false}) chatComponent: ChatComponent;
   @ViewChild('sidenav', {static: false}) menu: any;
+  @ViewChild('assistants', {static: false}) assistantsComponent: AssistantsComponent;
 
   // Constants
   BIG_ELEMENT_CLASS = 'OV_big';
@@ -458,6 +460,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         }
       });
       this.checkSomeoneShareScreen();
+      if(this.assistantsComponent) {
+        this.assistantsComponent.getAssistants();
+      }
     });
   }
 

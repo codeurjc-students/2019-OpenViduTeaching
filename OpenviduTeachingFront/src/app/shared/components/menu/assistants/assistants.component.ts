@@ -27,12 +27,19 @@ export class AssistantsComponent implements OnInit {
   assistantsDisconnectedCount: Number;
 
   ngOnInit() {
-    this.getParticipants();
+    this.getAssistants();
   }
 
-  getParticipants() {
+  getAssistants() {
     this.roomSrv.getAssistants(this.session.sessionId).subscribe(
       assistants => {
+        this.moderatorsConnected = [];
+        this.participantsConnected = [];
+        this.presentersConnected = [];
+
+        this.moderatorsDisconnected = [];
+        this.participantsDisconnected = [];
+        this.presentersDisconnected = [];
 
         for(let moderator of assistants.moderators) {
           if(moderator.connected) {
