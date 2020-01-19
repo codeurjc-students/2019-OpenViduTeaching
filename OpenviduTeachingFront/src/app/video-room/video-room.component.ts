@@ -12,6 +12,7 @@ import {
   StreamEvent,
   StreamManagerEvent,
   StreamManager,
+  ConnectionEvent,
 } from 'openvidu-browser';
 import { DialogErrorComponent } from '../shared/components/dialog-error/dialog-error.component';
 import { OpenViduLayout, OpenViduLayoutOptions } from '../shared/layout/openvidu-layout';
@@ -81,6 +82,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   @HostListener('window:beforeunload')
   beforeunloadHandler() {
     this.exitSession();
+    this.openViduSrv.syncRemoveUser(this.mySessionId);
   }
 
   @HostListener('window:resize')
@@ -138,6 +140,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     this.subscribeToUserChanged();
     this.subscribeToStreamCreated();
     this.subscribedToStreamDestroyed();
+    this.subscribedToDisconnect();
     this.subscribedToChat();
     this.connectToSession();
   }
@@ -158,9 +161,12 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       this.localUsers = [];
       this.remoteUsers = [];
       this.openviduLayout = null;
-      this.userService.removeCurrentUser(this.mySessionId);
       this.router.navigate(['']);
       this.leaveSession.emit();
+      this.openViduSrv.removeUser(this.mySessionId).subscribe(
+        (_) => { },
+        error => console.log(error)
+      );
     }
   }
 
@@ -470,6 +476,17 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     this.session.on('streamDestroyed', (event: StreamEvent) => {
       this.deleteRemoteStream(event.stream);
       this.checkSomeoneShareScreen();
+      event.preventDefault();
+    });
+  }
+
+  private subscribedToDisconnect() {
+    this.session.on('connectionDestroyed', (event: ConnectionEvent) => {
+      if(this.assistantsComponent) {
+        setTimeout(() => {
+          this.assistantsComponent.getAssistants();
+        }, 500);
+      }
       event.preventDefault();
     });
   }

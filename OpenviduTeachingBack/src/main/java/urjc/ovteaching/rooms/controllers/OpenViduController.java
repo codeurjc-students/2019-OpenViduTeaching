@@ -148,9 +148,9 @@ public class OpenViduController {
 		}
 		
 		if (this.openViduComponent.removeUser(room, user) != null) {
-			// This user has left the lesson
+			// This user has left the room
 			if (this.openViduComponent.isSessionEmpty(room)) {
-				// The last user has left the lesson
+				// The last user has left the room
 				this.openViduComponent.removeSession(room);
 			}
 			return new ResponseEntity<>(HttpStatus.OK);

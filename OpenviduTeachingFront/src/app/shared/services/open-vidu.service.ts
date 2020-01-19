@@ -43,6 +43,12 @@ export class OpenViduService {
       );
   }
 
+  syncRemoveUser(roomName: string) {
+    let xhr = new XMLHttpRequest()
+    xhr.open("DELETE",this.baseURL + '/room/' + roomName + '/user',false);
+    xhr.send();
+  }
+
   getToken(mySessionId: string): Promise<string> {
     return new Promise((resolve, reject) => {
       this.createSession(mySessionId)

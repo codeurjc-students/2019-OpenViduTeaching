@@ -102,7 +102,7 @@ public class RoomController {
 	 * @return the room with either code (participant or moderator) or name
 	 */
 	@GetMapping("/room/{codeOrName}")
-	public ResponseEntity<String> getRoomByInviteCode(@PathVariable String codeOrName) {
+	public ResponseEntity<String> getRoomByInviteCodeOrName(@PathVariable String codeOrName) {
 		Room room = roomServ.findByName(codeOrName);
 		if (room == null) {
 			room = roomServ.findByInviteCode(codeOrName);

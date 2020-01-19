@@ -95,21 +95,10 @@ export class UserService {
         console.log(user);
     }
 
-    public removeCurrentUser(sessionId?: string) {
-        if (sessionId) {
-            this.openviduSrv.removeUser(sessionId).subscribe(
-                (_) => {
-                    localStorage.removeItem('currentUser');
-                    this.isLogged = false;
-                    this.isAdmin = false;
-                },
-                error => console.log(error)
-            );
-        } else {
-            localStorage.removeItem('currentUser');
-            this.isLogged = false;
-            this.isAdmin = false;
-        }
+    public removeCurrentUser() {
+        localStorage.removeItem('currentUser');
+        this.isLogged = false;
+        this.isAdmin = false;
     }
 
     public isModOfRoom(roomName: string): boolean {
