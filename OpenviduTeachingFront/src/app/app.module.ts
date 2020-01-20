@@ -43,7 +43,7 @@ import { ApiService } from './shared/services/api.service';
 import { LinkifyPipe } from './shared/pipes/linkfy';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { InviteComponent } from './shared/components/invite/invite.component';
+import { InviteComponent } from './invite/invite.component';
 import { BasicAuthInterceptor } from 'src/interceptors/auth.interceptor';
 import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 import { AssistantsComponent } from './shared/components/menu/assistants/assistants.component';

@@ -9,11 +9,9 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -88,11 +86,11 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping("/register/{user}/{pass}")
-	public ResponseEntity<User> register(Model model, @PathVariable String user, @PathVariable String pass, HttpServletRequest request, HttpServletResponse httpServletResponse) {
+	@RequestMapping("/register/{user}/{pass}")
+	public ResponseEntity<User> register(@PathVariable String user, @PathVariable String pass, HttpServletRequest request, HttpServletResponse httpServletResponse) {
 		User newUser = userServ.findByName(user);
 		if (newUser == null) {
-			userServ.save(new User(user, pass, "ROLE_USER"));
+			newUser = userServ.save(new User(user, pass, "ROLE_USER"));
 			try {
 				request.login(user, pass);
 			} catch (ServletException e) {

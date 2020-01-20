@@ -13,12 +13,12 @@
 
 ::ng-deep .mat-focused .mat-form-field-label {
     color: #ffffff !important;
-   }
-  
-   ::ng-deep.mat-form-field-underline {
+}
+
+ ::ng-deep.mat-form-field-underline {
     background-color: #ffffff !important;
-  } 
-  
-  ::ng-deep.mat-form-field-ripple {
-   background-color: #ffffff !important;;
-  }
+}
+
+ ::ng-deep.mat-form-field-ripple {
+    background-color: #ffffff !important;
+}

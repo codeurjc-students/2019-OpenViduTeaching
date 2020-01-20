@@ -1,0 +1,24 @@
+<div id="background">
+    <div id="component">
+        <div id="ov_info">
+            <img id="ov_img" alt="OpenVidu Logo" src="assets/images/openvidu_vert_white_bg_trans_cropped.png">
+        </div>
+        <div id="roomName">Joining "{{roomName}}"<span *ngIf="this.userSrv.isLogged"> as {{this.userSrv.user.name}}</span></div>
+        <div>
+            <div *ngIf="!this.userSrv.isLogged">
+                <mat-form-field appearance="outline" color="primary">
+                    <mat-label>Username</mat-label>
+                    <input matInput [(ngModel)]="userName" (keypress)="eventKeyPress($event)">
+                    <mat-hint *ngIf=this.userErrorMsg id="userErrorMsg">{{userErrorMsg}}</mat-hint>
+                </mat-form-field>
+                <div></div>
+                <mat-form-field appearance="outline" color="primary">
+                    <mat-label>Password</mat-label>
+                    <input matInput [(ngModel)]="password" (keypress)="eventKeyPress($event)">
+                </mat-form-field>
+                <div></div>
+            </div>
+            <button mat-raised-button color="accent" (click)="enterRoom()">Access room</button>
+        </div>
+    </div>
+</div>

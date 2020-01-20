@@ -21,6 +21,7 @@ import { OpenViduService } from '../shared/services/open-vidu.service';
 import { ChatComponent } from '../shared/components/menu/chat/chat.component';
 import { OvSettings } from '../shared/models/ov-settings';
 import { ApiService } from '../shared/services/api.service';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-video-room',
@@ -94,6 +95,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    if(!this.userService.isLogged) {
+      this.openDialogError('You need to be logged in to enter a room', 'Rooms can only be accessed with an invite URL');
+    }
     this.checkTheme();
     this.openViduSrv
       .getOvSettingsData()

@@ -62,6 +62,17 @@ export class UserService {
         );
     }
 
+    register(userName: string, pass: string) {
+        return this.http.get<User>(this.baseURL + '/register/' + userName + '/' + pass, {}).pipe(
+            map(user => {
+                console.log(user);
+                let auth = window.btoa(userName + ':' + pass);
+                this.saveUser(user, auth);
+                return user;
+            }),
+        );
+    }
+
     checkUserName(userName: string): Observable<string> {
         return this.http.get(this.baseURL + '/user/' + userName, { responseType: 'text' }).pipe(
             map(userName => { return userName }),
@@ -80,7 +91,7 @@ export class UserService {
         return Observable.throw("Server error (" + error.status + "): " + error.text())
     }
 
-    public saveUser(user: User, auth: string) {
+    saveUser(user: User, auth: string) {
         if (user) {
             this.setCurrentUser(user);
             user.authdata = auth;
@@ -88,24 +99,28 @@ export class UserService {
         }
     }
 
-    public setCurrentUser(user: User) {
+    setCurrentUser(user: User) {
         this.isLogged = true;
         this.user = user;
         this.isAdmin = this.user.roles.indexOf('ROLE_ADMIN') !== -1;
         console.log(user);
     }
 
-    public removeCurrentUser() {
+    removeCurrentUser() {
         localStorage.removeItem('currentUser');
         this.isLogged = false;
         this.isAdmin = false;
     }
 
-    public isModOfRoom(roomName: string): boolean {
+    isModOfRoom(roomName: string): boolean {
         return this.isLogged && this.user.moddedRooms!=null && (this.user.moddedRooms.some((room) => room.name === roomName));
     }
 
-    public canStream(roomName: string): boolean {
+    canStream(roomName: string): boolean {
         return this.isLogged && ((this.user.moddedRooms!=null && this.user.moddedRooms.some((room) => room.name === roomName)) || (this.user.presentedRooms!=null && this.user.presentedRooms.some((room) => room.name === roomName)));
+    }
+
+    isInRoom(roomName: string): boolean {
+        return this.isLogged && ((this.user.moddedRooms!=null && this.user.moddedRooms.some((room) => room.name === roomName)) || (this.user.presentedRooms!=null && this.user.presentedRooms.some((room) => room.name === roomName)) || (this.user.participatedRooms!=null && this.user.participatedRooms.some((room) => room.name === roomName)));
     }
 }

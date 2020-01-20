@@ -20,8 +20,8 @@ public class UserService {
 		return userRep.findAll();
 	}
 
-	public void save(User user) {
-		userRep.save(user);
+	public User save(User user) {
+		return userRep.save(user);
 	}
 
 	public void delete(long id) {

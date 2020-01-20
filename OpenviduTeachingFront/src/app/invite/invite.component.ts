@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RoomService } from '../../services/room.service';
-import { UserService } from '../../services/user.service';
+import { RoomService } from '../shared/services/room.service';
+import { UserService } from '../shared/services/user.service';
 
 @Component({
   selector: 'app-invite',
@@ -13,8 +13,9 @@ export class InviteComponent implements OnInit {
   code: string;
   roomName: string;
   userName: string;
+  password: string;
   nameTaken: boolean = false;
-  inputErrorMsg: string;
+  userErrorMsg: string;
 
   constructor(
     private roomSrv: RoomService,
@@ -31,23 +32,35 @@ export class InviteComponent implements OnInit {
   }
 
   enterRoom() {
-    if(this.userName == null || this.userName == '') {
-      this.inputErrorMsg = 'You must enter a username';
+    if(this.userSrv.isLogged) {
+      this.userName = this.userSrv.user.name;
+      if(this.userSrv.isInRoom(this.roomName)) {
+        this.router.navigate(['/',this.roomName]);
+      } else {
+        this.goToRoom(); 
+      }
     } else {
-      this.userSrv.checkUserName(this.userName).subscribe(
-        (_) => {
-          this.inputErrorMsg = 'Username already taken';
-        },
-        error => {
-          //Only enters when the username isn't taken
-          this.goToRoom();
-        }
-      );
+      if(this.userName == null || this.userName == '') {
+        this.userErrorMsg = 'You must enter a username';
+      } else {
+        this.userSrv.register(this.userName,this.password).subscribe(
+          (_) => {
+            this.goToRoom();
+          },
+          error => {
+            if(error.code==409) {
+              this.userErrorMsg = 'Username already taken';
+            } else {
+              this.userErrorMsg = 'Something went wrong. Please try again';
+            }
+          }
+        );
+      }
     }
   }
 
   goToRoom() {
-    this.roomSrv.enterRoom(this.code, this.userName).subscribe(
+    this.roomSrv.enterRoom(this.code).subscribe(
       (_) => {
         this.router.navigate(['/', this.roomName]);
       },
@@ -64,7 +77,7 @@ export class InviteComponent implements OnInit {
       },
       error => {
         this.router.navigate(['/']);
-        console.log(error)
+        console.log(error);
       }
     );
   }

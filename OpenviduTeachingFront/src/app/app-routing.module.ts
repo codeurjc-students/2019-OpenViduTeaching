@@ -1,4 +1,4 @@
-import { InviteComponent } from './shared/components/invite/invite.component';
+import { InviteComponent } from './invite/invite.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';

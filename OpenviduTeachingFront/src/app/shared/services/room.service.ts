@@ -39,11 +39,9 @@ export class RoomService {
     );
   }
 
-  enterRoom(code: string, userName: string): Observable<User> {
-    return this.http.put<User>(this.baseURL + '/room/' + code + '/user/' + userName, {}).pipe(
+  enterRoom(code: string): Observable<User> {
+    return this.http.put<User>(this.baseURL + '/room/' + code + '/user', {}).pipe(
       map(user => {
-        let auth = window.btoa(userName + ':pass'); //TODO change pass
-        this.userService.saveUser(user, auth);
         return user;
       }),
       catchError((error) => this.handleError(error))

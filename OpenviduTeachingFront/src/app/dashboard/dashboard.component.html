@@ -17,7 +17,10 @@
     (loggedIn)="getRooms()">
   </login-component>
 
-  <div id="card_content" *ngIf="this.userSrv.isLogged">
+  <div id="card_content" *ngIf="this.userSrv.isLogged
+    && ((this.moddedRooms!==undefined && this.moddedRooms.length>0)
+    || (this.presentedRooms!==undefined && this.presentedRooms.length>0)
+    || (this.participatedRooms!==undefined && this.participatedRooms.length>0))">
     <mat-card id="room_card">
       <mat-list>
         <div *ngIf="this.moddedRooms!==undefined && this.moddedRooms.length>0">
