@@ -42,7 +42,7 @@ public class RoomController {
 
 	@Autowired
 	private UserComponent userComponent;
-	
+
 	@Autowired
 	private OpenViduComponent openviduComponent;
 
@@ -93,7 +93,7 @@ public class RoomController {
 				}
 			}
 		}
-		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
 	/**
@@ -118,44 +118,28 @@ public class RoomController {
 	 * 
 	 * @return the room with either code (participant or moderator)
 	 */
-	@PutMapping("/room/{code}/user/{userName}")
+	@PutMapping("/room/{code}/user")
 	@JsonView(User.WithRooms.class)
-	public ResponseEntity<User> newUserInRoom(HttpSession session, HttpServletRequest request,
-			@PathVariable String code, @PathVariable String userName) {
-		User user = userServ.findByName(userName);
-		String password = "pass"; // TODO change pass
+	public ResponseEntity<User> newUserInRoom(HttpServletRequest request, @PathVariable String code) {
+		if (!request.isUserInRole("USER")) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		User user = userServ.findByName(request.getUserPrincipal().getName());
+		// User currentUser = this.userComponent.getLoggedUser();
 		Room room = roomServ.findByInviteCode(code);
 
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		if (user == null) {
-			// Creates user if it doesn't exist
-			user = new User(userName, password, "ROLE_USER");
-			userServ.save(user);
-		} else {
-			if (room.isModerator(user)) {
-				// Cannot enter a room if already a mod of it
-				return new ResponseEntity<>(HttpStatus.CONFLICT);
-			}
-			if (code.equals(room.getParticipantInviteCode()) && (room.isParticipant(user)) || room.isPresenter(user)) {
-				// Cannot enter a room as participant if already in it
-				return new ResponseEntity<>(HttpStatus.CONFLICT);
-			}
+		if (room.isModerator(user)) {
+			// Cannot enter a room if already a mod of it
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
-		try {
-			/*
-			 * Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			 * if (auth != null){ new SecurityContextLogoutHandler().logout(request, response, auth); }
-			 */
-			request.login(userName, password);
-		} catch (ServletException e) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		if (code.equals(room.getParticipantInviteCode()) && (room.isParticipant(user)) || room.isPresenter(user)) {
+			// Cannot enter a room as participant if already in it
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
-		/*
-		 * if (!userComponent.isLoggedUser()) { return new
-		 * ResponseEntity<>(HttpStatus.UNAUTHORIZED); }
-		 */
+		
 		if (code.equals(room.getParticipantInviteCode())) {
 			user.addParticipatedRoom(room);
 		} else {
@@ -191,31 +175,31 @@ public class RoomController {
 		if (room.isInRoom(user)) {
 			Collection<User> connected = openviduComponent.getConnectedAssistants(room);
 			JSONObject response = new JSONObject();
-			
+
 			Set<JSONObject> moderators = new HashSet<>();
-			for(User mod : room.getModerators()) {
+			for (User mod : room.getModerators()) {
 				JSONObject userJson = new JSONObject();
 				userJson.put("name", mod.getName());
 				userJson.put("connected", connected.contains(mod));
 				moderators.add(userJson);
 			}
-			
+
 			Set<JSONObject> presenters = new HashSet<>();
-			for(User pres : room.getPresenters()) {
+			for (User pres : room.getPresenters()) {
 				JSONObject userJson = new JSONObject();
 				userJson.put("name", pres.getName());
 				userJson.put("connected", connected.contains(pres));
 				presenters.add(userJson);
 			}
-			
+
 			Set<JSONObject> participants = new HashSet<>();
-			for(User part : room.getParticipants()) {
+			for (User part : room.getParticipants()) {
 				JSONObject userJson = new JSONObject();
 				userJson.put("name", part.getName());
 				userJson.put("connected", connected.contains(part));
 				participants.add(userJson);
 			}
-			
+
 			response.put("moderators", moderators);
 			response.put("presenters", presenters);
 			response.put("participants", participants);
