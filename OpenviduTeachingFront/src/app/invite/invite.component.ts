@@ -48,11 +48,7 @@ export class InviteComponent implements OnInit {
             this.goToRoom();
           },
           error => {
-            if(error.code==409) {
               this.userErrorMsg = 'Username already taken';
-            } else {
-              this.userErrorMsg = 'Something went wrong. Please try again';
-            }
           }
         );
       }

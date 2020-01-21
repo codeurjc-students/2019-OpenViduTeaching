@@ -22,18 +22,23 @@
     max-width: 80%;
 }
 
-#inputErrorMsg {
-    color: red;
-}
-
 #roomName {
     display: inline-block;
     font-family: 'Ubuntu', sans-serif;
     background-color: #494949;
-    font-size: 180%;
+    font-size: 200%;
     margin-bottom: 5%;
     padding-right: 2%;
     padding-left: 2%;
+}
+
+p {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 120%;
+}
+
+#userErrorMsg {
+    color: red;
 }
 
 ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {

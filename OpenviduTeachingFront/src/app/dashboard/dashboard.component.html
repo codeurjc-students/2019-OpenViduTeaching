@@ -26,7 +26,15 @@
         <div *ngIf="this.moddedRooms!==undefined && this.moddedRooms.length>0">
           <h3 mat-subheader>MODDED ROOMS</h3>
           <mat-list-item *ngFor="let mod of this.moddedRooms">
-            <a mat-line mat-button routerLink="{{mod.name}}">{{mod.name}}</a>
+            <a mat-line mat-stroked-button routerLink="{{mod.name}}">
+              {{mod.name}}
+            </a>
+            <button mat-icon-button (click)="getInviteURL(mod.name,'moderator')">
+              <mat-icon color="accent" matTooltip="Invite URL for moderators">link</mat-icon>
+            </button>
+            <button mat-icon-button (click)="getInviteURL(mod.name,'participant')">
+              <mat-icon matTooltip="Invite URL for participants">link</mat-icon>
+            </button>
           </mat-list-item>
         </div>
 
@@ -35,7 +43,7 @@
         <div *ngIf="this.presentedRooms!==undefined && this.presentedRooms.length>0">
           <h3 mat-subheader>PRESENTED ROOMS</h3>
           <mat-list-item *ngFor="let pres of this.presentedRooms">
-            <a mat-line mat-button routerLink="{{pres.name}}">{{pres.name}}</a>
+            <a mat-line mat-stroked-button routerLink="{{pres.name}}">{{pres.name}}</a>
           </mat-list-item>
         </div>
 
@@ -44,7 +52,7 @@
         <div *ngIf="this.participatedRooms!==undefined && this.participatedRooms.length>0">
           <h3 mat-subheader>PARTICIPATED ROOMS</h3>
           <mat-list-item *ngFor="let part of this.participatedRooms">
-            <a mat-line mat-button routerLink="{{part.name}}">{{part.name}}</a>
+            <a mat-line mat-stroked-button routerLink="{{part.name}}">{{part.name}}</a>
           </mat-list-item>
         </div>
       </mat-list>

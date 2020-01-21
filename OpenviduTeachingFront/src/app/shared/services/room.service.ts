@@ -64,6 +64,6 @@ export class RoomService {
 
   private handleError(error: any) {
     console.error(error);
-    return Observable.throw("Server error (" + error.status + "): " + error.text())
+    return Observable.throw("Server error (" + error.status + "): " + error.message)
   }
 }

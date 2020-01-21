@@ -31,10 +31,10 @@
       <button mat-icon-button (click)="exitSession()" id="navLeaveButton" *ngIf="!this.ovSettings || (this.ovSettings && this.ovSettings.toolbarButtons.exit)">
         <mat-icon color="warn" matTooltip="Leave the session">power_settings_new</mat-icon>
       </button>
-      <button mat-icon-button (click)="getInvideURL('moderator')" *ngIf="localUser && this.userService.isModOfRoom(this.mySessionId)">
+      <button mat-icon-button (click)="getInviteURL('moderator')" *ngIf="localUser && this.userService.isModOfRoom(this.mySessionId)">
         <mat-icon color="accent" matTooltip="Invite URL for moderators">link</mat-icon>
       </button>
-      <button mat-icon-button (click)="getInvideURL('participant')" *ngIf="localUser && this.userService.isModOfRoom(this.mySessionId)">
+      <button mat-icon-button (click)="getInviteURL('participant')" *ngIf="localUser && this.userService.isModOfRoom(this.mySessionId)">
         <mat-icon matTooltip="Invite URL for participants">link</mat-icon>
       </button>
       <button mat-icon-button id="navMenuButton" (click)="toggleMenu()" *ngIf="!this.ovSettings || (this.ovSettings && this.ovSettings.chat)">

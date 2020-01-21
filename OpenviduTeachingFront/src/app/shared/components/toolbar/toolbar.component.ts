@@ -73,7 +73,7 @@ export class ToolbarComponent implements OnInit {
     this.menuButtonClicked.emit();
   }
 
-  getInvideURL(role:string){
+  getInviteURL(role:string){
     this.roomSrv.getRoomCode(this.mySessionId, role).subscribe(
       code => {
         let url:string = 'http://' + location.hostname + ':4200/#/invite/' + code;

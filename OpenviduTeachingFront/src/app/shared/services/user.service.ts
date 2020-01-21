@@ -88,7 +88,7 @@ export class UserService {
     }
 
     private handleError(error: any) {
-        return Observable.throw("Server error (" + error.status + "): " + error.text())
+        return Observable.throw("Server error (" + error.status + "): " + error.message)
     }
 
     saveUser(user: User, auth: string) {

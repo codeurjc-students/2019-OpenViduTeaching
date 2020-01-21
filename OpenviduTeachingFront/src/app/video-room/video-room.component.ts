@@ -531,7 +531,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
   private openDialogError(message, messageError: string) {
     this.dialog.open(DialogErrorComponent, {
-      width: '450px',
+      width: '500px',
       data: { message: message, messageError: messageError },
     });
   }
