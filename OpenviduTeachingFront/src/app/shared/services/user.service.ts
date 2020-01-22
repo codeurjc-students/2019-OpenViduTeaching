@@ -90,10 +90,18 @@ export class UserService {
         return Observable.throw("Server error (" + error.status + "): " + error.message)
     }
 
-    saveUser(user: User, auth: string) {
+    saveUser(user: User, auth?: string) {
         if (user) {
+            let oldAuth: string;
+            if(this.user) {
+                oldAuth = this.user.authdata;
+            }
             this.setCurrentUser(user);
-            user.authdata = auth;
+            if(auth) {
+                user.authdata = auth;
+            } else {
+                user.authdata = oldAuth;
+            }
             localStorage.setItem('currentUser', JSON.stringify(user));
         }
     }

@@ -35,7 +35,19 @@ export class InviteComponent implements OnInit {
     if(this.userSrv.isLogged) {
       this.userName = this.userSrv.user.name;
       if(this.userSrv.isInRoom(this.roomName)) {
-        this.router.navigate(['/',this.roomName]);
+        if(this.userSrv.isModOfRoom(this.roomName)) {
+          this.router.navigate(['/',this.roomName]);
+        } else {
+          this.roomSrv.enterRoom(this.code).subscribe(
+            user => {
+              this.userSrv.saveUser(user);
+              this.router.navigate(['/', this.roomName]);
+            },
+            error => {
+              console.log(error)
+            }
+          );
+        }
       } else {
         this.roomSrv.enterRoom(this.code).subscribe(
           (_) => {
