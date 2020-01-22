@@ -80,31 +80,32 @@
 
       <mat-sidenav-content class="sidenav-main">
         <div id="layout" class="bounds" [class.boundsLight]="lightTheme">
-          <div
-            class="OT_root OT_publisher custom-class"
-            id="localUser"
-            *ngFor="let localUser of localUsers"
-            (dblclick)="enlargeElement($event)"
-          >
-            <stream-component
-              *ngIf="localUser.getStreamManager()"
-              #videoStream
-              [user]="localUser"
-              [localUser]="localUsers[0]"
-              [lightTheme]="lightTheme"
-              [newMessagesNum]="newMessages"
-              [compact]="compact"
-              [menuOpened]="menuOpened"
-              [canEditNickname]="true"
-              (nicknameClicked)="nicknameChanged($event)"
-              (camButtonClicked)="toggleCam()"
-              (micButtonClicked)="toggleMic()"
-              (exitButtonClicked)="exitSession()"
-              (menuButtonClicked)="toggleMenu()"
-              (screenShareClicked)="screenShareAndChangeScreen()"
-              (stopScreenSharingClicked)="stopScreenSharing()"
-            ></stream-component>
-          </div>
+          <ng-container *ngIf="userService.canStream(mySessionId)">
+            <div
+              class="OT_root OT_publisher custom-class"
+              id="localUser"
+              *ngFor="let localUser of localUsers"
+              (dblclick)="enlargeElement($event)">
+              <stream-component
+                *ngIf="localUser.getStreamManager()"
+                #videoStream
+                [user]="localUser"
+                [localUser]="localUsers[0]"
+                [lightTheme]="lightTheme"
+                [newMessagesNum]="newMessages"
+                [compact]="compact"
+                [menuOpened]="menuOpened"
+                [canEditNickname]="true"
+                (nicknameClicked)="nicknameChanged($event)"
+                (camButtonClicked)="toggleCam()"
+                (micButtonClicked)="toggleMic()"
+                (exitButtonClicked)="exitSession()"
+                (menuButtonClicked)="toggleMenu()"
+                (screenShareClicked)="screenShareAndChangeScreen()"
+                (stopScreenSharingClicked)="stopScreenSharing()">
+              </stream-component>
+            </div>
+          </ng-container>
 
           <div
             *ngFor="let user of this.remoteUsers"
