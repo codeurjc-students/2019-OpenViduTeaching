@@ -37,33 +37,40 @@ export class InviteComponent implements OnInit {
       if(this.userSrv.isInRoom(this.roomName)) {
         this.router.navigate(['/',this.roomName]);
       } else {
-        this.goToRoom(); 
+        this.roomSrv.enterRoom(this.code).subscribe(
+          (_) => {
+            this.router.navigate(['/', this.roomName]);
+          },
+          error => {
+            console.log(error)
+          }
+        );
       }
     } else {
       if(this.userName == null || this.userName == '') {
         this.userErrorMsg = 'You must enter a username';
+      } else if(this.password == null) {
+        this.userErrorMsg = 'You must enter a password';
       } else {
         this.userSrv.register(this.userName,this.password).subscribe(
           (_) => {
-            this.goToRoom();
+            this.roomSrv.enterRoom(this.code).subscribe(
+              user => {
+                let auth = window.btoa(this.userName + ':' + this.password);
+                this.userSrv.saveUser(user, auth);
+                this.router.navigate(['/', this.roomName]);
+              },
+              error => {
+                console.log(error)
+              }
+            );
           },
           error => {
-              this.userErrorMsg = 'Username already taken';
+            this.userErrorMsg = 'Username already taken';
           }
         );
       }
     }
-  }
-
-  goToRoom() {
-    this.roomSrv.enterRoom(this.code).subscribe(
-      (_) => {
-        this.router.navigate(['/', this.roomName]);
-      },
-      error => {
-        console.log(error)
-      }
-    );
   }
 
   checkRoom() {

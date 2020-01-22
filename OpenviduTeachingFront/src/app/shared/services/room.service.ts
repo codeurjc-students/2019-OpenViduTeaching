@@ -41,9 +41,7 @@ export class RoomService {
 
   enterRoom(code: string): Observable<User> {
     return this.http.put<User>(this.baseURL + '/room/' + code + '/user', {}).pipe(
-      map(user => {
-        return user;
-      }),
+      map(user => { return user; }),
       catchError((error) => this.handleError(error))
     );
   }

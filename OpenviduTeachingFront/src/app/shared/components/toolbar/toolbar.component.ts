@@ -76,7 +76,7 @@ export class ToolbarComponent implements OnInit {
   getInviteURL(role:string){
     this.roomSrv.getRoomCode(this.mySessionId, role).subscribe(
       code => {
-        let url:string = 'http://' + location.hostname + ':4200/#/invite/' + code;
+        let url:string = window.location.origin + '/#/invite/' + code;
         this.urlSnackBar.open(url, 'Close');
       },
       error => console.error(error)

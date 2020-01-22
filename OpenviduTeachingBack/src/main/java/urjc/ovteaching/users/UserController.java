@@ -65,8 +65,8 @@ public class UserController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@JsonView(User.WithRooms.class)
 	@RequestMapping("/logIn")
+	@JsonView(User.WithRooms.class)
 	public ResponseEntity<User> logIn() {
 		if (!userComponent.isLoggedUser()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -87,6 +87,7 @@ public class UserController {
 	}
 	
 	@RequestMapping("/register/{user}/{pass}")
+	@JsonView(User.WithRooms.class)
 	public ResponseEntity<User> register(@PathVariable String user, @PathVariable String pass, HttpServletRequest request, HttpServletResponse httpServletResponse) {
 		User newUser = userServ.findByName(user);
 		if (newUser == null) {

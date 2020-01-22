@@ -57,6 +57,7 @@ public class User {
 		this.roles = new ArrayList<>(Arrays.asList(roles));
 		this.moddedRooms = new ArrayList<>();
 		this.participatedRooms = new ArrayList<>();
+		this.presentedRooms = new ArrayList<>();
 	}
 
 	protected User() {

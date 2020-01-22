@@ -65,7 +65,6 @@ export class UserService {
     register(userName: string, pass: string) {
         return this.http.get<User>(this.baseURL + '/register/' + userName + '/' + pass, {}).pipe(
             map(user => {
-                console.log(user);
                 let auth = window.btoa(userName + ':' + pass);
                 this.saveUser(user, auth);
                 return user;
