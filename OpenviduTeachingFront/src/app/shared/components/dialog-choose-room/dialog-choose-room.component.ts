@@ -5,7 +5,7 @@ import { UserModel } from '../../models/user-model';
 import { NicknameMatcher } from '../../forms-matchers/nickname';
 import { ApiService } from '../../services/api.service';
 import { OpenVidu, Publisher } from 'openvidu-browser';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { OvSettings } from '../../models/ov-settings';
 
 interface IDevices {
@@ -53,6 +53,7 @@ export class DialogChooseRoomComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private apiSrv: ApiService
   ) { }
 
@@ -215,6 +216,7 @@ export class DialogChooseRoomComponent implements OnInit {
     });
     this.localUsers = [];
     this.leaveSession.emit();
+    this.router.navigate(['']);
   }
 
   private setDevicesValue(publisher: Publisher) {

@@ -7,3 +7,10 @@
     font-size: 120%;
     color: rgb(100, 100, 100);
 }
+
+#spinner {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

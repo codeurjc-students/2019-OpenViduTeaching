@@ -17,7 +17,10 @@
     (loggedIn)="getRooms()">
   </login-component>
 
+  <mat-spinner color="accent" id="spinner" *ngIf="loading"></mat-spinner>
+
   <div id="card_content" *ngIf="this.userSrv.isLogged
+    && !loading
     && ((this.moddedRooms!==undefined && this.moddedRooms.length>0)
     || (this.presentedRooms!==undefined && this.presentedRooms.length>0)
     || (this.participatedRooms!==undefined && this.participatedRooms.length>0))">

@@ -167,10 +167,12 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       this.openviduLayout = null;
       this.router.navigate(['']);
       this.leaveSession.emit();
-      this.openViduSrv.removeUser(this.mySessionId).subscribe(
-        (_) => { },
-        error => console.log(error)
-      );
+      if(this.mySessionId) {
+        this.openViduSrv.removeUser(this.mySessionId).subscribe(
+          (_) => { },
+          error => console.log(error)
+        );
+      }
     }
   }
 
@@ -509,7 +511,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         userAvatar: messageOwner.getAvatar(),
       });
       this.checkNotification();
-      this.chatComponent.scrollToBottom();
+      if(this.chatComponent) {
+        this.chatComponent.scrollToBottom();
+      }
     });
   }
 

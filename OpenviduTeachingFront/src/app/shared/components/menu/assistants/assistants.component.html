@@ -1,4 +1,4 @@
-<mat-card id="connected">
+<mat-card *ngIf="!loading" id="connected">
     <div>
         <h4>
             {{assistantsConnectedCount}} assistant<span *ngIf="this.assistantsConnectedCount!==1">s</span> online
@@ -44,7 +44,7 @@
     </mat-list>
 </mat-card>
 
-<mat-card id="disconnected" *ngIf="this.assistantsDisconnectedCount>0">
+<mat-card id="disconnected" *ngIf="this.assistantsDisconnectedCount>0 && !loading">
     <div>
         <h4>
             {{assistantsDisconnectedCount}} assistant<span *ngIf="this.assistantsDisconnectedCount!==1">s</span> offline
@@ -84,3 +84,5 @@
         </div>
     </mat-list>
 </mat-card>
+
+<mat-spinner id="spinner" *ngIf="loading"></mat-spinner>

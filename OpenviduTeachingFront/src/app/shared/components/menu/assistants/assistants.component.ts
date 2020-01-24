@@ -12,6 +12,8 @@ export class AssistantsComponent implements OnInit {
   @Input() session: Session;
   @Input() userName: string;
 
+  private loading: boolean;
+
   constructor(
     private roomSrv: RoomService
   ) { }
@@ -31,6 +33,8 @@ export class AssistantsComponent implements OnInit {
   }
 
   getAssistants() {
+    this.loading = true;
+    console.log("loading");
     this.roomSrv.getAssistants(this.session.sessionId).subscribe(
       assistants => {
         this.moderatorsConnected = [];
@@ -67,6 +71,9 @@ export class AssistantsComponent implements OnInit {
 
         this.assistantsConnectedCount = this.moderatorsConnected.length + this.participantsConnected.length + this.presentersConnected.length;
         this.assistantsDisconnectedCount = this.moderatorsDisconnected.length + this.participantsDisconnected.length + this.presentersDisconnected.length;
+
+        this.loading = false;
+        console.log("loaded");
       },
       error => console.log(error)
     );

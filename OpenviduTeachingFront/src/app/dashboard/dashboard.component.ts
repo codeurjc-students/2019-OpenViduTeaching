@@ -18,6 +18,8 @@ export class DashboardComponent implements OnInit {
   private presentedRooms: Room[] = [];
   private participatedRooms: Room[] = [];
 
+  private loading: boolean;
+
   constructor(
     private router: Router,
     private userSrv: UserService,
@@ -32,11 +34,13 @@ export class DashboardComponent implements OnInit {
   }
 
   getRooms() {
+    this.loading = true;
     this.userSrv.getRoomsForUser().subscribe(
       rooms => {
         this.moddedRooms = rooms.modded;
         this.presentedRooms = rooms.presented;
         this.participatedRooms = rooms.participated;
+        this.loading = false;
       },
       error => console.log(error)
     );
