@@ -39,24 +39,49 @@
         fixedInViewport="true"
         fixedTopGap="40"
         fixedBottomGap="0"
-        *ngIf="localUsers && (localUsers[0].getStreamManager() && (!this.ovSettings || (this.ovSettings && this.ovSettings.chat)))"
+        *ngIf="localUsers && (localUsers[0].getStreamManager())"
       >
       
-        <mat-tab-group class="tab-group" backgroundColor="primary" dynamicHeight>
-          <mat-tab class="tab">
+        <mat-tab-group class="tab-group" backgroundColor="primary" dynamicHeight animationDuration="0ms">
+
+          <mat-tab class="tab" *ngIf="!this.ovSettings || (this.ovSettings && this.ovSettings.chat)">
             <ng-template mat-tab-label>
               <mat-icon>chat</mat-icon>
-              Chat
+              <span *ngIf="userService.canStream(mySessionId)">Assistants chat</span>
+              <span *ngIf="!userService.canStream(mySessionId)">Chat</span>
             </ng-template>
             <ng-template matTabContent>
               <chat-component
                 #chatComponent
+                [signal]="'chat'"
                 [session]="this.session"
                 [sessionScreen]="this.sessionScreen"
                 [user]="this.localUsers[0]"
                 [menuOpened]="menuOpened"
                 [lightTheme]="lightTheme"
                 [messageList]="messageList"
+                [roomName]="roomName"
+                (closeMenu)="toggleMenu()"
+              ></chat-component>
+            </ng-template>
+          </mat-tab>
+
+          <mat-tab class="tab" *ngIf="(!this.ovSettings || (this.ovSettings && this.ovSettings.chat)) && userService.canStream(mySessionId)">
+            <ng-template mat-tab-label>
+              <mat-icon>chat_bubble</mat-icon>
+              Moderators chat
+            </ng-template>
+            <ng-template matTabContent>
+              <chat-component
+                #modChatComponent
+                [signal]="'chatMod'"
+                [session]="this.session"
+                [sessionScreen]="this.sessionScreen"
+                [user]="this.localUsers[0]"
+                [menuOpened]="menuOpened"
+                [lightTheme]="lightTheme"
+                [messageList]="messageListMod"
+                [roomName]="roomName"
                 (closeMenu)="toggleMenu()"
               ></chat-component>
             </ng-template>
@@ -75,6 +100,7 @@
               </assistants-component>
             </ng-template>
           </mat-tab>
+
         </mat-tab-group>
       </mat-sidenav>
 

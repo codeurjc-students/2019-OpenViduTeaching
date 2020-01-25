@@ -1,3 +1,4 @@
+import { UserService } from './../../../services/user.service';
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, HostListener } from '@angular/core';
 import { UserModel } from '../../../models/user-model';
 import { Session } from 'openvidu-browser';
@@ -12,10 +13,12 @@ export class ChatComponent implements OnInit {
   @ViewChild('chatScroll', {static: false}) chatScroll: ElementRef;
   @ViewChild('chatInput', {static: false}) chatInput: ElementRef;
 
+  @Input() signal: string;
   @Input() session: Session;
   @Input() sessionScreen: Session;
   @Input() user: UserModel;
   @Input() lightTheme: boolean;
+  @Input() roomName: string;
   @Input()
   messageList: { connectionId: string; nickname: string; message: string; userAvatar: string }[] = [];
 
@@ -25,7 +28,9 @@ export class ChatComponent implements OnInit {
 
   message: string;
 
-  constructor() {}
+  constructor(
+    private userSrv: UserService
+  ) {}
 
   @HostListener('document:keydown.escape', ['$event'])
   onKeydownHandler(event: KeyboardEvent) {
@@ -66,7 +71,7 @@ export class ChatComponent implements OnInit {
         };
         this.session.signal({
           data: JSON.stringify(data),
-          type: 'chat',
+          type: this.signal,
         });
         this.message = '';
       }

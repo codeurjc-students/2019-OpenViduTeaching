@@ -1,7 +1,9 @@
 <div id="chatContainer">
   <div id="chatComponent" [class.chatComponentLight]="lightTheme">
     <div id="chatToolbar">
-      <span> CHAT</span>
+      <span *ngIf="!userSrv.isModOfRoom(roomName) && signal==='chat'"> CHAT</span>
+      <span *ngIf="userSrv.isModOfRoom(roomName) && signal==='chat'"> ASSITANTS CHAT</span>
+      <span *ngIf="signal==='chatMod'"> MODERATORS CHAT</span>
       <button mat-icon-button (click)="close()" id="closeButton">
         <mat-icon matTooltip="Close" color="warn">highlight_off</mat-icon>
       </button>

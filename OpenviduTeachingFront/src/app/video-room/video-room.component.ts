@@ -42,6 +42,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   @Output() error = new EventEmitter<any>();
 
   @ViewChild('chatComponent', {static: false}) chatComponent: ChatComponent;
+  @ViewChild('modChatComponent', {static: false}) modChatComponent: ChatComponent;
   @ViewChild('sidenav', {static: false}) menu: any;
   @ViewChild('assistants', {static: false}) assistantsComponent: AssistantsComponent;
 
@@ -67,6 +68,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   localUsers: UserModel[] = [];
   remoteUsers: UserModel[] = [];
   messageList: { connectionId: string; nickname: string; message: string; userAvatar: string }[] = [];
+  messageListMod: { connectionId: string; nickname: string; message: string; userAvatar: string }[] = [];
   newMessages = 0;
 
   private OV: OpenVidu;
@@ -150,7 +152,10 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     this.subscribeToStreamCreated();
     this.subscribedToStreamDestroyed();
     this.subscribedToDisconnect();
-    this.subscribedToChat();
+    this.subscribedToChat('chat', this.messageList, this.chatComponent);
+    if(this.userService.isModOfRoom(this.roomName)) {
+      this.subscribedToChat('chatMod', this.messageListMod, this.modChatComponent);
+    }
     this.connectToSession();
   }
 
@@ -502,22 +507,22 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     });
   }
 
-  private subscribedToChat() {
-    this.session.on('signal:chat', (event: any) => {
+  private subscribedToChat(signal: string, msgList: { connectionId: string; nickname: string; message: string; userAvatar: string }[], component: ChatComponent) {
+    this.session.on('signal:' + signal, (event: any) => {
       const data = JSON.parse(event.data);
       const messageOwner =
         this.localUsers[0].getConnectionId() === data.connectionId
           ? this.localUsers[0]
           : this.remoteUsers.filter((user) => user.getConnectionId() === data.connectionId)[0];
-      this.messageList.push({
+      msgList.push({
         connectionId: data.connectionId,
         nickname: data.nickname,
         message: data.message,
-        userAvatar: messageOwner.getAvatar(),
+        userAvatar: messageOwner? messageOwner.getAvatar() : undefined,
       });
       this.checkNotification();
-      if(this.chatComponent) {
-        this.chatComponent.scrollToBottom();
+      if(component) {
+        component.scrollToBottom();
       }
     });
   }
