@@ -2,7 +2,7 @@ import { AssistantsComponent } from './../shared/components/menu/assistants/assi
 import { UserService } from '../shared/services/user.service';
 import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import {
   OpenVidu,
   Publisher,
@@ -62,6 +62,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   openviduLayout: OpenViduLayout;
   openviduLayoutOptions: OpenViduLayoutOptions;
   mySessionId: string;
+  roomName: string;
   myUserName: string;
   localUsers: UserModel[] = [];
   remoteUsers: UserModel[] = [];
@@ -75,6 +76,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   constructor(
     private openViduSrv: OpenViduService,
     private router: Router,
+    private route: ActivatedRoute,
     public dialog: MatDialog,
     private apiSrv: ApiService,
     private userService:UserService
@@ -98,9 +100,12 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     if(!this.userService.isLogged) {
       this.openDialogError('You need to be logged in to enter a room', 'Rooms can only be accessed with an invite URL');
     }
+    this.route.paramMap.subscribe(params => {
+      this.roomName = params.get("roomName");
+    });
     this.checkTheme();
     this.openViduSrv
-      .getOvSettingsData()
+      .getOvSettingsData(this.roomName)
       .then((data: OvSettings) => {
         this.ovSettings = this.ovSettings ? this.ovSettings : data;
       })

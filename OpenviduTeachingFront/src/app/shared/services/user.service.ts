@@ -27,7 +27,6 @@ export class UserService {
     baseURL: string = '/ovTeachingApi';
 
     constructor(
-        private openviduSrv: OpenViduService,
         private http: HttpClient
     ) {
         let user = JSON.parse(localStorage.getItem('currentUser'));

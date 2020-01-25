@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { OvSettings } from '../models/ov-settings';
 import { Observable, throwError } from 'rxjs';
-import { User } from './user.service';
+import { User, UserService } from './user.service';
 import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -14,20 +14,12 @@ export class OpenViduService {
   private SETTINGS_FILE_NAME = 'ov-settings.json';
 
   baseURL: string = '/ovTeachingApi';
+  ovSettings: OvSettings;
 
-  private ovSettings: OvSettings = {
-    chat: true,
-    autopublish: false,
-    toolbarButtons: {
-      video: true,
-      audio: true,
-      fullscreen: true,
-      screenShare: true,
-      exit: true,
-    },
-  };
-
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private userSrv: UserService  
+  ) {}
 
   generateToken(roomName: string): Observable<User> {
     return this.http.put<any>(this.baseURL + '/room/' + roomName + '/token', {}).pipe(
@@ -100,13 +92,27 @@ export class OpenViduService {
     return Observable.throw("Server error (" + error.status + "): " + error.message)
   }
 
-  getOvSettingsData(): Promise<OvSettings> {
+  private getLocalOVSettings(roomName: string) {
+    return {
+      chat: true,
+      autopublish: false,
+      toolbarButtons: {
+        video: this.userSrv.canStream(roomName),
+        audio: this.userSrv.canStream(roomName),
+        fullscreen: true,
+        screenShare: this.userSrv.canStream(roomName),
+        exit: true,
+      },
+    };
+  }
+
+  getOvSettingsData(roomName: string): Promise<OvSettings> {
     return new Promise((resolve) => {
       this.http.get(this.SETTINGS_FILE_NAME).subscribe(
         (data: any) => {
           console.log('FILE', data);
           console.log(data.openviduSettings);
-          this.ovSettings = data.openviduSettings ? data.openviduSettings : this.ovSettings;
+          this.ovSettings = data.openviduSettings ? data.openviduSettings : this.getLocalOVSettings(roomName);
           if (data.openviduCredentials) {
             this.URL_OV = data.openviduCredentials.openvidu_url ? data.openviduCredentials.openvidu_url : this.URL_OV;
           }
@@ -120,7 +126,7 @@ export class OpenViduService {
             this.URL_OV = environment.openvidu_url;
           }
           console.log('URL Environment', this.URL_OV);
-          resolve(this.ovSettings);
+          resolve(this.getLocalOVSettings(roomName));
         },
       );
     });
