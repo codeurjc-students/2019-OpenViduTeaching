@@ -1,3 +1,4 @@
+import { RoomService } from './../shared/services/room.service';
 import { AssistantsComponent } from './../shared/components/menu/assistants/assistants.component';
 import { UserService } from '../shared/services/user.service';
 import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
@@ -13,6 +14,7 @@ import {
   StreamManagerEvent,
   StreamManager,
   ConnectionEvent,
+  Connection,
 } from 'openvidu-browser';
 import { DialogErrorComponent } from '../shared/components/dialog-error/dialog-error.component';
 import { OpenViduLayout, OpenViduLayoutOptions } from '../shared/layout/openvidu-layout';
@@ -70,6 +72,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   messageList: { connectionId: string; nickname: string; message: string; userAvatar: string }[] = [];
   messageListMod: { connectionId: string; nickname: string; message: string; userAvatar: string }[] = [];
   newMessages = 0;
+  modConnections: Connection[] = [];
+  updatingModConnections: boolean;
 
   private OV: OpenVidu;
   private OVScreen: OpenVidu;
@@ -81,7 +85,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     public dialog: MatDialog,
     private apiSrv: ApiService,
-    private userService:UserService
+    private userService:UserService,
+    private roomService: RoomService
   ) {}
 
   @HostListener('window:beforeunload')
@@ -178,7 +183,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       this.router.navigate(['']);
       this.leaveSession.emit();
       if(this.mySessionId) {
-        this.openViduSrv.removeUser(this.mySessionId).subscribe(
+        this.openViduSrv.removeUser(this.roomName).subscribe(
           (_) => { },
           error => console.log(error)
         );
@@ -485,6 +490,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       if(this.assistantsComponent) {
         this.assistantsComponent.getAssistants();
       }
+      this.updateModConnections();
     });
   }
 
@@ -498,12 +504,13 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
   private subscribedToDisconnect() {
     this.session.on('connectionDestroyed', (event: ConnectionEvent) => {
+      event.callDefaultBehavior();
       if(this.assistantsComponent) {
         setTimeout(() => {
           this.assistantsComponent.getAssistants();
         }, 500);
       }
-      event.preventDefault();
+      this.updateModConnections();
     });
   }
 
@@ -632,5 +639,26 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         resolve();
       }).catch((error) => reject(error));
     });
+  }
+
+  private updateModConnections() {
+    this.updatingModConnections = true;
+    this.roomService.getAssistants(this.mySessionId).subscribe(
+      assistants => {
+        this.modConnections = [];
+        for(let connection of Object.values(this.session.remoteConnections)) {
+          let connectionName = (JSON.parse(connection.data.split('%/%')[0])).clientData;
+          for(let moderator of assistants.moderators) {
+            if(moderator.connected && moderator.name === connectionName) {
+              this.modConnections.push(connection);
+            }
+          }
+        }
+        this.modConnections.push(this.session.connection);
+        this.updatingModConnections = false;
+        console.log(this.modConnections);
+      },
+      error => console.log(error)
+    );
   }
 }

@@ -74,6 +74,10 @@ public class Room {
 		return this.presenters.contains(user);
 	}
 	
+	public boolean canStream(User user) {
+		return isModerator(user) || isPresenter(user);
+	}
+	
 	public boolean isInRoom(User user) {
 		return isModerator(user) || isParticipant(user) || isPresenter(user);
 	}

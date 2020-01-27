@@ -61,6 +61,7 @@
                 [lightTheme]="lightTheme"
                 [messageList]="messageList"
                 [roomName]="roomName"
+                [connections]="[]"
                 (closeMenu)="toggleMenu()"
               ></chat-component>
             </ng-template>
@@ -82,6 +83,7 @@
                 [lightTheme]="lightTheme"
                 [messageList]="messageListMod"
                 [roomName]="roomName"
+                [connections]="modConnections"
                 (closeMenu)="toggleMenu()"
               ></chat-component>
             </ng-template>

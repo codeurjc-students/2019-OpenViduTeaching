@@ -1,7 +1,7 @@
 import { UserService } from './../../../services/user.service';
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild, HostListener } from '@angular/core';
 import { UserModel } from '../../../models/user-model';
-import { Session } from 'openvidu-browser';
+import { Session, Connection } from 'openvidu-browser';
 
 @Component({
   selector: 'chat-component',
@@ -19,6 +19,7 @@ export class ChatComponent implements OnInit {
   @Input() user: UserModel;
   @Input() lightTheme: boolean;
   @Input() roomName: string;
+  @Input() connections: Connection[];
   @Input()
   messageList: { connectionId: string; nickname: string; message: string; userAvatar: string }[] = [];
 
@@ -71,6 +72,7 @@ export class ChatComponent implements OnInit {
         };
         this.session.signal({
           data: JSON.stringify(data),
+          to: this.connections,
           type: this.signal,
         });
         this.message = '';

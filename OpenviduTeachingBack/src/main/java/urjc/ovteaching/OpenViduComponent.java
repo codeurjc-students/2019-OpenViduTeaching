@@ -112,8 +112,9 @@ public class OpenViduComponent {
 	}
 	
 	private OpenViduRole getRole(User user, Room room) {
-		//OpenViduRole role = room.isModerator(user) ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
-		return OpenViduRole.PUBLISHER;
+		//OpenViduRole role = room.canStream(user) ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
+		OpenViduRole role = OpenViduRole.PUBLISHER;
+		return role;
 	}
 	
 	public String[] removeUser(Room room, User user) {
