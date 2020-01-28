@@ -40,7 +40,6 @@ export class LoginComponent {
     this.userService.logIn(user, pass).subscribe(
       (_) => {
         this.dialogRef.close();
-        this.router.navigate(['/']);
         this.loggedIn.emit();
       },
       (error) => alert('Invalid user or password'),

@@ -8,7 +8,8 @@
         <div id="roomName">Joining "{{roomName}}"<span *ngIf="this.userSrv.isLogged"> as {{this.userSrv.user.name}}</span></div>
         <div>
             <div *ngIf="!this.userSrv.isLogged">
-                <p>Create an account to enter the room</p>
+                <login-component></login-component><p id="loginMsg"> to enter the room</p>
+                <p>or create an account:</p>
                 <mat-form-field appearance="outline" color="primary">
                     <mat-label>Username</mat-label>
                     <input matInput [(ngModel)]="userName" (keypress)="eventKeyPress($event)">
@@ -21,7 +22,7 @@
                 </mat-form-field>
                 <div></div>
             </div>
-            <button mat-raised-button color="accent" (click)="enterRoom()">Access room</button>
+            <button mat-raised-button color="accent" (click)="enterRoom()" [disabled]="!userSrv.isLogged && (!userName || !password)">Access room</button>
         </div>
     </div>
 </div>

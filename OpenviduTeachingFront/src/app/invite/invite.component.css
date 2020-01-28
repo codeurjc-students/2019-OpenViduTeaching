@@ -32,6 +32,10 @@
     padding-left: 2%;
 }
 
+#loginMsg {
+    display: inline;
+}
+
 p {
     font-family: 'Ubuntu', sans-serif;
     font-size: 120%;
