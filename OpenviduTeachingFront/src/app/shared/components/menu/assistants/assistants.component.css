@@ -9,8 +9,5 @@
 }
 
 #spinner {
-    position: fixed;
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin:30% auto;
 }
