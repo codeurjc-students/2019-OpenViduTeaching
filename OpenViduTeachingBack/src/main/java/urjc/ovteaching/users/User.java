@@ -95,6 +95,10 @@ public class User {
 		this.moddedRooms.add(room);
 	}
 
+	public void addPresentedRoom(Room presentedRoom) {
+		this.presentedRooms.add(presentedRoom);
+	}
+
 	public void addParticipatedRoom(Room room) {
 		this.participatedRooms.add(room);
 	}
@@ -105,6 +109,7 @@ public class User {
 
 	public void leaveRoom(Room room) {
 		this.participatedRooms.remove(room);
+		this.presentedRooms.remove(room);
 		this.moddedRooms.remove(room);
 	}
 

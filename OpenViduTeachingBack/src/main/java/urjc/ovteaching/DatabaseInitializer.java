@@ -1,8 +1,15 @@
 package urjc.ovteaching;
 
+import java.io.FileReader;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import urjc.ovteaching.rooms.Room;
@@ -21,30 +28,68 @@ public class DatabaseInitializer {
 
 	@Autowired
 	OpenViduComponent openViduComponent;
+	
+	@Autowired
+    ResourceLoader resourceLoader;
 
+	@SuppressWarnings("unchecked")
 	@PostConstruct
 	public void init() {
-		try {
+		try (FileReader reader = new FileReader(resourceLoader.getResource("classpath:json/initialData.json").getFile())) {
 			
-			Room roomA = new Room("roomA");
-			Room roomB = new Room("roomB");
-			roomServ.save(roomA);
-			roomServ.save(roomB);
-
-			User student1 = new User("student1", "pass", "ROLE_USER");
-			User student2 = new User("student2", "pass", "ROLE_USER");
-			User teacher = new User("teacher", "pass", "ROLE_USER", "ROLE_ADMIN");
-			teacher.addModdedRoom(roomA);
-			teacher.addModdedRoom(roomB);
-			student1.addParticipatedRoom(roomA);
-			student2.addParticipatedRoom(roomB);
-
-			userServ.save(student1);
-			userServ.save(student2);
-			userServ.save(teacher);
+			JSONObject fileObject = (JSONObject) (new JSONParser().parse(reader));
+			
+			JSONArray roomList = (JSONArray) fileObject.get("rooms");
+            roomList.forEach(room -> saveRoomObject((JSONObject) room));
+			
+            JSONArray userList = (JSONArray) fileObject.get("users");
+            userList.forEach(user -> saveUserObject((JSONObject) user));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void saveRoomObject(JSONObject roomObject) {
+        String roomName = (String) roomObject.get("name");
+        roomServ.save(new Room(roomName));
+    }
+	
+	@SuppressWarnings("unchecked")
+	private void saveUserObject(JSONObject userObject) {
+		String userName = (String) userObject.get("name");
+		String password = (String) userObject.get("password");
+		String[] roles = new String[2];
+		roles[0] = "ROLE_USER";
+		List<String> moddedRooms = (List<String>) userObject.get("moddedRooms");
+		if(moddedRooms != null && !moddedRooms.isEmpty()) {
+			roles[1] = "ROLE_ADMIN";
+		}
+		User user =  new User(userName, password, roles);
+		
+		if(moddedRooms != null && !moddedRooms.isEmpty()) {
+			for(String moddedName: moddedRooms) {
+				Room moddedRoom = roomServ.findByName(moddedName);
+				user.addModdedRoom(moddedRoom);
+			}
+		}
+		
+		List<String> presentedRooms = (List<String>) userObject.get("presentedRooms");
+		if(presentedRooms != null && !presentedRooms.isEmpty()) {
+			for(String presentedName: presentedRooms) {
+				Room presentedRoom = roomServ.findByName(presentedName);
+				user.addPresentedRoom(presentedRoom);
+			}
+		}
+		
+		List<String> participatedRooms = (List<String>) userObject.get("participatedRooms");
+		if(participatedRooms != null && !participatedRooms.isEmpty()) {
+			for(String participatedName: participatedRooms) {
+				Room participatedRoom = roomServ.findByName(participatedName);
+				user.addParticipatedRoom(participatedRoom);
+			}
+		}
+		
+		userServ.save(user);
 	}
 
 }
