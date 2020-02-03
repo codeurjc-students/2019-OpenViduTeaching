@@ -41,17 +41,13 @@
           </mat-list-item>
         </div>
 
-        <mat-divider *ngIf="this.moddedRooms!==undefined && this.moddedRooms.length>0 && this.presentedRooms!==undefined && this.presentedRooms.length>0"></mat-divider>
-
         <div *ngIf="this.presentedRooms!==undefined && this.presentedRooms.length>0">
           <h3 mat-subheader>PRESENTED ROOMS</h3>
           <mat-list-item *ngFor="let pres of this.presentedRooms">
             <a mat-line mat-stroked-button routerLink="{{pres.name}}">{{pres.name}}</a>
           </mat-list-item>
         </div>
-
-        <mat-divider *ngIf="((this.moddedRooms!==undefined && this.moddedRooms.length>0) || (this.presentedRooms!==undefined && this.presentedRooms.length>0)) && this.participatedRooms!==undefined && this.participatedRooms.length>0"></mat-divider>
-
+        
         <div *ngIf="this.participatedRooms!==undefined && this.participatedRooms.length>0">
           <h3 mat-subheader>PARTICIPATED ROOMS</h3>
           <mat-list-item *ngFor="let part of this.participatedRooms">
@@ -60,6 +56,21 @@
         </div>
       </mat-list>
 
+      <button mat-flat-button class="addRoomButton" matTooltip="Create a new room" (click)="openAddRoomDialog()" *ngIf="this.userSrv.isAdmin">
+        <mat-icon>add</mat-icon>
+      </button>
     </mat-card>
   </div>
 </div>
+
+<ng-template #addRoomDialog let-dialogRef="dialogRef" id="addRoomDialog">
+  <mat-form-field appearance="outline" color="primary" class="dialogCentered">
+    <mat-label>Room name</mat-label>
+      <input matInput [(ngModel)]="newRoom"  (keypress)="eventKeyPress($event)">
+  </mat-form-field>
+  <div>
+    <button mat-flat-button class="addRoomButton dialogCentered" matTooltip="Create a new room" (click)="createRoom()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+</ng-template>

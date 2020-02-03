@@ -19,7 +19,8 @@ export class LoginComponent {
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
     public userService: UserService,
-    private router: Router) { }
+    private router: Router
+  ) { }
 
   openLoginDialog() {
     this.dialogRef = this.dialog.open(this.loginDialog, {

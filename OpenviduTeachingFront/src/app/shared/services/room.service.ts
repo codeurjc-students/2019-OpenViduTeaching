@@ -1,3 +1,4 @@
+import { Room } from './../models/room-model';
 import { UserService, User } from './user.service';
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
@@ -18,8 +19,8 @@ export class RoomService {
     private userService: UserService
   ) { }
 
-  createRoom(roomName: string): Observable<string> {
-    return this.http.post<string>(this.baseURL + '/room/' + roomName, {}).pipe(
+  createRoom(roomName: string): Observable<Room> {
+    return this.http.post<Room>(this.baseURL + '/room/' + roomName, {}).pipe(
       map(roomName => { return roomName }),
       catchError((error) => this.handleError(error))
     );

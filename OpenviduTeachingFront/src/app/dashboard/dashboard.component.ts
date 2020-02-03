@@ -1,9 +1,9 @@
 import { RoomService } from './../shared/services/room.service';
 import { UserService } from './../shared/services/user.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Room } from '../shared/models/room-model';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialogRef, MatDialog } from '@angular/material';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,12 +19,18 @@ export class DashboardComponent implements OnInit {
   private participatedRooms: Room[] = [];
 
   private loading: boolean;
+  private roomInputOpen: boolean;
+  private newRoom: string;
+
+  @ViewChild('addRoomDialog', { static: false }) addRoomDialog: TemplateRef<any>;
+  dialogRef: MatDialogRef<any, any>;
 
   constructor(
     private router: Router,
     private userSrv: UserService,
     private roomSrv: RoomService,
-    private urlSnackBar: MatSnackBar
+    private urlSnackBar: MatSnackBar,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit() {
@@ -54,5 +60,31 @@ export class DashboardComponent implements OnInit {
       },
       error => console.error(error)
     );
+  }
+
+  openAddRoomDialog() {
+    this.dialogRef = this.dialog.open(this.addRoomDialog, {
+      width: '50%',
+      height: '60%',
+    });
+  }
+
+  eventKeyPress(event: any) {
+    if (event && event.keyCode === 13) {
+      // Press Enter
+      this.createRoom();
+    }
+  }
+
+  createRoom() {
+    this.roomSrv.createRoom(this.newRoom).subscribe(
+      room => {
+        this.dialogRef.close("Room created");
+        this.userSrv.user.moddedRooms.push(room)
+        this.router.navigate([room.name]);
+      },
+      error => console.error(error)
+    );
+    this.newRoom;
   }
 }

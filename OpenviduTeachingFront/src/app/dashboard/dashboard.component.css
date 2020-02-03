@@ -65,3 +65,17 @@ login-component {
 #spinner {
   margin:5% auto;
 }
+
+.addRoomButton {
+  background-color: rgb(6, 211, 98);
+}
+
+.dialogCentered {
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #dfdfdf;
+  opacity: 1;
+}

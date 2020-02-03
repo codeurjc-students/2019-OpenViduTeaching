@@ -13,6 +13,8 @@
 ::ng-deep .mat-dialog-container {
     background-color: #494949;
     height: fit-content !important;
+    width: fit-content !important;
+    margin: auto auto;
 }
 
 ::ng-deep .mat-focused .mat-form-field-label {
@@ -25,4 +27,13 @@
 
  ::ng-deep.mat-form-field-ripple {
     background-color: #ffffff !important;
+}
+
+mat-card-content {
+    margin-bottom: 0px;
+}
+
+.centered {
+    left: 50%;
+    transform: translate(-50%, 0);
 }

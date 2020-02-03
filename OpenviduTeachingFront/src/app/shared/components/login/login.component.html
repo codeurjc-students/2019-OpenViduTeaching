@@ -24,13 +24,13 @@
                 <form>
                     <div layout="column">
                         <div>
-                            <mat-form-field color="primary">
+                            <mat-form-field appearance="outline" color="primary" class="centered">
                                 <mat-label>User</mat-label>
                                 <input #user matInput placeholder="User" (keypress)="eventKeyPress($event, user.value, pass.value)">
                             </mat-form-field>
                         </div>
                         <div>
-                            <mat-form-field color="primary">
+                            <mat-form-field appearance="outline" color="primary" class="centered">
                                 <mat-label>Password</mat-label>
                                 <input #pass matInput placeholder="Password" type="password" (keypress)="eventKeyPress($event, user.value, pass.value)">
                             </mat-form-field>
@@ -40,7 +40,7 @@
             </mat-card-content>
             <mat-card-actions>
                 <div layout="column">
-                    <a mat-raised-button (click)="logIn($event, user.value, pass.value)" class="text-upper" color="primary">
+                    <a mat-flat-button (click)="logIn($event, user.value, pass.value)" class="text-upper centered" color="primary">
                         <span>Login</span>
                     </a>
                 </div>

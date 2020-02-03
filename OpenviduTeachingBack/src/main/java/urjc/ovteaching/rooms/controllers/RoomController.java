@@ -52,7 +52,8 @@ public class RoomController {
 	 * @return the room name
 	 */
 	@PostMapping("/room/{roomName}")
-	public ResponseEntity<String> createNewRoom(@PathVariable String roomName, HttpServletRequest request) {
+	@JsonView(Room.NameOnly.class)
+	public ResponseEntity<Room> createNewRoom(@PathVariable String roomName, HttpServletRequest request) {
 		if (!request.isUserInRole("ADMIN")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -63,7 +64,7 @@ public class RoomController {
 		// User currentUser = this.userComponent.getLoggedUser();
 		Room room = new Room(roomName);
 		roomServ.addRoomWithMod(room, currentUser);
-		return new ResponseEntity<>(room.getName(), HttpStatus.CREATED);
+		return new ResponseEntity<>(room, HttpStatus.CREATED);
 	}
 
 	/**
