@@ -32,25 +32,14 @@ export class InviteComponent implements OnInit {
   }
 
   enterRoom() {
-    if(this.userSrv.isLogged) {
+    if(this.userSrv.isLogged) { //User is logged
       this.userName = this.userSrv.user.name;
-      if(this.userSrv.isInRoom(this.roomName)) {
-        if(this.userSrv.isModOfRoom(this.roomName)) {
-          this.router.navigate(['/',this.roomName]);
-        } else {
-          this.roomSrv.enterRoom(this.code).subscribe(
-            user => {
-              this.userSrv.saveUser(user);
-              this.router.navigate(['/', this.roomName]);
-            },
-            error => {
-              console.log(error)
-            }
-          );
-        }
+      if(this.userSrv.isModOfRoom(this.roomName)) { //Direct access if already a mod
+        this.router.navigate(['/',this.roomName]);
       } else {
-        this.roomSrv.enterRoom(this.code).subscribe(
-          (_) => {
+        this.roomSrv.enterRoom(this.code).subscribe( //Update user if they are not in the room or mod
+          user => {
+            this.userSrv.saveUser(user);
             this.router.navigate(['/', this.roomName]);
           },
           error => {
@@ -58,7 +47,7 @@ export class InviteComponent implements OnInit {
           }
         );
       }
-    } else {
+    } else { //User is not logged
       if(this.userName == null || this.userName == '') {
         this.userErrorMsg = 'You must enter a username';
       } else if(this.password == null) {
