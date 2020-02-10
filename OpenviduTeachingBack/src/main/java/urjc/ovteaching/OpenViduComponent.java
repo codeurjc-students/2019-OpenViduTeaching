@@ -112,8 +112,16 @@ public class OpenViduComponent {
 	}
 	
 	private OpenViduRole getRole(User user, Room room) {
-		//OpenViduRole role = room.canStream(user) ? OpenViduRole.PUBLISHER : OpenViduRole.SUBSCRIBER;
-		OpenViduRole role = OpenViduRole.PUBLISHER;
+		OpenViduRole role;
+		if(room.isModerator(user)) {
+			role = OpenViduRole.MODERATOR;
+		} else if(room.isPresenter(user)) {
+			role = OpenViduRole.PUBLISHER;
+		} else if(room.isParticipant(user)) {
+			role = OpenViduRole.SUBSCRIBER;
+		} else {
+			role = null;
+		}
 		return role;
 	}
 	
