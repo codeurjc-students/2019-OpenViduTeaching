@@ -68,6 +68,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   roomName: string;
   myUserName: string;
   localUsers: UserModel[] = [];
+  remoteStreamers: UserModel[] = [];
   remoteUsers: UserModel[] = [];
   messageList: { connectionId: string; nickname: string; message: string; userAvatar: string }[] = [];
   messageListMod: { connectionId: string; nickname: string; message: string; userAvatar: string }[] = [];
@@ -156,7 +157,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     this.subscribeToUserChanged();
     this.subscribeToStreamCreated();
     this.subscribedToStreamDestroyed();
-    this.subscribedToDisconnect();
+    this.subscribeToConnectionCreated();
+    this.subscribedToConnectionDestroyed();
     this.subscribedToChat('chat', this.messageList, this.chatComponent);
     if(this.userService.isModOfRoom(this.roomName)) {
       this.subscribedToChat('chatMod', this.messageListMod, this.modChatComponent);
@@ -178,7 +180,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       this.sessionScreen = null;
       this.userCamDeleted = null;
       this.localUsers = [];
-      this.remoteUsers = [];
+      this.remoteStreamers = [];
       this.openviduLayout = null;
       this.router.navigate(['']);
       this.leaveSession.emit();
@@ -367,20 +369,44 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   }
 
   private deleteRemoteStream(stream: Stream): void {
-    const userStream = this.remoteUsers.filter((user: UserModel) => user.getStreamManager().stream === stream)[0];
-    const index = this.remoteUsers.indexOf(userStream, 0);
+    const userStream = this.remoteStreamers.filter((user: UserModel) => user.getStreamManager().stream === stream)[0];
+    const index = this.remoteStreamers.indexOf(userStream, 0);
     if (index > -1) {
-      this.remoteUsers.splice(index, 1);
+      this.remoteStreamers.splice(index, 1);
     }
+  }
+
+  private subscribeToConnectionCreated() {
+    this.session.on('connectionCreated', (event: ConnectionEvent) => {
+      const connectionId = event.connection.connectionId;
+      if (
+        (this.localUsers[0] && this.localUsers[0].getConnectionId() !== connectionId && this.session.connection.connectionId !== connectionId &&
+        (this.localUsers[1] && this.localUsers[1].getConnectionId() !== connectionId)) ||
+        (this.localUsers[0] && !this.localUsers[1] && this.localUsers[0].getConnectionId() !== connectionId && this.session.connection.connectionId !== connectionId)
+      ) {
+        const newUser = new UserModel();
+        newUser.setConnectionId(connectionId);
+        const nickname = event.connection.data.split('%')[0];
+        newUser.setNickname(JSON.parse(nickname).clientData);
+        this.remoteUsers.push(newUser);
+
+        this.localUsers.forEach((user) => {
+          this.sendSignalUserChanged(user);
+        });
+      }
+      if(this.assistantsComponent) {
+        this.assistantsComponent.getAssistants();
+      }
+      this.updateModConnections();
+    });
   }
 
   private subscribeToStreamCreated() {
     this.session.on('streamCreated', (event: StreamEvent) => {
       const connectionId = event.stream.connection.connectionId;
       if (
-        (this.localUsers[0] &&
-          this.localUsers[0].getConnectionId() !== connectionId &&
-          (this.localUsers[1] && this.localUsers[1].getConnectionId() !== connectionId)) ||
+        (this.localUsers[0] && this.localUsers[0].getConnectionId() !== connectionId &&
+        (this.localUsers[1] && this.localUsers[1].getConnectionId() !== connectionId)) ||
         (this.localUsers[0] && !this.localUsers[1] && this.localUsers[0].getConnectionId() !== connectionId)
       ) {
         const subscriber = this.session.subscribe(event.stream, undefined);
@@ -395,7 +421,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         newUser.setNickname(JSON.parse(nickname).clientData);
         const type = event.stream.typeOfVideo === 'SCREEN' ? this.SCREEN_TYPE : this.REMOTE_TYPE;
         newUser.setType(type);
-        this.remoteUsers.push(newUser);
+        this.remoteStreamers.push(newUser);
 
         this.localUsers.forEach((user) => {
           this.sendSignalUserChanged(user);
@@ -467,6 +493,25 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   private subscribeToUserChanged() {
     this.session.on('signal:userChanged', (event: any) => {
       const data = JSON.parse(event.data);
+      this.remoteStreamers.forEach((user: UserModel) => {
+        if (user.getConnectionId() === event.from.connectionId) {
+          if (data.isAudioActive !== undefined) {
+            user.setAudioActive(data.isAudioActive);
+          }
+          if (data.isVideoActive !== undefined) {
+            user.setVideoActive(data.isVideoActive);
+          }
+          if (data.nickname !== undefined) {
+            user.setNickname(data.nickname);
+          }
+          if (data.isScreenShareActive !== undefined) {
+            user.setScreenShareActive(data.isScreenShareActive);
+          }
+          if (data.avatar !== undefined) {
+            user.setUserAvatar(data.avatar);
+          }
+        }
+      });
       this.remoteUsers.forEach((user: UserModel) => {
         if (user.getConnectionId() === event.from.connectionId) {
           if (data.isAudioActive !== undefined) {
@@ -487,10 +532,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         }
       });
       this.checkSomeoneShareScreen();
-      if(this.assistantsComponent) {
-        this.assistantsComponent.getAssistants();
-      }
-      this.updateModConnections();
     });
   }
 
@@ -502,7 +543,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     });
   }
 
-  private subscribedToDisconnect() {
+  private subscribedToConnectionDestroyed() {
     this.session.on('connectionDestroyed', (event: ConnectionEvent) => {
       event.callDefaultBehavior();
       if(this.assistantsComponent) {
@@ -520,12 +561,12 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       const messageOwner =
         this.localUsers[0].getConnectionId() === data.connectionId
           ? this.localUsers[0]
-          : this.remoteUsers.filter((user) => user.getConnectionId() === data.connectionId)[0];
+          : this.remoteUsers.filter((user) => user.getConnectionId() === data.connectionId || user.getNickname() === data.nickname)[0];
       msgList.push({
         connectionId: data.connectionId,
         nickname: data.nickname,
         message: data.message,
-        userAvatar: messageOwner? messageOwner.getAvatar() : undefined,
+        userAvatar: messageOwner.getAvatar(),
       });
       this.checkNotification();
       if(component) {
@@ -560,7 +601,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   private checkSomeoneShareScreen() {
     let isScreenShared: boolean;
     // return true if at least one passes the test
-    isScreenShared = this.remoteUsers.some((user) => user.isScreenShareActive()) || this.localUsers[0].isScreenShareActive();
+    isScreenShared = this.remoteStreamers.some((user) => user.isScreenShareActive()) || this.localUsers[0].isScreenShareActive();
     this.openviduLayoutOptions.fixedRatio = isScreenShared;
     this.openviduLayout.setLayoutOptions(this.openviduLayoutOptions);
     this.openviduLayout.updateLayout();
@@ -656,7 +697,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         }
         this.modConnections.push(this.session.connection);
         this.updatingModConnections = false;
-        console.log(this.modConnections);
       },
       error => console.log(error)
     );
