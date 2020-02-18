@@ -3,10 +3,15 @@ OpenVidu application tailored for teaching activities.
 
 Check out the [Medium blog](https://medium.com/@diego.mzmn) for updates
 
-## Project Roadmap
-- [ ] Roles and role-restricted functionalities
+## Table of Contents ##
+
+- [Project Roadmap](#project-roadmap)
+- [Development & Installation](#development-&-installation)
+
+## Project Roadmap ##
+- [X] Roles and role-restricted functionalities
 	* Users will be divided into moderators, presenters and assistants
-- [ ] Chat
+- [X] Chat
 	* Based on OpenViduCall's chat with added functionalities and restrictions
 - [ ] Basic session recording
 	* Video only recordings
@@ -23,4 +28,8 @@ Check out the [Medium blog](https://medium.com/@diego.mzmn) for updates
 - [ ] Mood/status sharing
 	* Users may display their mood for a brief time
 Note that this roadmap may change throughout development.
+
+## Development & Installation ##
+
+For information on how to develop the app [CLICK HERE](/documentation/development.md)
 
