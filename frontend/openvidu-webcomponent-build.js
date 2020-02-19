@@ -25,16 +25,16 @@ module.exports.buildWebcomponent = function () {
 
 async function buildElement() {
   const files = [
-    './dist/openvidu-call/runtime.js',
-    './dist/openvidu-call/polyfills.js',
-    './dist/openvidu-call/scripts.js',
-    './dist/openvidu-call/main.js',
+    './dist/openvidu-teaching/runtime.js',
+    './dist/openvidu-teaching/polyfills.js',
+    './dist/openvidu-teaching/scripts.js',
+    './dist/openvidu-teaching/main.js',
   ];
 
   try {
     await fs.ensureDir('openvidu-webcomponent');
     await concat(files, './openvidu-webcomponent/openvidu-webcomponent-' + VERSION + '.js')
-    await fs.copy('./dist/openvidu-call/styles.css', './openvidu-webcomponent/openvidu-webcomponent-' + VERSION + '.css');
+    await fs.copy('./dist/openvidu-teaching/styles.css', './openvidu-webcomponent/openvidu-webcomponent-' + VERSION + '.css');
   } catch (err) {
     console.error('Error executing build funtion in webcomponent-builds.js', err);
     replaceText(appModule, "// bootstrap: [AppComponent]", "bootstrap: [AppComponent]");

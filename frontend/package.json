@@ -55,7 +55,7 @@
         "typedoc": "0.15.0",
         "typescript": "3.4.5"
     },
-    "name": "openvidu-call",
+    "name": "openvidu-teaching",
     "private": true,
     "scripts": {
         "build": "./node_modules/@angular/cli/bin/ng build",

@@ -44,5 +44,5 @@ npm start
 
 * If you want to run the frontend together with the Java application build it and place the files into the static resources before running the server:
 ~~~~ shell
-npm build --output-path ../backend/main/resources/static
+npm build --output-path ../backend/main/resources/static --baseHref=https://localhost:8080/
 ~~~~
