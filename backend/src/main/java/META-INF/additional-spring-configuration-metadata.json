@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "openvidu.url",
+    "type": "java.lang.String",
+    "description": "The URL where the OpenVidu server is deployed"
+  },
+  {
+    "name": "openvidu.secret",
+    "type": "java.lang.String",
+    "description": "The OpenVidu secret for the server"
+  },
+  {
+    "name": "openvidu.publicurl",
+    "type": "java.lang.String",
+    "description": "The OpenVidu public URL type (local, ngrok, FINAL_URL)"
+  }
+]}
