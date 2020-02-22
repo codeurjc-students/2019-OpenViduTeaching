@@ -1,6 +1,7 @@
 package urjc.ovteaching;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -8,6 +9,8 @@ import java.nio.file.Paths;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,24 +20,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.common.io.ByteStreams;
+
 @CrossOrigin
 @RestController
 public class AssetsController {
 	
-	private static final Path FILES_FOLDER = Paths.get(System.getProperty("user.dir"), "/src/main/resources/static/assets/images");
-	
-	@PostConstruct
-	public void init() throws IOException {
-		if (!Files.exists(FILES_FOLDER)) {
-			Files.createDirectories(FILES_FOLDER);
-		}
-	}
+	@Autowired
+    ResourceLoader resourceLoader;
 	
 	@GetMapping("/assets/images/{image}")
 	public ResponseEntity<byte[]> getImage(@PathVariable String image) throws IOException {
 		try {
-			Path path = FILES_FOLDER.resolve(image);
-			byte[] bytes = Files.readAllBytes(path);
+			byte[] bytes = ByteStreams.toByteArray(resourceLoader.getResource("classpath:static/assets/images/" + image).getInputStream());
 		
 			String[] imageName = image.split("\\.");
 			String filetype = imageName[imageName.length-1];

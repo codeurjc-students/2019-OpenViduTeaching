@@ -1,6 +1,8 @@
 package urjc.ovteaching;
 
 import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -35,8 +37,8 @@ public class DatabaseInitializer {
 	@SuppressWarnings("unchecked")
 	@PostConstruct
 	public void init() {
-		try (FileReader reader = new FileReader(resourceLoader.getResource("classpath:json/initialData.json").getFile())) {
-			
+		try {
+			Reader reader = new InputStreamReader(resourceLoader.getResource("classpath:json/initialData.json").getInputStream());
 			JSONObject fileObject = (JSONObject) (new JSONParser().parse(reader));
 			
 			JSONArray roomList = (JSONArray) fileObject.get("rooms");
