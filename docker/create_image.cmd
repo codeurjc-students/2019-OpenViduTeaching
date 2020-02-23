@@ -11,11 +11,12 @@ xcopy /s /y dist\openvidu-teaching\* ..\backend\src\main\resources\static
 
 cd ../backend
 
+:: Compile Spring Boot project
 docker run -it --rm -v "%cd%":/usr/src/project -w /usr/src/project maven:alpine mvn -Dmaven.test.skip=true package
 xcopy /y target\OpenViduTeaching-1.0.0.jar ..\docker\build\
 
-cd ../docker
+cd ../docker/standalone
 
-:: docker build -t diegomzmn/openviduteaching .
-cd build
-java -jar OpenViduTeaching-1.0.0.jar
+:: Build docker image for standalone
+docker build -t diegomzmn/openviduteaching-standalone .
+:: docker push diegomzmn/openviduteaching-standalone
