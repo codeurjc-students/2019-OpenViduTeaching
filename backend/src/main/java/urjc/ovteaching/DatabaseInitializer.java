@@ -1,6 +1,5 @@
 package urjc.ovteaching;
 
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.List;
@@ -11,6 +10,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
@@ -33,12 +33,15 @@ public class DatabaseInitializer {
 	
 	@Autowired
     ResourceLoader resourceLoader;
+	
+	@Value("${initialDataFile}")
+	private String initialFile;
 
 	@SuppressWarnings("unchecked")
 	@PostConstruct
 	public void init() {
 		try {
-			Reader reader = new InputStreamReader(resourceLoader.getResource("classpath:json/initialData.json").getInputStream());
+			Reader reader = new InputStreamReader(resourceLoader.getResource(initialFile).getInputStream());
 			JSONObject fileObject = (JSONObject) (new JSONParser().parse(reader));
 			
 			JSONArray roomList = (JSONArray) fileObject.get("rooms");
