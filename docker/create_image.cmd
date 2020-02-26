@@ -1,10 +1,10 @@
 cd ../frontend
 
 :: Build angular app
-:: docker run --rm --name angular-cli -v ${PWD}:/angular -w /angular node /bin/bash -c "npm install; npm run ng build --prod --baseHref=http://localhost:8080/"
-call npm install
-call npm audit fix
-call npm run ng build --prod --baseHref=http://localhost:8080/
+docker run --rm --name angular-cli -v "%cd%":/angular -w /angular node /bin/bash -c "npm install; npm audit fix; npm run build --prod --baseHref=http://localhost:8080/"
+:: call npm install
+:: call npm audit fix
+:: call npm run ng build --prod --baseHref=http://localhost:8080/
 
 :: Copy generated resources on static
 xcopy /s /y dist\openvidu-teaching\* ..\backend\src\main\resources\static
@@ -17,6 +17,6 @@ xcopy /y target\OpenViduTeaching-1.0.0.jar ..\docker\build\
 
 cd ../docker/standalone
 
-:: Build docker image for standalone
-docker build -t diegomzmn/openviduteaching-standalone .
-:: docker push diegomzmn/openviduteaching-standalone
+call build_standalone.cmd
+
+cd ..
