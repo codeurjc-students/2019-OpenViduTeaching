@@ -41,6 +41,9 @@ public class DatabaseInitializer {
 	@PostConstruct
 	public void init() {
 		try {
+			if(initialFile.startsWith("/") || initialFile.matches("[a-zA-Z]\\:.*")) {
+				initialFile = "file:" + initialFile;
+			}
 			Reader reader = new InputStreamReader(resourceLoader.getResource(initialFile).getInputStream());
 			JSONObject fileObject = (JSONObject) (new JSONParser().parse(reader));
 			

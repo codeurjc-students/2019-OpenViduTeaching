@@ -13,5 +13,10 @@
     "name": "openvidu.publicurl",
     "type": "java.lang.String",
     "description": "The OpenVidu public URL type (local, ngrok, FINAL_URL)"
+  },
+  {
+    "name": "initialDataFile",
+    "type": "java.lang.String",
+    "description": "The json file where the initial data for the database is taken from"
   }
 ]}
