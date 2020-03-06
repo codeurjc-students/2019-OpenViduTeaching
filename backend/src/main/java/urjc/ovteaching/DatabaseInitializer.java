@@ -44,6 +44,7 @@ public class DatabaseInitializer {
 			if(initialFile.startsWith("/") || initialFile.matches("[a-zA-Z]\\:.*")) {
 				initialFile = "file:" + initialFile;
 			}
+			System.out.println("Reading from file: " + initialFile);
 			Reader reader = new InputStreamReader(resourceLoader.getResource(initialFile).getInputStream());
 			JSONObject fileObject = (JSONObject) (new JSONParser().parse(reader));
 			
@@ -60,6 +61,7 @@ public class DatabaseInitializer {
 	private void saveRoomObject(JSONObject roomObject) {
         String roomName = (String) roomObject.get("name");
         roomServ.save(new Room(roomName));
+        System.out.println("Added room: " + roomName);
     }
 	
 	@SuppressWarnings("unchecked")
@@ -98,6 +100,8 @@ public class DatabaseInitializer {
 		}
 		
 		userServ.save(user);
+		
+		System.out.println("Added user:" + userName);
 	}
 
 }

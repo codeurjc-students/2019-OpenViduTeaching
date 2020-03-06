@@ -19,4 +19,8 @@ cd ../docker/standalone
 
 call build_standalone.cmd
 
+cd ../composed
+
+call build_composed.cmd
+
 cd ..

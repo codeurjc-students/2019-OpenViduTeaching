@@ -1,0 +1,34 @@
+{
+	"rooms": [
+		{
+			"name": "roomX"
+		},
+		{
+			"name": "roomY"
+		}
+	],
+	"users": [
+		{
+			"name": "participant1",
+			"password": "pass",
+			"participatedRooms": [
+				"roomX"
+			]
+		},
+		{
+			"name": "participant2",
+			"password": "pass",
+			"participatedRooms": [
+				"roomY"
+			]
+		},
+		{
+			"name": "moderator",
+			"password": "pass",
+			"moddedRooms": [
+				"roomX",
+				"roomY"
+			]
+		}
+	]
+}
