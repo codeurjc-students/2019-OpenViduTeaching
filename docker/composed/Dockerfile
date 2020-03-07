@@ -9,4 +9,4 @@ COPY ${initialDataFile} /initialData.json
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "OpenViduTeaching.jar", "--initialDataFile=/initialData.json"]
+CMD ["java", "-jar", "OpenViduTeaching.jar"]
