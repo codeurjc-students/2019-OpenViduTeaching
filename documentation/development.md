@@ -9,13 +9,13 @@ You will need both the OpenVidu server and OpenViduTeaching server.
     ~~~~ shell
     docker run -p 4443:4443 --rm -e openvidu.secret=MY_SECRET openvidu/openvidu-server-kms:2.11.0
     ~~~~
-    You can choose your port and secret however you like.
+    You can choose the secret however you like.
     Check the [OpenVidu tutorials](https://openvidu.io/docs/tutorials/) for more info.
 
 * The OpenViduTeaching backend uses Spring Boot v2.1.9. To start developing open the "backend" folder with the IDE of your choice as a Spring Boot project.
     The database is H2, so you don't need to download anything else for that.
     The first users and rooms are initialized from the file initialData.json located in resources/json.
-    You may change your OpenVidu url and secret in the application.properties file inside the resources folder.
+    You may change your OpenVidu url and secret in the application.properties file inside the resources folder (if you change the port you must change it in the frontend and OpenVidu server too).
     To start the server:
     ~~~~ shell
     cd backend

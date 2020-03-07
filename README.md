@@ -31,6 +31,6 @@ Note that this roadmap may change throughout development.
 
 ## Development & Installation ##
 
-For information on how to get the the app working [CLICK HERE](/documentation/installation.md)
+For information on how to get the the app working [CLICK HERE](/documentation/deploy.md)
 For information on how to develop the app [CLICK HERE](/documentation/development.md)
 

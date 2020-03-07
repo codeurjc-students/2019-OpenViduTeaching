@@ -12,7 +12,7 @@ services:
     openvidu-teaching:
         image: diegomzmn/openviduteaching:latest
         volumes:
-            - C:\Users\diego\OneDrive\Documentos\GitHub\2019-OpenViduTeaching\backend\src\main\resources\json\initialData.json:/initialData.json
+            - /path/to/initialData.json:/initialData.json
         ports:
             - "8080:8080"
         environment:
