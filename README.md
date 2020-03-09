@@ -1,4 +1,4 @@
-# 2019-OpenViduTeaching
+# 2019-OpenViduTeaching #
 OpenVidu application tailored for teaching activities.
 
 Check out the [Medium blog](https://medium.com/@diego.mzmn) for updates
@@ -31,6 +31,6 @@ Note that this roadmap may change throughout development.
 
 ## Development & Installation ##
 
-For information on how to get the the app working [CLICK HERE](/documentation/deploy.md)
-For information on how to develop the app [CLICK HERE](/documentation/development.md)
-
+For information on how to get the the app working [CLICK HERE](/documentation/deploy.md).
+For information on how to develop the app [CLICK HERE](/documentation/development.md).
+For information on the REST API [CLICK HERE](/documentation/api.md).

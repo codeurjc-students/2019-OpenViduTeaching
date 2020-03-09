@@ -51,6 +51,11 @@ public class OpenViduController {
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		User user = userServ.findByName(request.getUserPrincipal().getName());
+		// User user = this.userComponent.getLoggedUser();
+		if(!room.isInRoom(user)) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 		try {
 			String sessionId;
 			if (!this.openViduComponent.isSessionCreated(room)) {
