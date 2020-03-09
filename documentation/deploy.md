@@ -62,7 +62,7 @@ You have three options for deploying the app:
 
 ### OpenViduTeaching Docker container + Openvidu+KMS Docker container ###
 
-* You can simply make a docker-compose.yml. Take [this one](https://github.com/codeurjc-students/2019-OpenViduTeaching/blob/master/docker/composed/docker-compose.yml) as an example. You have to set the ports as specified (you can change 8080 in openvidu-teaching), mount the volume and use an enviroment variable for the path (same as in first option). You MUST use the variable for the url (localhost will not work).
+* You can simply make a docker-compose.yml. Take [this one](https://github.com/codeurjc-students/2019-OpenViduTeaching/blob/master/docker/composed/docker-compose.yml) as an example. You have to set the ports as specified (you can change 8080 in openvidu-teaching), mount the volume and use an enviroment variable for the path (same as in first option). You MUST use the variable for the url (localhost will not work). You can use a .env file for the enviroment variables, as in the example, or just write them in the .yml. Using a .env file is highly encouraged, at least for the OpenVidu Secret, because it is the unique password for the OpenVidu Server.
 
 * You can also start both manually. Here's how you run both independently with the same configuration as in the compose example.
 `docker run -p 4443:4443 --rm -e openvidu.secret=SECRET openvidu/openvidu-server-kms:2.11.0`

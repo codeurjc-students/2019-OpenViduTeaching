@@ -7,15 +7,15 @@ services:
         ports:
             - "4443:4443"
         environment:
-            openvidu.secret: SECRET
+            openvidu.secret: ${OPENVIDU_SECRET}
 
     openvidu-teaching:
         image: diegomzmn/openviduteaching:latest
         volumes:
-            - /path/to/initialData.json:/initialData.json
+            - ${LOCAL_INITIAL_FILE_PATH}:${DOCKER_INITIAL_FILE_PATH}
         ports:
             - "8080:8080"
         environment:
-            openvidu.url: https://192.168.1.38:4443/
-            openvidu.secret: SECRET
-            initialDataFile: /initialData.json
+            openvidu.url: https://${OPENVIDU_SERVER_IP}:4443/
+            openvidu.secret: ${OPENVIDU_SECRET}
+            initialDataFile: ${DOCKER_INITIAL_FILE_PATH}

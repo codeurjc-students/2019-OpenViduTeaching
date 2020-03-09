@@ -3,3 +3,4 @@ backend/bin/src/main/resources/keystore.jks
 backend/bin/src/main/resources/static/*
 backend/src/main/resources/static/*
 *.class
+docker/composed/.env
