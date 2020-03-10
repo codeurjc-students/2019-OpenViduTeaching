@@ -11,7 +11,7 @@
 	</parent>
 	<groupId>urjc.openvidu</groupId>
 	<artifactId>OpenViduTeaching</artifactId>
-	<version>1.0.0</version>
+	<version>0.1.0</version>
 	<name>OpenViduTeaching</name>
 	<description>Project for online teaching using OpenVidu</description>
 
@@ -90,6 +90,7 @@
 			</plugins>
 		</pluginManagement>
 
+		<finalName>${project.artifactId}</finalName>
 	</build>
 
 </project>
