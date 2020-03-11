@@ -18,7 +18,9 @@ This document will explain how is used the Licensoft-Web API.
     * [Add current user to room](#add-current-user-to-room)
     * [Get assistants](#get-assistants)
 * [OpenVidu requests](#openvidu-requests)
-    * [](#)
+    * [Create session](#create-session)
+    * [Get token](#get-token)
+    * [Disconnect current user](#disconnect-current-user)
 
 
 ## Authorization ##
@@ -354,7 +356,7 @@ Gets the OpenVidu Token for the current user according to it's role (moderator=m
     }
     ~~~~
 
-### Disconnect user ###
+### Disconnect current user ###
 Removes the current user from the room's session (not the room itself). This also removes the session if the user was the only one in it.
 - **URL**  
    `/ovTeachingApi/room/{roomName}/user`
