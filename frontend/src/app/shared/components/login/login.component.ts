@@ -10,7 +10,7 @@ import { UserService } from '../../services/user.service';
 })
 export class LoginComponent {
 
-  @ViewChild('loginDialog', { static: false }) loginDialog: TemplateRef<any>;
+  @ViewChild('loginDialog') loginDialog: TemplateRef<any>;
   dialogRef: MatDialogRef<any, any>;
 
   @Output() loggedIn = new EventEmitter<any>();

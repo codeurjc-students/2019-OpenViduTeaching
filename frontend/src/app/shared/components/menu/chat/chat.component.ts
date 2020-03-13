@@ -10,8 +10,8 @@ import { Session, Connection } from 'openvidu-browser';
 })
 export class ChatComponent implements OnInit {
 
-  @ViewChild('chatScroll', {static: false}) chatScroll: ElementRef;
-  @ViewChild('chatInput', {static: false}) chatInput: ElementRef;
+  @ViewChild('chatScroll') chatScroll: ElementRef;
+  @ViewChild('chatInput') chatInput: ElementRef;
 
   @Input() signal: string;
   @Input() session: Session;

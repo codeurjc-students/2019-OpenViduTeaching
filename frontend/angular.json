@@ -182,5 +182,8 @@
       }
     }
   },
-  "defaultProject": "openvidu-teaching"
+  "defaultProject": "openvidu-teaching",
+  "cli": {
+    "analytics": "67b94364-25e3-4d93-9e2f-d99a6e7f1420"
+  }
 }

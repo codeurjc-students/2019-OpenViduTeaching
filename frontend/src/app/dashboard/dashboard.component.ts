@@ -22,7 +22,7 @@ export class DashboardComponent implements OnInit {
   private roomInputOpen: boolean;
   private newRoom: string;
 
-  @ViewChild('addRoomDialog', { static: false }) addRoomDialog: TemplateRef<any>;
+  @ViewChild('addRoomDialog') addRoomDialog: TemplateRef<any>;
   dialogRef: MatDialogRef<any, any>;
 
   constructor(

@@ -43,10 +43,10 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   @Output() leaveSession = new EventEmitter<any>();
   @Output() error = new EventEmitter<any>();
 
-  @ViewChild('chatComponent', {static: false}) chatComponent: ChatComponent;
-  @ViewChild('modChatComponent', {static: false}) modChatComponent: ChatComponent;
-  @ViewChild('sidenav', {static: false}) menu: any;
-  @ViewChild('assistants', {static: false}) assistantsComponent: AssistantsComponent;
+  @ViewChild('chatComponent') chatComponent: ChatComponent;
+  @ViewChild('modChatComponent') modChatComponent: ChatComponent;
+  @ViewChild('sidenav') menu: any;
+  @ViewChild('assistants') assistantsComponent: AssistantsComponent;
 
   // Constants
   BIG_ELEMENT_CLASS = 'OV_big';

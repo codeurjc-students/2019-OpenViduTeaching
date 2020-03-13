@@ -33,8 +33,8 @@ export class StreamComponent implements OnInit {
   @Output() exitButtonClicked = new EventEmitter<any>();
   @Output() menuButtonClicked = new EventEmitter<any>();
 
-  @ViewChild('videoReference', {static: false}) htmlVideoElement: ElementRef;
-  @ViewChild('nicknameInput', {static: false}) nicknameInput: ElementRef;
+  @ViewChild('videoReference') htmlVideoElement: ElementRef;
+  @ViewChild('nicknameInput') nicknameInput: ElementRef;
 
 
   constructor(private apiSrv: ApiService) {}
