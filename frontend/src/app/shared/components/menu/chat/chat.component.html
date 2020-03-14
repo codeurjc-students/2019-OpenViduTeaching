@@ -1,6 +1,6 @@
 <div id="chatContainer">
-  <div id="chatComponent" [class.chatComponentLight]="lightTheme">
-    <div id="chatToolbar">
+  <div id="chatComponent" [class.chatComponentLight]="lightTheme" [class.darkBackground]="signal!=='chat'" [class.grayBackground]="signal==='chat'">
+    <div id="chatToolbar" [class.darkBackground]="signal==='chat'" [class.grayBackground]="signal!=='chat'">
       <span *ngIf="!userSrv.isModOfRoom(roomName) && signal==='chat'"> CHAT</span>
       <span *ngIf="userSrv.isModOfRoom(roomName) && signal==='chat'"> ASSITANTS CHAT</span>
       <span *ngIf="signal==='chatMod'"> MODERATORS CHAT</span>
@@ -25,7 +25,7 @@
       >
         <img class="user-img" [src]="data.userAvatar" />
         <div class="msg-detail">
-          <div class="msg-info">
+          <div class="msg-info" [class.darkLetters]="signal==='chat'" [class.lightLetters]="signal!=='chat'">
             <p>{{ data.nickname }}</p>
           </div>
           <div class="msg-content">

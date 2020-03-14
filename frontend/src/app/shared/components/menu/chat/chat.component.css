@@ -9,9 +9,26 @@ input {
   font-family: 'Ubuntu', sans-serif;
 }
 
+.darkBackground {
+  background-color: #3d3d3d;
+  color: #ffffff;
+}
+
+.grayBackground {
+  background-color: #b8b8b8;
+  color: #000000;
+}
+
+.lightLetters {
+  color: #ffffff;
+}
+
+.darkLetters {
+  color: #000000;
+}
+
 #chatToolbar {
   height: 30px;
-  background-color: #3d3d3d;
   box-sizing: border-box;
   font-weight: bold;
   font-size: 14px;
@@ -19,7 +36,6 @@ input {
   padding-top: 4px;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
-  color: #ffffff;
 }
 
 #closeButton {
@@ -29,7 +45,6 @@ input {
 }
 
 #chatComponent {
-  background-color: #b8b8b8;
   position: absolute;
   z-index: 99999;
   top: 0;
@@ -72,7 +87,6 @@ input {
 
 .msg-info p {
   font-size: 0.8em;
-  color: #000000;
   font-style: italic;
 }
 
