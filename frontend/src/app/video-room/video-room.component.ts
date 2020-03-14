@@ -2,7 +2,7 @@ import { RoomService } from './../shared/services/room.service';
 import { AssistantsComponent } from './../shared/components/menu/assistants/assistants.component';
 import { UserService } from '../shared/services/user.service';
 import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatTabChangeEvent } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   OpenVidu,
@@ -43,9 +43,10 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   @Output() leaveSession = new EventEmitter<any>();
   @Output() error = new EventEmitter<any>();
 
+  @ViewChild('sidenav') menu: any;
+  @ViewChild('tabGroup') tabGroup: any;
   @ViewChild('chatComponent') chatComponent: ChatComponent;
   @ViewChild('modChatComponent') modChatComponent: ChatComponent;
-  @ViewChild('sidenav') menu: any;
   @ViewChild('assistants') assistantsComponent: AssistantsComponent;
 
   // Constants
@@ -73,6 +74,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   messageList: { connectionId: string; nickname: string; message: string; userAvatar: string }[] = [];
   messageListMod: { connectionId: string; nickname: string; message: string; userAvatar: string }[] = [];
   newMessages = 0;
+  newMessagesAssistants = 0;
+  newMessagesModerators = 0;
   modConnections: Connection[] = [];
   updatingModConnections: boolean;
 
@@ -145,7 +148,20 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     });
   }
 
-  checkNotification() {
+  tabChanged(tabChangeEvent: MatTabChangeEvent) {
+    if(tabChangeEvent.index===0) {
+      this.newMessagesAssistants = 0;
+    } else if (tabChangeEvent.index===1) {
+      this.newMessagesModerators = 0;
+    }
+  }
+
+  checkNotification(signal: string) {
+    if(signal==='chat') {
+      this.newMessagesAssistants = this.tabGroup.selectedIndex===0 ? 0 : this.newMessagesAssistants + 1;
+    } else {
+      this.newMessagesModerators = this.tabGroup.selectedIndex===1 ? 0 : this.newMessagesModerators + 1;
+    }
     this.newMessages = this.menuOpened ? 0 : this.newMessages + 1;
   }
 
@@ -568,7 +584,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         message: data.message,
         userAvatar: messageOwner.getAvatar(),
       });
-      this.checkNotification();
+      this.checkNotification(signal);
       if(component) {
         component.scrollToBottom();
       }

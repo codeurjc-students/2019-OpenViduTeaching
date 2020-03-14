@@ -42,11 +42,11 @@
         *ngIf="localUsers && (localUsers[0].getStreamManager())"
       >
       
-        <mat-tab-group class="tab-group" backgroundColor="primary" animationDuration="0ms">
+        <mat-tab-group #tabGroup class="tab-group" backgroundColor="primary" animationDuration="0ms" (selectedTabChange)="tabChanged($event)">
 
           <mat-tab class="tab" *ngIf="!this.ovSettings || (this.ovSettings && this.ovSettings.chat)">
             <ng-template mat-tab-label>
-              <mat-icon>chat</mat-icon>
+              <mat-icon matBadge="{{newMessagesAssistants}}" [matBadgeHidden]="newMessagesAssistants === 0"  matBadgePosition="above before" matBadgeColor="accent">chat</mat-icon>
               <span *ngIf="userService.canStream(mySessionId)">Assistants chat</span>
               <span *ngIf="!userService.canStream(mySessionId)">Chat</span>
             </ng-template>
@@ -67,7 +67,7 @@
 
           <mat-tab class="tab" *ngIf="(!this.ovSettings || (this.ovSettings && this.ovSettings.chat)) && userService.canStream(mySessionId)">
             <ng-template mat-tab-label>
-              <mat-icon>chat_bubble</mat-icon>
+              <mat-icon matBadge="{{newMessagesModerators}}" [matBadgeHidden]="newMessagesModerators === 0"  matBadgePosition="above before" matBadgeColor="accent">chat_bubble</mat-icon>
               Moderators chat
             </ng-template>
             <chat-component
