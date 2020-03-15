@@ -16,6 +16,7 @@ import io.openvidu.java.client.OpenVidu;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.OpenViduRole;
+import io.openvidu.java.client.Recording;
 import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 import io.openvidu.java.client.TokenOptions;
@@ -46,18 +47,6 @@ public class OpenViduComponent {
 		this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
 		this.roomIdSession = new ConcurrentHashMap<>();
 		this.sessionIdUserIdToken = new ConcurrentHashMap<>();
-	}
-
-	public OpenVidu getOpenVidu() {
-		return openVidu;
-	}
-
-	public String getOPENVIDU_URL() {
-		return OPENVIDU_URL;
-	}
-
-	public String getSECRET() {
-		return SECRET;
 	}
 
 	public boolean isSessionCreated(Room room) {
@@ -152,5 +141,23 @@ public class OpenViduComponent {
 			set.add(user);
 		}
 		return set;
+	}
+	
+	public String startRecording(Room room) {
+		try {
+			return this.openVidu.startRecording(this.roomIdSession.get(room.getId()).getSessionId()). getId();
+		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public String stopRecording(Room room) {
+		try {
+			return this.openVidu.stopRecording(this.roomIdSession.get(room.getId()).getSessionId()).getId();
+		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
