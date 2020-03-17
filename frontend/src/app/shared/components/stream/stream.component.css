@@ -1,7 +1,7 @@
 .nickname {
   padding: 5px !important;
   position: absolute;
-  z-index: 999;
+  z-index: 100;
   border-radius: 5px; 
   color: #313131;
   font-family: 'Ubuntu', sans-serif;
@@ -16,7 +16,7 @@
   position: absolute;
   top: -3px;
   right: 0;
-  z-index: 999;
+  z-index: 100;
 }
 
 #nicknameForm {
@@ -68,7 +68,7 @@ video {
 
 .streamButtons {
   position: absolute;
-  z-index: 1000;
+  z-index: 101;
   background-color: #000000c4;
   right: 1px;
 }
