@@ -105,13 +105,15 @@
 
       <mat-sidenav-content class="sidenav-main">
 
-        <popup-message-component
-          class="popup"
-          chatType="Assistants"
-          userName="User"
-          userAvatar="https://idostories.com/wp-content/uploads/2019/02/user-avatar-placeholder.png"
-          content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.">
-        </popup-message-component>
+        <ng-container *ngFor="let message of this.lastMessages">
+          <popup-message-component
+            class="popup"
+            [chatType]="message.chatType"
+            [userName]="message.nickname"
+            [userAvatar]="message.userAvatar"
+            [content]="message.message">
+          </popup-message-component>
+        </ng-container>
 
         <div id="layout" class="bounds" [class.boundsLight]="lightTheme">
           <ng-container *ngIf="userService.canStream(mySessionId)">

@@ -78,6 +78,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   newMessagesModerators = 0;
   modConnections: Connection[] = [];
   updatingModConnections: boolean;
+  lastMessages: { chatType: string; nickname: string; message: string; userAvatar: string, timestamp: Date}[] = [];
 
   private OV: OpenVidu;
   private OVScreen: OpenVidu;
@@ -163,6 +164,23 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       this.newMessagesModerators = this.tabGroup.selectedIndex===1 ? 0 : this.newMessagesModerators + 1;
     }
     this.newMessages = this.menuOpened ? 0 : this.newMessages + 1;
+  }
+
+  showChatPopup(signal: string, nickname: string, message: string, userAvatar: string) {
+    const chatType: string = signal === 'chat' ? 'Assistants' : 'Moderators';
+    const timestamp = new Date();
+    this.lastMessages.push({
+      chatType: chatType,
+      nickname: nickname,
+      message: message,
+      userAvatar: userAvatar,
+      timestamp: timestamp,
+    });
+    setTimeout(() => {
+      this.lastMessages = this.lastMessages.filter((obj) => {
+        return obj.timestamp !== timestamp;
+      });
+    }, 5000);
   }
 
   joinToSession() {
@@ -585,6 +603,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         userAvatar: messageOwner.getAvatar(),
       });
       this.checkNotification(signal);
+      this.showChatPopup(signal, data.nickname, data.message, messageOwner.getAvatar());
       if(component) {
         component.scrollToBottom();
       }

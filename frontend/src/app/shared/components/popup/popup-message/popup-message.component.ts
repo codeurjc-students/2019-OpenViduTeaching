@@ -1,4 +1,4 @@
-import { UserModel } from '../../models/user-model';
+import { UserModel } from '../../../models/user-model';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
