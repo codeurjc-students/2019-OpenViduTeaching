@@ -169,18 +169,21 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   showChatPopup(signal: string, nickname: string, message: string, userAvatar: string) {
     const chatType: string = signal === 'chat' ? 'Assistants' : 'Moderators';
     const timestamp = new Date();
-    this.lastMessages.push({
-      chatType: chatType,
-      nickname: nickname,
-      message: message,
-      userAvatar: userAvatar,
-      timestamp: timestamp,
-    });
-    setTimeout(() => {
-      this.lastMessages = this.lastMessages.filter((obj) => {
-        return obj.timestamp !== timestamp;
+    const isThatChatSelected = signal === 'chat' ? this.tabGroup.selectedIndex===0 : this.tabGroup.selectedIndex===1;
+    if(nickname!==this.localUsers[0].getNickname() && (!this.menuOpened || !isThatChatSelected)) {
+      this.lastMessages.push({
+        chatType: chatType,
+        nickname: nickname,
+        message: message,
+        userAvatar: userAvatar,
+        timestamp: timestamp,
       });
-    }, 5000);
+      setTimeout(() => {
+        this.lastMessages = this.lastMessages.filter((obj) => {
+          return obj.timestamp !== timestamp && obj.nickname !== nickname;
+        });
+      }, 5000);
+    }
   }
 
   joinToSession() {
