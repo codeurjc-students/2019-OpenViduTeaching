@@ -78,7 +78,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   newMessagesModerators = 0;
   modConnections: Connection[] = [];
   updatingModConnections: boolean;
-  lastMessages: { chatType: string; nickname: string; message: string; userAvatar: string, timestamp: Date}[] = [];
+  lastNotifications: { top: string, chatType: string; nickname: string; message: string; userAvatar: string, timestamp: Date}[] = [];
 
   private OV: OpenVidu;
   private OVScreen: OpenVidu;
@@ -142,7 +142,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     this.menu.toggle().then(() => {
       this.menuOpened = this.menu.opened;
       if (this.menuOpened) {
-        this.newMessages = 0;
+        this.newMessages = this.tabGroup.selectedIndex===0 ? this.newMessagesModerators : (this.tabGroup.selectedIndex>1 ? this.newMessagesAssistants+this.newMessagesModerators : this.newMessagesAssistants);
       }
       const ms = this.isWebComponent ? 300 : 0;
       setTimeout(() => this.openviduLayout.updateLayout(), ms);
@@ -152,8 +152,10 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   tabChanged(tabChangeEvent: MatTabChangeEvent) {
     if(tabChangeEvent.index===0) {
       this.newMessagesAssistants = 0;
+      this.newMessages = this.newMessagesModerators;
     } else if (tabChangeEvent.index===1) {
       this.newMessagesModerators = 0;
+      this.newMessages = this.newMessagesAssistants;
     }
   }
 
@@ -163,7 +165,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     } else {
       this.newMessagesModerators = this.tabGroup.selectedIndex===1 ? 0 : this.newMessagesModerators + 1;
     }
-    this.newMessages = this.menuOpened ? 0 : this.newMessages + 1;
+    this.newMessages = this.menuOpened ? (this.tabGroup.selectedIndex===0 ? this.newMessagesModerators : (this.tabGroup.selectedIndex>1 ? this.newMessagesAssistants+this.newMessagesModerators: this.newMessagesAssistants)) : this.newMessages + 1;
   }
 
   showChatPopup(signal: string, nickname: string, message: string, userAvatar: string) {
@@ -171,7 +173,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     const timestamp = new Date();
     const isThatChatSelected = signal === 'chat' ? this.tabGroup.selectedIndex===0 : this.tabGroup.selectedIndex===1;
     if(nickname!==this.localUsers[0].getNickname() && (!this.menuOpened || !isThatChatSelected)) {
-      this.lastMessages.push({
+      this.lastNotifications.push({
+        top: '5%',
         chatType: chatType,
         nickname: nickname,
         message: message,
@@ -179,7 +182,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         timestamp: timestamp,
       });
       setTimeout(() => {
-        this.lastMessages = this.lastMessages.filter((obj) => {
+        this.lastNotifications = this.lastNotifications.filter((obj) => {
           return obj.timestamp !== timestamp && obj.nickname !== nickname;
         });
       }, 5000);

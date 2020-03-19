@@ -47,7 +47,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 import { AssistantsComponent } from './shared/components/menu/assistants/assistants.component';
 import { UserService } from './shared/services/user.service';
 import { LoginComponent } from './shared/components/login/login.component';
-import { PopupMessageComponent } from './shared/components/popup/popup-message/popup-message.component';
+import { PopupComponent } from './shared/components/popup/popup.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +66,7 @@ import { PopupMessageComponent } from './shared/components/popup/popup-message/p
     InviteComponent,
     AssistantsComponent,
     LoginComponent,
-    PopupMessageComponent
+    PopupComponent
   ],
   imports: [
     FormsModule,

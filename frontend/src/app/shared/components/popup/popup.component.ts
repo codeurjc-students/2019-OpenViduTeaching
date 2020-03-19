@@ -1,12 +1,11 @@
-import { UserModel } from '../../../models/user-model';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'popup-message-component',
-  templateUrl: './popup-message.component.html',
-  styleUrls: ['./popup-message.component.css']
+  templateUrl: './popup.component.html',
+  styleUrls: ['./popup.component.css']
 })
-export class PopupMessageComponent implements OnInit {
+export class PopupComponent implements OnInit {
 
   @Input() chatType: string;
   @Input() userName: string;

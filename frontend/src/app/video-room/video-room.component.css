@@ -6,10 +6,9 @@
 
 .popup {
   position: absolute;
-  left: 80%;
+  left: 78%;
   right: 2%;
-  top: 5%;
-  min-width: 15%;
+  min-width: 20%;
   z-index: 999;
 }
 

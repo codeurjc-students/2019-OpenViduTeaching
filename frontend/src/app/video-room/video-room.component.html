@@ -105,13 +105,14 @@
 
       <mat-sidenav-content class="sidenav-main">
 
-        <ng-container *ngFor="let message of this.lastMessages">
+        <ng-container *ngFor="let notification of this.lastNotifications">
           <popup-message-component
             class="popup"
-            [chatType]="message.chatType"
-            [userName]="message.nickname"
-            [userAvatar]="message.userAvatar"
-            [content]="message.message">
+            [style.top]="notification.top"
+            [chatType]="notification.chatType"
+            [userName]="notification.nickname"
+            [userAvatar]="notification.userAvatar"
+            [content]="notification.message">
           </popup-message-component>
         </ng-container>
 
