@@ -105,16 +105,16 @@
 
       <mat-sidenav-content class="sidenav-main">
 
-        <ng-container *ngFor="let notification of this.lastNotifications">
-          <popup-message-component
-            class="popup"
-            [style.top]="notification.top"
-            [chatType]="notification.chatType"
-            [userName]="notification.nickname"
-            [userAvatar]="notification.userAvatar"
-            [content]="notification.message">
-          </popup-message-component>
-        </ng-container>
+        <popup-message-component
+          *ngFor="let notification of this.lastNotifications"
+          class="popup"
+          #popup
+          [style.top]="notification.top"
+          [chatType]="notification.chatType"
+          [userName]="notification.nickname"
+          [userAvatar]="notification.userAvatar"
+          [content]="notification.message">
+        </popup-message-component>
 
         <div id="layout" class="bounds" [class.boundsLight]="lightTheme">
           <ng-container *ngIf="userService.canStream(mySessionId)">

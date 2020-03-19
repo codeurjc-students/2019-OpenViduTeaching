@@ -1,7 +1,7 @@
 import { RoomService } from './../shared/services/room.service';
 import { AssistantsComponent } from './../shared/components/menu/assistants/assistants.component';
 import { UserService } from '../shared/services/user.service';
-import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { MatDialog, MatTabChangeEvent } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -48,6 +48,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   @ViewChild('chatComponent') chatComponent: ChatComponent;
   @ViewChild('modChatComponent') modChatComponent: ChatComponent;
   @ViewChild('assistants') assistantsComponent: AssistantsComponent;
+  @ViewChildren('popup', { read: ElementRef }) currentPopups:QueryList<ElementRef>; 
 
   // Constants
   BIG_ELEMENT_CLASS = 'OV_big';
@@ -168,13 +169,22 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     this.newMessages = this.menuOpened ? (this.tabGroup.selectedIndex===0 ? this.newMessagesModerators : (this.tabGroup.selectedIndex>1 ? this.newMessagesAssistants+this.newMessagesModerators: this.newMessagesAssistants)) : this.newMessages + 1;
   }
 
+  private getOffsetOfNextNotification(): string {
+    if(this.lastNotifications.length===0) {
+      return '5%';
+    } else {
+      const lastPopup = this.currentPopups.last;
+      return lastPopup.nativeElement.offsetTop + lastPopup.nativeElement.offsetHeight + 10 + 'px';
+    }
+  }
+
   showChatPopup(signal: string, nickname: string, message: string, userAvatar: string) {
     const chatType: string = signal === 'chat' ? 'Assistants' : 'Moderators';
     const timestamp = new Date();
     const isThatChatSelected = signal === 'chat' ? this.tabGroup.selectedIndex===0 : this.tabGroup.selectedIndex===1;
     if(nickname!==this.localUsers[0].getNickname() && (!this.menuOpened || !isThatChatSelected)) {
       this.lastNotifications.push({
-        top: '5%',
+        top: this.getOffsetOfNextNotification(),
         chatType: chatType,
         nickname: nickname,
         message: message,
@@ -182,9 +192,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         timestamp: timestamp,
       });
       setTimeout(() => {
-        this.lastNotifications = this.lastNotifications.filter((obj) => {
-          return obj.timestamp !== timestamp && obj.nickname !== nickname;
-        });
+        this.lastNotifications.shift();
       }, 5000);
     }
   }
