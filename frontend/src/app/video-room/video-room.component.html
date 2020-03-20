@@ -106,7 +106,7 @@
       <mat-sidenav-content class="sidenav-main">
 
         <popup-message-component
-          *ngFor="let notification of this.lastNotifications"
+          *ngFor="let notification of this.currentNotifications"
           class="popup"
           #popup
           [style.top]="notification.top"

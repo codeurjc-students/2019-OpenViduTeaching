@@ -79,7 +79,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   newMessagesModerators = 0;
   modConnections: Connection[] = [];
   updatingModConnections: boolean;
-  lastNotifications: { top: string, chatType: string; nickname: string; message: string; userAvatar: string, timestamp: Date}[] = [];
+  currentNotifications: { top: string, chatType: string; nickname: string; message: string; userAvatar: string, timestamp: Date}[] = [];
 
   private OV: OpenVidu;
   private OVScreen: OpenVidu;
@@ -169,12 +169,21 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     this.newMessages = this.menuOpened ? (this.tabGroup.selectedIndex===0 ? this.newMessagesModerators : (this.tabGroup.selectedIndex>1 ? this.newMessagesAssistants+this.newMessagesModerators: this.newMessagesAssistants)) : this.newMessages + 1;
   }
 
-  private getOffsetOfNextNotification(): string {
-    if(this.lastNotifications.length===0) {
+  private getOffsetOfNotification(position: number): string {
+    if(position===0) {
       return '5%';
     } else {
-      const lastPopup = this.currentPopups.last;
-      return lastPopup.nativeElement.offsetTop + lastPopup.nativeElement.offsetHeight + 10 + 'px';
+      const previousPopup = this.currentPopups.toArray()[position-1];
+      return previousPopup.nativeElement.offsetTop + previousPopup.nativeElement.offsetHeight + 10 + 'px';
+    }
+  }
+
+  private recalculatePopupOffsets() {
+    for(let i=0;i<this.currentNotifications.length;i++) {
+      setTimeout(() => {
+        //If we don't set a timeout the top property change is too slow for the loop and it glitches when calculating different heights
+        this.currentNotifications[i].top = this.getOffsetOfNotification(i);
+      }, 0);
     }
   }
 
@@ -183,8 +192,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     const timestamp = new Date();
     const isThatChatSelected = signal === 'chat' ? this.tabGroup.selectedIndex===0 : this.tabGroup.selectedIndex===1;
     if(nickname!==this.localUsers[0].getNickname() && (!this.menuOpened || !isThatChatSelected)) {
-      this.lastNotifications.push({
-        top: this.getOffsetOfNextNotification(),
+      this.currentNotifications.push({
+        top: this.getOffsetOfNotification(this.currentNotifications.length),
         chatType: chatType,
         nickname: nickname,
         message: message,
@@ -192,7 +201,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         timestamp: timestamp,
       });
       setTimeout(() => {
-        this.lastNotifications.shift();
+        this.currentNotifications.shift();
+        this.recalculatePopupOffsets();
       }, 5000);
     }
   }
