@@ -24,11 +24,29 @@ import { ChatComponent } from '../shared/components/menu/chat/chat.component';
 import { OvSettings } from '../shared/models/ov-settings';
 import { ApiService } from '../shared/services/api.service';
 import { ThrowStmt } from '@angular/compiler';
+import { trigger, transition, style, animate, query, stagger, animateChild } from '@angular/animations';
 
 @Component({
   selector: 'app-video-room',
   templateUrl: './video-room.component.html',
   styleUrls: ['./video-room.component.css'],
+  animations: [
+    trigger('popup', [
+      transition(':enter', [
+        style({ transform: 'scale(0.1)', opacity: 0 }),
+        animate('0.75s cubic-bezier(.8, -0.6, 0.26, 1.6)',
+          style({ transform: 'scale(1)', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        style({ transform: 'scale(1)', opacity: 1, height: '*' }),
+        animate('0.5s cubic-bezier(.8, -0.6, 0.2, 1.5)',
+          style({
+            transform: 'scale(0.1)', opacity: 0,
+            height: '0px', margin: '0px'
+          }))
+      ])
+    ])
+  ]
 })
 export class VideoRoomComponent implements OnInit, OnDestroy {
   // webComponent's inputs and outputs
@@ -202,7 +220,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       });
       setTimeout(() => {
         this.currentNotifications.shift();
-        this.recalculatePopupOffsets();
+        setTimeout(() => {
+          this.recalculatePopupOffsets();
+        }, 500);
       }, 5000);
     }
   }

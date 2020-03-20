@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'popup-message-component',
+  selector: 'popup-component',
   templateUrl: './popup.component.html',
   styleUrls: ['./popup.component.css']
 })
