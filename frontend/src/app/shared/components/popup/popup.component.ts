@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class PopupComponent implements OnInit {
 
-  @Input() chatType: string;
+  @Input() subtitle: string;
   @Input() userName: string;
   @Input() userAvatar: string;
   @Input() content: string;

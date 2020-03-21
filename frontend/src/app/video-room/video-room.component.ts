@@ -97,7 +97,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   newMessagesModerators = 0;
   modConnections: Connection[] = [];
   updatingModConnections: boolean;
-  currentNotifications: { top: string, chatType: string; nickname: string; message: string; userAvatar: string, timestamp: Date}[] = [];
+  currentNotifications: { top: string, subtitle: string; nickname: string; content: string; userAvatar: string, timestamp: Date}[] = [];
 
   private OV: OpenVidu;
   private OVScreen: OpenVidu;
@@ -205,6 +205,15 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     }
   }
 
+  private removePopupOnTimeout() {
+    setTimeout(() => {
+      this.currentNotifications.shift();
+      setTimeout(() => {
+        this.recalculatePopupOffsets();
+      }, 500);
+    }, 5000);
+  }
+
   showChatPopup(signal: string, nickname: string, message: string, userAvatar: string) {
     const chatType: string = signal === 'chat' ? 'Assistants' : 'Moderators';
     const timestamp = new Date();
@@ -212,19 +221,24 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     if(nickname!==this.localUsers[0].getNickname() && (!this.menuOpened || !isThatChatSelected)) {
       this.currentNotifications.push({
         top: this.getOffsetOfNotification(this.currentNotifications.length),
-        chatType: chatType,
+        subtitle: chatType,
         nickname: nickname,
-        message: message,
+        content: message,
         userAvatar: userAvatar,
         timestamp: timestamp,
       });
       setTimeout(() => {
-        this.currentNotifications.shift();
-        setTimeout(() => {
-          this.recalculatePopupOffsets();
-        }, 500);
-      }, 5000);
+        this.playAudio('message');
+      }, 250);
+      this.removePopupOnTimeout();
     }
+  }
+
+  playAudio(fileName: string) {
+    let audio = new Audio();
+      audio.src = "../assets/sounds/" + fileName + ".mp3";
+      audio.load();
+      audio.play();
   }
 
   joinToSession() {
