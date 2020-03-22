@@ -1,9 +1,10 @@
-<mat-card>
+<mat-card [style.backgroundColor]="this.backgroundColor" [style.color]="this.letterColor">
     <mat-card-header>
         <img mat-card-avatar [src]="this.userAvatar">
         <mat-card-title>{{this.userName}}</mat-card-title>
         <mat-card-subtitle>{{this.subtitle}}</mat-card-subtitle>
     </mat-card-header>
+    <br *ngIf="!this.subtitle">
     <mat-card-content *ngIf="this.content">
        {{this.content}}
     </mat-card-content>

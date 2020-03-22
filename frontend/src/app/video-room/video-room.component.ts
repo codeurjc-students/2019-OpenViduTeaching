@@ -97,7 +97,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   newMessagesModerators = 0;
   modConnections: Connection[] = [];
   updatingModConnections: boolean;
-  currentNotifications: { top: string, subtitle: string; nickname: string; content: string; userAvatar: string, timestamp: Date}[] = [];
+  currentNotifications: { top: string, subtitle: string; nickname: string; content: string; userAvatar: string; color: string}[] = [];
 
   private OV: OpenVidu;
   private OVScreen: OpenVidu;
@@ -214,9 +214,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     }, 5000);
   }
 
-  showChatPopup(signal: string, nickname: string, message: string, userAvatar: string) {
+  showChatPopup(nickname: string, message: string, userAvatar: string, signal: string) {
     const chatType: string = signal === 'chat' ? 'Assistants' : 'Moderators';
-    const timestamp = new Date();
     const isThatChatSelected = signal === 'chat' ? this.tabGroup.selectedIndex===0 : this.tabGroup.selectedIndex===1;
     if(nickname!==this.localUsers[0].getNickname() && (!this.menuOpened || !isThatChatSelected)) {
       this.currentNotifications.push({
@@ -225,11 +224,27 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         nickname: nickname,
         content: message,
         userAvatar: userAvatar,
-        timestamp: timestamp,
+        color: 'light'
       });
       setTimeout(() => {
         this.playAudio('message');
       }, 250);
+      this.removePopupOnTimeout();
+    }
+  }
+
+  showConnectionPopup(nickname: string, isConnectionCreated: boolean, userAvatar: string) {
+    if(nickname!==this.localUsers[0].getNickname()) {
+      this.currentNotifications.push({
+        top: this.getOffsetOfNotification(this.currentNotifications.length),
+        subtitle: undefined,
+        nickname: nickname,
+        content: isConnectionCreated ? 'Joined the session' : 'Left the session',
+        userAvatar: userAvatar,
+        color: 'dark'
+      });
+      const audioName = isConnectionCreated ? 'connection' : 'disconnection';
+      this.playAudio(audioName);
       this.removePopupOnTimeout();
     }
   }
@@ -571,7 +586,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     this.localUsers[0].setLocalConnectionId(this.session.connection.connectionId);
     if (this.userService.canStream(this.mySessionId) && this.session.capabilities.publish) {
       this.publishSession(this.localUsers[0]).then(() => {
-          this.sendSignalUserChanged(this.localUsers[0]);
+          this.sendSignalUserChanged(this.localUsers[0], true);
           this.joinSession.emit();
       })
         .catch((error) => console.error(error));
@@ -579,6 +594,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         this.openviduLayout.updateLayout();
         (<HTMLElement>this.localUsers[0].getStreamManager().videos[0].video).parentElement.classList.remove('custom-class');
       });
+    } else {
+      this.sendSignalUserChanged(this.localUsers[0], true);
     }
   }
 
@@ -621,6 +638,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
           if (data.avatar !== undefined) {
             user.setUserAvatar(data.avatar);
           }
+          if (data.isFirstTime) {
+            this.showConnectionPopup(user.getNickname(), true, data.avatar);
+          }
         }
       });
       this.checkSomeoneShareScreen();
@@ -643,6 +663,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
           this.assistantsComponent.getAssistants();
         }, 500);
       }
+      const connection = event.connection;
+      const userDisconnected = this.remoteUsers.filter((user) => user.getConnectionId() === connection.connectionId)[0];
+      this.showConnectionPopup(userDisconnected.getNickname(), false, userDisconnected.getAvatar());
       this.updateModConnections();
     });
   }
@@ -661,14 +684,14 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         userAvatar: messageOwner.getAvatar(),
       });
       this.checkNotification(signal);
-      this.showChatPopup(signal, data.nickname, data.message, messageOwner.getAvatar());
+      this.showChatPopup(data.nickname, data.message, messageOwner.getAvatar(), signal);
       if(component) {
         component.scrollToBottom();
       }
     });
   }
 
-  private sendSignalUserChanged(user: UserModel): void {
+  private sendSignalUserChanged(user: UserModel, isFirstTime?: boolean): void {
     const session = user.isLocal() ? this.session : this.sessionScreen;
     const data = {
       isAudioActive: user.isAudioActive(),
@@ -676,6 +699,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       isScreenShareActive: user.isScreenShareActive(),
       nickname: user.getNickname(),
       avatar: user.getAvatar(),
+      isFirstTime: isFirstTime,
     };
     const signalOptions: SignalOptions = {
       data: JSON.stringify(data),
