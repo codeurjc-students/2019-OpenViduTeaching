@@ -20,7 +20,7 @@ export class PopupComponent implements OnInit {
 
   ngOnInit() {
     if(this.color==='dark') {
-      this.backgroundColor = '#494949';
+      this.backgroundColor = '#333333';
       this.letterColor = '#ffffff';
     } else {
       this.backgroundColor = 'white';

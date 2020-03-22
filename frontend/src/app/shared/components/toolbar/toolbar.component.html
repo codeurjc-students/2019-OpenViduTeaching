@@ -37,6 +37,10 @@
       <button mat-icon-button (click)="getInviteURL('participant')" *ngIf="localUser && this.userService.isModOfRoom(this.mySessionId)">
         <mat-icon matTooltip="Invite URL for participants">link</mat-icon>
       </button>
+      <button mat-icon-button (click)="raiseHand()" *ngIf="localUser">
+        <img *ngIf="!isHandRaised" src="../../../../assets/images/raise_hand.png" matTooltip="Raise your hand" id="raise_hand">
+        <img *ngIf="isHandRaised" src="../../../../assets/images/lower_hand.png" matTooltip="Lower your hand" id="raise_hand">
+      </button>
       <button mat-icon-button id="navMenuButton" (click)="toggleMenu()" *ngIf="!this.ovSettings || (this.ovSettings && this.ovSettings.chat)">
           <mat-icon matBadge="{{newMessagesNum}}" [matBadgeHidden]="newMessagesNum === 0"  matBadgePosition="above before" matTooltip="Menu" matBadgeColor="accent">menu</mat-icon>
       </button>

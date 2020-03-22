@@ -82,3 +82,8 @@
 .pointLight {
     border: 1px solid #ffffff !important;
 }
+
+#raise_hand {
+    max-width: 50%;
+    max-height: 50%;
+}

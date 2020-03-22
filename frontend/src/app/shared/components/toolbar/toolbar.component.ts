@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material';
 })
 export class ToolbarComponent implements OnInit {
   fullscreenIcon = 'fullscreen';
+  isHandRaised = false;
 
   @Input() lightTheme: boolean;
   @Input() mySessionId: string;
@@ -28,6 +29,7 @@ export class ToolbarComponent implements OnInit {
   @Output() exitButtonClicked = new EventEmitter<any>();
   @Output() menuButtonClicked = new EventEmitter<any>();
   @Output() stopScreenSharingClicked = new EventEmitter<any>();
+  @Output() raiseHandClicked = new EventEmitter<any>();
 
   constructor(
     private apiSrv: ApiService,
@@ -71,6 +73,11 @@ export class ToolbarComponent implements OnInit {
 
   toggleMenu() {
     this.menuButtonClicked.emit();
+  }
+
+  raiseHand() {
+    this.isHandRaised = !this.isHandRaised;
+    this.raiseHandClicked.emit();
   }
 
   getInviteURL(role:string){
