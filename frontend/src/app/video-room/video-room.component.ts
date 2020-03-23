@@ -99,6 +99,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   updatingModConnections: boolean;
   currentNotifications: { top: string, subtitle: string; nickname: string; content: string; userAvatar: string; color: string}[] = [];
   handsRaised: {nickname: string, avatar: string, connectionId: string}[] = [];
+  handsRaisedMessage: string;
 
   private OV: OpenVidu;
   private OVScreen: OpenVidu;
@@ -673,6 +674,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         connectionId: user.getConnectionId()
       });
     }
+    this.handsRaisedMessage = (this.handsRaised.length>1 ? 'And ' + (this.handsRaised.length-1) + ' other ' + (this.handsRaised.length===2 ? 'person' : 'people') + ' are' : 'Is') + ' raising their hand'
   }
 
   private subscribedToStreamDestroyed() {
