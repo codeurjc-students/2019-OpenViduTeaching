@@ -22,9 +22,12 @@ export class PopupComponent implements OnInit {
     if(this.color==='dark') {
       this.backgroundColor = '#333333';
       this.letterColor = '#ffffff';
-    } else {
+    } else if(this.color==='light'){
       this.backgroundColor = 'white';
       this.letterColor = 'rgba(0, 0, 0, 0.87)';
+    } else if(this.color==='accent'){
+      this.backgroundColor = 'rgb(255, 193, 7)';
+      this.letterColor = 'rgb(0, 0, 0)';
     }
   }
 

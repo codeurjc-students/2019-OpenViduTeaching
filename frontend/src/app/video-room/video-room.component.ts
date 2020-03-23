@@ -98,7 +98,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   modConnections: Connection[] = [];
   updatingModConnections: boolean;
   currentNotifications: { top: string, subtitle: string; nickname: string; content: string; userAvatar: string; color: string}[] = [];
-  handsRaised: {nickName: string, connectionId: string}[] = [];
+  handsRaised: {nickname: string, avatar: string, connectionId: string}[] = [];
 
   private OV: OpenVidu;
   private OVScreen: OpenVidu;
@@ -651,6 +651,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
           }
           if (data.isHandRaised !== undefined) {
             user.setHandRaised(data.isHandRaised);
+            this.raiseOrLowerHand(user);
           }
           if (data.isFirstTime) {
             this.showConnectionPopup(user.getNickname(), true, data.avatar);
@@ -659,6 +660,19 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       });
       this.checkSomeoneShareScreen();
     });
+  }
+
+  raiseOrLowerHand(user: UserModel) {
+    //Removes the user from the array if they were already raising the hand
+    this.handsRaised = this.handsRaised.filter(handRaisedUser => handRaisedUser.connectionId!==user.getConnectionId());
+    if(user.isHandRaised()) {
+      //Adds the user with their current data to the array
+      this.handsRaised.push({
+        nickname: user.getNickname(),
+        avatar: user.getAvatar(),
+        connectionId: user.getConnectionId()
+      });
+    }
   }
 
   private subscribedToStreamDestroyed() {

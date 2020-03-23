@@ -119,6 +119,18 @@
           [color]="notification.color">
         </popup-component>
 
+        <popup-component
+          *ngIf="this.handsRaised.length>0"
+          class="popup"
+          @popup
+          [style.top]="'5%'"
+          [subtitle]="undefined"
+          [userName]="handsRaised[0].nickname"
+          [userAvatar]="handsRaised[0].avatar"
+          [content]="(handsRaised.length>1 ? 'And ' + (handsRaised.length-1) + ' other people are' : 'Is') + ' raising their hand'"
+          [color]="'accent'">
+        </popup-component>
+
         <div id="layout" class="bounds" [class.boundsLight]="lightTheme">
           <ng-container *ngIf="userService.canStream(mySessionId)">
             <div
