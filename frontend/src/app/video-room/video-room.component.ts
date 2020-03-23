@@ -98,6 +98,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   modConnections: Connection[] = [];
   updatingModConnections: boolean;
   currentNotifications: { top: string, subtitle: string; nickname: string; content: string; userAvatar: string; color: string}[] = [];
+  handsRaised: {nickName: string, connectionId: string}[] = [];
 
   private OV: OpenVidu;
   private OVScreen: OpenVidu;
@@ -424,6 +425,11 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     this.initApp();
   }
 
+  raiseHand() {
+    this.localUsers[0].setHandRaised(!this.localUsers[0].isHandRaised());
+    this.sendSignalUserChanged(this.localUsers[0]);
+  }
+
   screenShareAndChangeScreen() {
     const videoSource = navigator.userAgent.indexOf('Firefox') !== -1 ? 'window' : 'screen';
     const hasAudio = this.localUsers[0].isLocal() ? false : true;
@@ -595,6 +601,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         (<HTMLElement>this.localUsers[0].getStreamManager().videos[0].video).parentElement.classList.remove('custom-class');
       });
     } else {
+      this.localUsers[0].setVideoActive(false);
+      this.localUsers[0].setAudioActive(false);
       this.sendSignalUserChanged(this.localUsers[0], true);
     }
   }
@@ -619,6 +627,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
           if (data.avatar !== undefined) {
             user.setUserAvatar(data.avatar);
           }
+          if (data.isHandRaised !== undefined) {
+            user.setHandRaised(data.isHandRaised);
+          }
         }
       });
       this.remoteUsers.forEach((user: UserModel) => {
@@ -637,6 +648,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
           }
           if (data.avatar !== undefined) {
             user.setUserAvatar(data.avatar);
+          }
+          if (data.isHandRaised !== undefined) {
+            user.setHandRaised(data.isHandRaised);
           }
           if (data.isFirstTime) {
             this.showConnectionPopup(user.getNickname(), true, data.avatar);
@@ -697,6 +711,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       isAudioActive: user.isAudioActive(),
       isVideoActive: user.isVideoActive(),
       isScreenShareActive: user.isScreenShareActive(),
+      isHandRaised: user.isHandRaised(),
       nickname: user.getNickname(),
       avatar: user.getAvatar(),
       isFirstTime: isFirstTime,

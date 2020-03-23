@@ -13,7 +13,6 @@ import { MatSnackBar } from '@angular/material';
 })
 export class ToolbarComponent implements OnInit {
   fullscreenIcon = 'fullscreen';
-  isHandRaised = false;
 
   @Input() lightTheme: boolean;
   @Input() mySessionId: string;
@@ -76,7 +75,6 @@ export class ToolbarComponent implements OnInit {
   }
 
   raiseHand() {
-    this.isHandRaised = !this.isHandRaised;
     this.raiseHandClicked.emit();
   }
 

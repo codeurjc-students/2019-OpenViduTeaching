@@ -26,6 +26,11 @@ export class UserModel {
   private screenShareActive: boolean;
 
   /**
+   * Whether the user is raising their hand or not
+   */
+  private handRaised: boolean;
+
+  /**
    * The user nickname
    */
   private nickname: string;
@@ -63,6 +68,7 @@ export class UserModel {
     this.audioActive = true;
     this.videoActive = true;
     this.screenShareActive = false;
+    this.handRaised = false;
     this.nickname = '';
     this.streamManager = null;
     this.type = 'local';
@@ -87,6 +93,13 @@ export class UserModel {
    */
   public isScreenShareActive(): boolean {
     return this.screenShareActive;
+  }
+
+  /**
+   * Return `true` if user is raising their hand and `false` if it is lowered
+   */
+  public isHandRaised(): boolean {
+    return this.handRaised;
   }
 
   /**
@@ -167,6 +180,14 @@ export class UserModel {
    */
   public setScreenShareActive(isScreenShareActive: boolean) {
     this.screenShareActive = isScreenShareActive;
+  }
+
+  /**
+   * Set the handRaised value
+   * @param isHandRaised value of isHandRaised
+   */
+  public setHandRaised(isHandRaised: boolean) {
+    this.handRaised = isHandRaised;
   }
 
   /**
