@@ -66,7 +66,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   @ViewChild('chatComponent') chatComponent: ChatComponent;
   @ViewChild('modChatComponent') modChatComponent: ChatComponent;
   @ViewChild('assistants') assistantsComponent: AssistantsComponent;
-  @ViewChildren('popup', { read: ElementRef }) currentPopups:QueryList<ElementRef>; 
+  @ViewChildren('popup', { read: ElementRef }) currentPopups: QueryList<ElementRef>;
+  @ViewChild('raisedHands', { read: ElementRef }) raisedHandsPopup: ElementRef;
 
   // Constants
   BIG_ELEMENT_CLASS = 'OV_big';
@@ -191,7 +192,11 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
   private getOffsetOfNotification(position: number): string {
     if(position===0) {
-      return '5%';
+      if(this.handsRaised.length>0) {
+          return this.raisedHandsPopup.nativeElement.offsetTop + this.raisedHandsPopup.nativeElement.offsetHeight + 10 + 'px'
+      } else {
+        return '5%';
+      }
     } else {
       const previousPopup = this.currentPopups.toArray()[position-1];
       return previousPopup.nativeElement.offsetTop + previousPopup.nativeElement.offsetHeight + 10 + 'px';
@@ -203,7 +208,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         //If we don't set a timeout the top property change is too slow for the loop and it glitches when calculating different heights
         this.currentNotifications[i].top = this.getOffsetOfNotification(i);
-      }, 0);
+      });
     }
   }
 
@@ -673,6 +678,12 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         avatar: user.getAvatar(),
         connectionId: user.getConnectionId()
       });
+      this.playAudio('handRaise');
+      this.recalculatePopupOffsets();
+    } else {
+      setTimeout(() => {
+        this.recalculatePopupOffsets();
+      }, 500);
     }
     this.handsRaisedMessage = (this.handsRaised.length>1 ? 'And ' + (this.handsRaised.length-1) + ' other ' + (this.handsRaised.length===2 ? 'person' : 'people') + ' are' : 'Is') + ' raising their hand'
   }
