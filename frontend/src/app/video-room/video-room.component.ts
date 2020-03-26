@@ -706,6 +706,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       }
       const connection = event.connection;
       const userDisconnected = this.remoteUsers.filter((user) => user.getConnectionId() === connection.connectionId)[0];
+      this.handsRaised = this.handsRaised.filter((handRaisedUser) => handRaisedUser.connectionId !== connection.connectionId);
+      this.remoteUsers = this.remoteUsers.filter((user) => user.getConnectionId() !== connection.connectionId);
       this.showConnectionPopup(userDisconnected.getNickname(), false, userDisconnected.getAvatar());
       this.updateModConnections();
     });
