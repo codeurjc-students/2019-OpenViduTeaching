@@ -669,21 +669,33 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   }
 
   raiseOrLowerHand(user: UserModel) {
-    //Removes the user from the array if they were already raising the hand
-    this.handsRaised = this.handsRaised.filter(handRaisedUser => handRaisedUser.connectionId!==user.getConnectionId());
     if(user.isHandRaised()) {
-      //Adds the user with their current data to the array
-      this.handsRaised.push({
-        nickname: user.getNickname(),
-        avatar: user.getAvatar(),
-        connectionId: user.getConnectionId()
-      });
-      this.playAudio('handRaise');
-      this.recalculatePopupOffsets();
+      let unupdatedUser = this.handsRaised.filter(handRaisedUser => handRaisedUser.connectionId===user.getConnectionId())[0];
+      if(unupdatedUser) { //Update the user that was already raising their hand
+        const index = this.handsRaised.indexOf(unupdatedUser);
+        this.handsRaised[index] = {
+          nickname: user.getNickname(),
+          avatar: user.getAvatar(),
+          connectionId: user.getConnectionId()
+        }
+      } else { //The user wasn't already raising their hand
+        this.handsRaised.push({
+          nickname: user.getNickname(),
+          avatar: user.getAvatar(),
+          connectionId: user.getConnectionId()
+        });
+        if(this.handsRaised.length==1) {
+          this.playAudio('handRaise');
+          this.recalculatePopupOffsets();
+        }
+      }
     } else {
-      setTimeout(() => {
-        this.recalculatePopupOffsets();
-      }, 500);
+      this.handsRaised = this.handsRaised.filter(handRaisedUser => handRaisedUser.connectionId!==user.getConnectionId());
+      if(this.handsRaised.length==0) {
+        setTimeout(() => {
+          this.recalculatePopupOffsets();
+        }, 500);
+      }
     }
     this.handsRaisedMessage = (this.handsRaised.length>1 ? 'And ' + (this.handsRaised.length-1) + ' other ' + (this.handsRaised.length===2 ? 'person' : 'people') + ' are' : 'Is') + ' raising their hand'
   }
