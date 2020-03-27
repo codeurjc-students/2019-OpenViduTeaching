@@ -2,15 +2,20 @@ package urjc.ovteaching.rooms;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+
+import org.json.simple.JSONObject;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -28,6 +33,9 @@ public class Room {
 	private String codeModerator;
 	@JsonView(NameOnly.class)
 	private String name;
+	@Lob
+	@ElementCollection
+	private List<JSONObject> handRaisedUsers;
 
 	@ManyToMany(mappedBy = "moddedRooms")
 	private Set<User> mods;
@@ -44,6 +52,7 @@ public class Room {
 		this.presenters = new HashSet<>();
 		this.codeParticipant = UUID.randomUUID().toString();
 		this.codeModerator = UUID.randomUUID().toString();
+		this.handRaisedUsers = new LinkedList<>();
 		this.name = name;
 	}
 
@@ -96,5 +105,33 @@ public class Room {
 
 	public String getName() {
 		return name;
+	}
+
+	@SuppressWarnings("unchecked")
+	public int addHandRaisedUser(String nickname, String avatar, String connectionId) {
+		JSONObject json = new JSONObject();
+		json.put("nickname", nickname);
+		json.put("avatar", avatar);
+		json.put("connectionId", connectionId);
+		if(this.handRaisedUsers.contains(json)) {
+			return -1;
+		} else {
+			this.handRaisedUsers.add(json);
+			return this.handRaisedUsers.size();
+		}
+	}
+	
+	public boolean removeHandRaisedUser(String connectionId) {
+		for(JSONObject jsonUser : this.handRaisedUsers) {
+			if(jsonUser.get("connectionId").equals(connectionId)) {
+				this.handRaisedUsers.remove(jsonUser);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public List<JSONObject> getHandRaisedUsers() {
+		return handRaisedUsers;
 	}
 }

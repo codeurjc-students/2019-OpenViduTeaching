@@ -2,21 +2,22 @@ package urjc.ovteaching.rooms.controllers;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -205,6 +206,89 @@ public class RoomController {
 			response.put("presenters", presenters);
 			response.put("participants", participants);
 			return new ResponseEntity<>(response, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+	}
+	
+	/**
+	 * Makes the user raise their hand
+	 * 
+	 * @return the position in the queue
+	 */
+	@JsonView(User.NameOnly.class)
+	@PostMapping("/room/{roomName}/raiseHand")
+	public ResponseEntity<Integer> raiseHand(@PathVariable String roomName, @RequestBody String nickname, @RequestBody String avatar, @RequestBody String connectionId, HttpServletRequest request) {
+		if (!request.isUserInRole("USER")) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		Room room = roomServ.findByName(roomName);
+		User user = userServ.findByName(request.getUserPrincipal().getName());
+		// User user = this.userComponent.getLoggedUser();
+		if (room == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		if (room.isInRoom(user)) {
+			Integer position = room.addHandRaisedUser(nickname, avatar, connectionId);
+			if(position.equals(-1)) {
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
+			}
+			this.roomServ.save(room);
+			return new ResponseEntity<>(position, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+	}
+	
+	/**
+	 * Makes the user lower their hand
+	 * 
+	 * @return the httpStatus of the operation
+	 */
+	@JsonView(User.NameOnly.class)
+	@DeleteMapping("/room/{roomName}/raiseHand")
+	public ResponseEntity<?> lowerHand(@PathVariable String roomName, @RequestBody String connectionId, HttpServletRequest request) {
+		if (!request.isUserInRole("USER")) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		Room room = roomServ.findByName(roomName);
+		User user = userServ.findByName(request.getUserPrincipal().getName());
+		// User user = this.userComponent.getLoggedUser();
+		if (room == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		if (room.isInRoom(user)) {
+			boolean wasRemoved = room.removeHandRaisedUser(connectionId);
+			this.roomServ.save(room);
+			if(wasRemoved) {
+				return new ResponseEntity<>(HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.CONFLICT);
+			}
+		} else {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+	}
+	
+	/**
+	 * Makes the user lower their hand
+	 * 
+	 * @return the httpStatus of the operation
+	 */
+	@JsonView(User.NameOnly.class)
+	@GetMapping("/room/{roomName}/raiseHand")
+	public ResponseEntity<List<JSONObject>> getRaisedHands(@PathVariable String roomName, HttpServletRequest request) {
+		if (!request.isUserInRole("USER")) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		Room room = roomServ.findByName(roomName);
+		User user = userServ.findByName(request.getUserPrincipal().getName());
+		// User user = this.userComponent.getLoggedUser();
+		if (room == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		if (room.isInRoom(user)) {
+			return new ResponseEntity<>(room.getHandRaisedUsers(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
