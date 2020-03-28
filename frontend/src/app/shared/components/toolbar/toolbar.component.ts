@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material';
 })
 export class ToolbarComponent implements OnInit {
   fullscreenIcon = 'fullscreen';
+  positionInHandRaiseQueue: number = 0;
 
   @Input() lightTheme: boolean;
   @Input() mySessionId: string;
@@ -75,7 +76,23 @@ export class ToolbarComponent implements OnInit {
   }
 
   raiseHand() {
-    this.raiseHandClicked.emit();
+    if(!this.localUser.isHandRaised()) {
+      this.roomSrv.raiseHand(this.mySessionId, this.localUser.getNickname(), this.localUser.getAvatar(), this.localUser.getConnectionId()).subscribe(
+        position => {
+          this.positionInHandRaiseQueue = position;
+          this.raiseHandClicked.emit();
+        },
+        error => console.error(error) 
+      );
+    } else {
+      this.roomSrv.lowerHand(this.mySessionId, this.localUser.getConnectionId()).subscribe(
+        (_) => {
+          this.raiseHandClicked.emit();
+        },
+        error => console.error(error) 
+      );
+    }
+    
   }
 
   getInviteURL(role:string){

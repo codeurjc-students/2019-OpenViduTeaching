@@ -1,7 +1,7 @@
 import { Room } from './../models/room-model';
 import { UserService, User } from './user.service';
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import 'rxjs/Rx';
 import { Observable } from 'rxjs';
 import { map, catchError } from "rxjs/operators";
@@ -54,11 +54,44 @@ export class RoomService {
     );
   }
 
-  removeUser(roomName: string) {
-    return this.http.delete<any>(this.baseURL + '/room/' + roomName + '/user/session').pipe(
-      map((_) => {}),
+  getHandRaisedUsers(roomName: string): Observable<any> {
+    return this.http.get<any>(this.baseURL + '/room/' + roomName + '/raiseHand').pipe(
+      map(users => { return users }),
       catchError((error) => this.handleError(error))
     );
+  }
+
+  raiseHand(roomName: string, nickname: string, avatar: string, connectionId: string): Observable<number> {
+    let body = {
+      "nickname": nickname,
+      "avatar": avatar,
+      "connectionId": connectionId
+    };
+    return this.http.post<any>(this.baseURL + '/room/' + roomName + '/raiseHand', body).pipe(
+      map(users => { return users }),
+      catchError((error) => this.handleError(error))
+    );
+  }
+
+  lowerHand(roomName: string, connectionId: string): Observable<any> {
+    let body = {
+      "connectionId": connectionId
+    };
+    return this.http.request<any>('delete', this.baseURL + '/room/' + roomName + '/raiseHand', { body: body }).pipe(
+      map(response => { return response }),
+      catchError((error) => this.handleError(error))
+    );
+  }
+
+  syncLowerHand(roomName: string, connectionId: string) {
+    let body = {
+      "connectionId": connectionId
+    };
+    fetch(this.baseURL + '/room/' + roomName + '/raiseHand', {
+      method: 'DELETE',
+      body: JSON.stringify(body),
+      keepalive: true
+    });
   }
 
   private handleError(error: any) {

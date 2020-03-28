@@ -36,9 +36,10 @@ export class OpenViduService {
   }
 
   syncRemoveUser(roomName: string) {
-    let xhr = new XMLHttpRequest()
-    xhr.open("DELETE",this.baseURL + '/room/' + roomName + '/user',false);
-    xhr.send();
+    fetch(this.baseURL + '/room/' + roomName + '/user', {
+      method: 'DELETE',
+      keepalive: true
+    });
   }
 
   getToken(mySessionId: string): Promise<string> {

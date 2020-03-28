@@ -107,23 +107,18 @@ public class Room {
 		return name;
 	}
 
-	@SuppressWarnings("unchecked")
-	public int addHandRaisedUser(String nickname, String avatar, String connectionId) {
-		JSONObject json = new JSONObject();
-		json.put("nickname", nickname);
-		json.put("avatar", avatar);
-		json.put("connectionId", connectionId);
-		if(this.handRaisedUsers.contains(json)) {
+	public int addHandRaisedUser(JSONObject handRaisedUser) {
+		if(this.handRaisedUsers.contains(handRaisedUser)) {
 			return -1;
 		} else {
-			this.handRaisedUsers.add(json);
+			this.handRaisedUsers.add(handRaisedUser);
 			return this.handRaisedUsers.size();
 		}
 	}
 	
-	public boolean removeHandRaisedUser(String connectionId) {
+	public boolean removeHandRaisedUser(JSONObject connectionId) {
 		for(JSONObject jsonUser : this.handRaisedUsers) {
-			if(jsonUser.get("connectionId").equals(connectionId)) {
+			if(jsonUser.get("connectionId").equals(connectionId.get("connectionId"))) {
 				this.handRaisedUsers.remove(jsonUser);
 				return true;
 			}

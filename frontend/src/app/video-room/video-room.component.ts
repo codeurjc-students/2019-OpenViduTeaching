@@ -118,8 +118,11 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
   @HostListener('window:beforeunload')
   beforeunloadHandler() {
-    this.exitSession();
     this.openViduSrv.syncRemoveUser(this.mySessionId);
+    if(this.localUsers[0].isHandRaised()) {
+      this.roomService.syncLowerHand(this.mySessionId, this.localUsers[0].getConnectionId());
+    }
+    this.exitSession();
   }
 
   @HostListener('window:resize')
@@ -288,6 +291,12 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       this.session.disconnect();
     }
     if(this.OV != null) {
+      if(this.localUsers[0].isHandRaised()) {
+        this.roomService.lowerHand(this.roomName, this.localUsers[0].getConnectionId()).subscribe(
+          (_) => {},
+          error => console.error(error) 
+        );
+      }
       this.OV = null;
       this.OVScreen = null;
       this.session = null;
@@ -718,7 +727,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       }
       const connection = event.connection;
       const userDisconnected = this.remoteUsers.filter((user) => user.getConnectionId() === connection.connectionId)[0];
-      this.handsRaised = this.handsRaised.filter((handRaisedUser) => handRaisedUser.connectionId !== connection.connectionId);
+      userDisconnected.setHandRaised(false);
+      this.raiseOrLowerHand(userDisconnected);
       this.remoteUsers = this.remoteUsers.filter((user) => user.getConnectionId() !== connection.connectionId);
       this.showConnectionPopup(userDisconnected.getNickname(), false, userDisconnected.getAvatar());
       this.updateModConnections();

@@ -37,7 +37,7 @@
       <button mat-icon-button (click)="getInviteURL('participant')" *ngIf="localUser && this.userService.isModOfRoom(this.mySessionId)">
         <mat-icon matTooltip="Invite URL for participants">link</mat-icon>
       </button>
-      <button mat-icon-button (click)="raiseHand()" *ngIf="localUser">
+      <button mat-icon-button (click)="raiseHand()" *ngIf="localUser" id="raise_hand_button" matBadge="{{positionInHandRaiseQueue}}" [matBadgeHidden]="!localUser.isHandRaised()" matBadgePosition="below after" matBadgeSize="medium" matBadgeColor="warn">
         <img *ngIf="localUser && !localUser.isHandRaised()" src="../../../../assets/images/raise_hand.png" matTooltip="Raise your hand" id="raise_hand">
         <img *ngIf="localUser && localUser.isHandRaised()" src="../../../../assets/images/lower_hand.png" matTooltip="Lower your hand" id="raise_hand">
       </button>

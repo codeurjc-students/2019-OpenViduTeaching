@@ -1,11 +1,15 @@
 package urjc.ovteaching.rooms;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import urjc.ovteaching.OpenViduComponent;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserService;
 
@@ -17,6 +21,9 @@ public class RoomService {
 
 	@Autowired
 	private UserService userServ;
+	
+	@Autowired
+	private OpenViduComponent openviduComponent;
 
 	public Optional<Room> findOne(long id) {
 		return roomRep.findById(id);
@@ -63,6 +70,17 @@ public class RoomService {
 			return room;
 		} else {
 			return roomRep.findByCodeParticipant(code);
+		}
+	}
+	
+	public void checkConnectedHandRaisedUsers(Room room) {
+		Iterator<JSONObject> it = room.getHandRaisedUsers().iterator();
+		while(it.hasNext()) {
+			JSONObject nextUser = it.next();
+			User fakeUser = new User((String) nextUser.get("username"), "pass", "USER_ROLE");
+			if(!this.openviduComponent.getConnectedAssistants(room).contains(fakeUser)) {
+				it.remove();
+			}
 		}
 	}
 }

@@ -216,9 +216,9 @@ public class RoomController {
 	 * 
 	 * @return the position in the queue
 	 */
-	@JsonView(User.NameOnly.class)
+	@SuppressWarnings("unchecked")
 	@PostMapping("/room/{roomName}/raiseHand")
-	public ResponseEntity<Integer> raiseHand(@PathVariable String roomName, @RequestBody String nickname, @RequestBody String avatar, @RequestBody String connectionId, HttpServletRequest request) {
+	public ResponseEntity<Integer> raiseHand(@PathVariable String roomName, @RequestBody JSONObject handRaisedUser, HttpServletRequest request) {
 		if (!request.isUserInRole("USER")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -229,7 +229,9 @@ public class RoomController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		if (room.isInRoom(user)) {
-			Integer position = room.addHandRaisedUser(nickname, avatar, connectionId);
+			handRaisedUser.put("username", user.getName());
+			this.roomServ.checkConnectedHandRaisedUsers(room);
+			Integer position = room.addHandRaisedUser(handRaisedUser);
 			if(position.equals(-1)) {
 				return new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
@@ -245,9 +247,8 @@ public class RoomController {
 	 * 
 	 * @return the httpStatus of the operation
 	 */
-	@JsonView(User.NameOnly.class)
 	@DeleteMapping("/room/{roomName}/raiseHand")
-	public ResponseEntity<?> lowerHand(@PathVariable String roomName, @RequestBody String connectionId, HttpServletRequest request) {
+	public ResponseEntity<?> lowerHand(@PathVariable String roomName, @RequestBody JSONObject connectionId, HttpServletRequest request) {
 		if (!request.isUserInRole("USER")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -262,20 +263,18 @@ public class RoomController {
 			this.roomServ.save(room);
 			if(wasRemoved) {
 				return new ResponseEntity<>(HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		} else {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 	}
 	
 	/**
-	 * Makes the user lower their hand
+	 * Gets the users who are raising their hand in that room
 	 * 
-	 * @return the httpStatus of the operation
+	 * @return the list of the users raising their hand
 	 */
-	@JsonView(User.NameOnly.class)
 	@GetMapping("/room/{roomName}/raiseHand")
 	public ResponseEntity<List<JSONObject>> getRaisedHands(@PathVariable String roomName, HttpServletRequest request) {
 		if (!request.isUserInRole("USER")) {
