@@ -31,6 +31,11 @@ export class UserModel {
   private handRaised: boolean;
 
   /**
+   * The position in the queue of people who are raising their hand (0 if not raising their hand)
+   */
+  private positionInHandRaiseQueue: number;
+
+  /**
    * The user nickname
    */
   private nickname: string;
@@ -69,6 +74,7 @@ export class UserModel {
     this.videoActive = true;
     this.screenShareActive = false;
     this.handRaised = false;
+    this.positionInHandRaiseQueue = 0;
     this.nickname = '';
     this.streamManager = null;
     this.type = 'local';
@@ -100,6 +106,13 @@ export class UserModel {
    */
   public isHandRaised(): boolean {
     return this.handRaised;
+  }
+
+  /**
+   * Return the position in the queue of people who are raising their hand (0 if not raising their hand)
+   */
+  public getPositionInHandRaiseQueue(): number {
+    return this.positionInHandRaiseQueue;
   }
 
   /**
@@ -188,6 +201,14 @@ export class UserModel {
    */
   public setHandRaised(isHandRaised: boolean) {
     this.handRaised = isHandRaised;
+  }
+
+  /**
+   * Set the position in the queue of people who are raising their hand
+   * @param positionInHandRaiseQueue value of the position
+   */
+  public setPositionInHandRaiseQueue(positionInHandRaiseQueue: number) {
+    this.positionInHandRaiseQueue = positionInHandRaiseQueue;
   }
 
   /**

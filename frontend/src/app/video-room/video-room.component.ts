@@ -1,3 +1,4 @@
+import { ToolbarComponent } from './../shared/components/toolbar/toolbar.component';
 import { RoomService } from './../shared/services/room.service';
 import { AssistantsComponent } from './../shared/components/menu/assistants/assistants.component';
 import { UserService } from '../shared/services/user.service';
@@ -24,7 +25,7 @@ import { ChatComponent } from '../shared/components/menu/chat/chat.component';
 import { OvSettings } from '../shared/models/ov-settings';
 import { ApiService } from '../shared/services/api.service';
 import { ThrowStmt } from '@angular/compiler';
-import { trigger, transition, style, animate, query, stagger, animateChild } from '@angular/animations';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-video-room',
@@ -645,6 +646,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
           if (data.isHandRaised !== undefined) {
             user.setHandRaised(data.isHandRaised);
           }
+          if(data.positionInHandRaiseQueue !== undefined) {
+            user.setPositionInHandRaiseQueue(data.positionInHandRaiseQueue);
+          }
         }
       });
       this.remoteUsers.forEach((user: UserModel) => {
@@ -664,9 +668,15 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
           if (data.avatar !== undefined) {
             user.setUserAvatar(data.avatar);
           }
+          if(data.positionInHandRaiseQueue !== undefined) {
+            user.setPositionInHandRaiseQueue(data.positionInHandRaiseQueue);
+          }
           if (data.isHandRaised !== undefined) {
+            const previousHandRaised = user.isHandRaised();
             user.setHandRaised(data.isHandRaised);
-            this.raiseOrLowerHand(user);
+            if(previousHandRaised!==user.isHandRaised()) {
+              this.raiseOrLowerHand(user);
+            }
           }
           if (data.isFirstTime) {
             this.showConnectionPopup(user.getNickname(), true, data.avatar);
@@ -678,7 +688,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   }
 
   raiseOrLowerHand(user: UserModel) {
-    if(user.isHandRaised()) {
+    if(user.isHandRaised()) { //Raise the hand
       let unupdatedUser = this.handsRaised.filter(handRaisedUser => handRaisedUser.connectionId===user.getConnectionId())[0];
       if(unupdatedUser) { //Update the user that was already raising their hand
         const index = this.handsRaised.indexOf(unupdatedUser);
@@ -698,12 +708,16 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
           this.recalculatePopupOffsets();
         }
       }
-    } else {
+    } else { //Lower the hand
       this.handsRaised = this.handsRaised.filter(handRaisedUser => handRaisedUser.connectionId!==user.getConnectionId());
       if(this.handsRaised.length==0) {
         setTimeout(() => {
           this.recalculatePopupOffsets();
         }, 500);
+      }
+      const localUserPosition = this.localUsers[0].getPositionInHandRaiseQueue();
+      if(user.getPositionInHandRaiseQueue()<localUserPosition) {
+        this.localUsers[0].setPositionInHandRaiseQueue(localUserPosition-1);
       }
     }
     this.handsRaisedMessage = (this.handsRaised.length>1 ? 'And ' + (this.handsRaised.length-1) + ' other ' + (this.handsRaised.length===2 ? 'person' : 'people') + ' are' : 'Is') + ' raising their hand'
@@ -727,8 +741,10 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       }
       const connection = event.connection;
       const userDisconnected = this.remoteUsers.filter((user) => user.getConnectionId() === connection.connectionId)[0];
-      userDisconnected.setHandRaised(false);
-      this.raiseOrLowerHand(userDisconnected);
+      if(userDisconnected.isHandRaised()) {
+        userDisconnected.setHandRaised(false);
+        this.raiseOrLowerHand(userDisconnected);
+      }
       this.remoteUsers = this.remoteUsers.filter((user) => user.getConnectionId() !== connection.connectionId);
       this.showConnectionPopup(userDisconnected.getNickname(), false, userDisconnected.getAvatar());
       this.updateModConnections();
@@ -763,6 +779,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       isVideoActive: user.isVideoActive(),
       isScreenShareActive: user.isScreenShareActive(),
       isHandRaised: user.isHandRaised(),
+      positionInHandRaiseQueue: user.getPositionInHandRaiseQueue(),
       nickname: user.getNickname(),
       avatar: user.getAvatar(),
       isFirstTime: isFirstTime,

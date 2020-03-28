@@ -30,5 +30,4 @@ export class PopupComponent implements OnInit {
       this.letterColor = 'rgb(0, 0, 0)';
     }
   }
-
 }
