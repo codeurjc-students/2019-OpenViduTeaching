@@ -281,6 +281,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     if(this.userService.isModOfRoom(this.roomName)) {
       this.subscribedToChat('chatMod', this.messageListMod, this.modChatComponent);
     }
+    this.subscribedToLowerHand();
     this.connectToSession();
   }
 
@@ -768,6 +769,15 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       this.showChatPopup(data.nickname, data.message, messageOwner.getAvatar(), signal);
       if(component) {
         component.scrollToBottom();
+      }
+    });
+  }
+
+  private subscribedToLowerHand() {
+    this.session.on('signal:lowerYourHand', (event:any) => {
+      if(event.from===undefined) { 
+        //Only do something if "from" is undefined, which means the signal was called by the backend
+        this.raiseHand();
       }
     });
   }

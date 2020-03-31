@@ -1,5 +1,7 @@
 package urjc.ovteaching.rooms.controllers;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -226,5 +229,39 @@ public class OpenViduController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(recordingId, HttpStatus.OK);
+	}
+	
+	/**
+	 * Sends a signal with the type and data associated
+	 * 
+	 * @return HttpStatus of the operation
+	 */
+	@PostMapping("/room/{roomName}/signal/{type}")
+	public ResponseEntity<?> sendSignal(@PathVariable String roomName, @PathVariable String type, @RequestBody JSONObject data, HttpServletRequest request) {
+		if (!request.isUserInRole("USER")) { // User not logged
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		Room room = roomServ.findByName(roomName);
+		User user = userServ.findByName(request.getUserPrincipal().getName());
+		// User currentUser = this.userComponent.getLoggedUser();
+
+		if (room == null) { // No room with that name
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		if (!room.isModerator(user)) { // User not in that room
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		if (!this.openViduComponent.isSessionCreated(room) || this.openViduComponent.isSessionEmpty(room)) {
+			// No session created for that room or it is empty
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+		
+		try {
+			this.openViduComponent.sendSignalToEveryone(room, type, data.toString());
+		} catch (IOException e) {
+			System.err.println(e.toString());
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }
