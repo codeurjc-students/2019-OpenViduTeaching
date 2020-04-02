@@ -611,6 +611,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       this.publishSession(this.localUsers[0]).then(() => {
           this.sendSignalUserChanged(this.localUsers[0], true);
           this.joinSession.emit();
+          this.overrideHandRaisedUsers();
       })
         .catch((error) => console.error(error));
       this.localUsers[0].getStreamManager().on('streamPlaying', () => {
@@ -620,7 +621,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     } else {
       this.localUsers[0].setVideoActive(false);
       this.localUsers[0].setAudioActive(false);
+      this.localUsers[0].setScreenShareActive(false);
       this.sendSignalUserChanged(this.localUsers[0], true);
+      this.overrideHandRaisedUsers();
     }
   }
 
@@ -722,6 +725,17 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       }
     }
     this.handsRaisedMessage = (this.handsRaised.length>1 ? 'And ' + (this.handsRaised.length-1) + ' other ' + (this.handsRaised.length===2 ? 'person' : 'people') + ' are' : 'Is') + ' raising their hand'
+  }
+
+  private overrideHandRaisedUsers() {
+    this.roomService.getHandRaisedUsers(this.mySessionId).subscribe(
+      (users) => {
+        users.forEach((user, index) => {
+          this.handsRaised[index] = user;
+        });
+      },
+      error => console.log(error)
+    );
   }
 
   private subscribedToStreamDestroyed() {
