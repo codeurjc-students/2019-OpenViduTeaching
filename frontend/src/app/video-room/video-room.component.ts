@@ -777,7 +777,12 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
     this.session.on('signal:lowerYourHand', (event:any) => {
       if(event.from===undefined) { 
         //Only do something if "from" is undefined, which means the signal was called by the backend
-        this.raiseHand();
+        this.roomService.lowerHand(this.mySessionId, this.localUsers[0].getConnectionId()).subscribe(
+          (_) => {
+            this.raiseHand();
+          },
+          error => console.error(error) 
+        );
       }
     });
   }

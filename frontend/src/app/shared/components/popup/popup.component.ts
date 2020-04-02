@@ -1,3 +1,5 @@
+import { OpenViduService } from './../../services/open-vidu.service';
+import { UserService } from './../../services/user.service';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
@@ -12,11 +14,17 @@ export class PopupComponent implements OnInit {
   @Input() userAvatar: string;
   @Input() content: string;
   @Input() color: string;
+  @Input() isRaiseHand: boolean;
+  @Input() roomName: string;
+  @Input() connectionId: string;
 
   backgroundColor: string;
   letterColor: string;
 
-  constructor() { }
+  constructor(
+    private userSrv: UserService,
+    private openviduSrv: OpenViduService
+  ) { }
 
   ngOnInit() {
     if(this.color==='dark') {
@@ -29,5 +37,12 @@ export class PopupComponent implements OnInit {
       this.backgroundColor = 'rgb(255, 193, 7)';
       this.letterColor = 'rgb(0, 0, 0)';
     }
+  }
+
+  sendSignalLowerHand() {
+    this.openviduSrv.sendSignal(this.roomName, 'lowerYourHand', [this.connectionId],{}).subscribe(
+      (_) => {},
+      error => console.error(error) 
+    );
   }
 }

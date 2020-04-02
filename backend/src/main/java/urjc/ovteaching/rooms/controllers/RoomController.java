@@ -248,7 +248,7 @@ public class RoomController {
 	 * @return the httpStatus of the operation
 	 */
 	@DeleteMapping("/room/{roomName}/raiseHand")
-	public ResponseEntity<?> lowerHand(@PathVariable String roomName, @RequestBody JSONObject connectionId, HttpServletRequest request) {
+	public ResponseEntity<?> lowerHand(@PathVariable String roomName, @RequestBody JSONObject body, HttpServletRequest request) {
 		if (!request.isUserInRole("USER")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -259,7 +259,7 @@ public class RoomController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		if (room.isInRoom(user)) {
-			boolean wasRemoved = room.removeHandRaisedUser(connectionId);
+			boolean wasRemoved = room.removeHandRaisedUser(body);
 			this.roomServ.save(room);
 			if(wasRemoved) {
 				return new ResponseEntity<>(HttpStatus.OK);

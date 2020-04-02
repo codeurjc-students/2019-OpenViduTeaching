@@ -1,10 +1,13 @@
 package urjc.ovteaching.rooms.controllers;
 
 import java.io.IOException;
+import java.util.HashSet;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
@@ -237,7 +243,7 @@ public class OpenViduController {
 	 * @return HttpStatus of the operation
 	 */
 	@PostMapping("/room/{roomName}/signal/{type}")
-	public ResponseEntity<?> sendSignal(@PathVariable String roomName, @PathVariable String type, @RequestBody JSONObject data, HttpServletRequest request) {
+	public ResponseEntity<?> sendSignal(@PathVariable String roomName, @PathVariable String type, @RequestBody JSONObject body, HttpServletRequest request) {
 		if (!request.isUserInRole("USER")) { // User not logged
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -257,7 +263,8 @@ public class OpenViduController {
 		}
 		
 		try {
-			this.openViduComponent.sendSignalToEveryone(room, type, data.toString());
+			JsonObject gsonBody = new Gson().fromJson(body.toString(), JsonObject.class);
+			this.openViduComponent.sendSignal(room, gsonBody.getAsJsonArray("to"), type, gsonBody.getAsJsonObject("data"));
 		} catch (IOException e) {
 			System.err.println(e.toString());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

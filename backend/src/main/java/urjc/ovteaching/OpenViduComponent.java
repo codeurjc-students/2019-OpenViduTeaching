@@ -33,11 +33,15 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.ssl.TrustStrategy;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import io.openvidu.java.client.OpenVidu;
@@ -215,20 +219,21 @@ public class OpenViduComponent {
 		return null;
 	}
 	
-	public void sendSignalToEveryone(Room room, String type, String data) throws UnsupportedEncodingException, IOException {
+	public void sendSignal(Room room, JsonArray to, String type, JsonObject data) throws UnsupportedEncodingException, IOException {
 		Session session = this.roomIdSession.get(room.getId());
 		
 		HttpPost request = new HttpPost(this.OPENVIDU_URL + "/api/signal");
 
 		JsonObject json = new JsonObject();
 		json.addProperty("session", session.getSessionId());
+		json.add("to", to);
 		json.addProperty("type", "signal:" + type);
-		json.addProperty("data", data);
+		json.addProperty("data", data.toString());
 
 		StringEntity params = new StringEntity(json.toString());
 		request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 		request.setEntity(params);
-
+		
 		HttpResponse response = this.httpClient.execute(request);
 		try {
 			int statusCode = response.getStatusLine().getStatusCode();
