@@ -724,15 +724,24 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
         this.localUsers[0].setPositionInHandRaiseQueue(localUserPosition-1);
       }
     }
-    this.handsRaisedMessage = (this.handsRaised.length>1 ? 'And ' + (this.handsRaised.length-1) + ' other ' + (this.handsRaised.length===2 ? 'person' : 'people') + ' are' : 'Is') + ' raising their hand'
+    this.handsRaisedMessage = (this.handsRaised.length>1 ? 'And ' + (this.handsRaised.length-1) + ' other ' + (this.handsRaised.length===2 ? 'person' : 'people') + ' are' : 'Is') + ' raising their hand';
   }
 
   private overrideHandRaisedUsers() {
     this.roomService.getHandRaisedUsers(this.mySessionId).subscribe(
       (users) => {
-        users.forEach((user, index) => {
-          this.handsRaised[index] = user;
-        });
+        let index = 0;
+        for(let user of users) {
+          if(user.nickname!==this.userService.user.name) {
+            this.handsRaised[index] = user;
+            if(this.handsRaised.length==1) {
+              this.playAudio('handRaise');
+              this.recalculatePopupOffsets();
+            }
+            index++;
+          }
+        }
+        this.handsRaisedMessage = (this.handsRaised.length>1 ? 'And ' + (this.handsRaised.length-1) + ' other ' + (this.handsRaised.length===2 ? 'person' : 'people') + ' are' : 'Is') + ' raising their hand';
       },
       error => console.log(error)
     );

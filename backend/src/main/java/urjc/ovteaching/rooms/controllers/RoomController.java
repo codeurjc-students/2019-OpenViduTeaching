@@ -287,6 +287,8 @@ public class RoomController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		if (room.isInRoom(user)) {
+			this.roomServ.checkConnectedHandRaisedUsers(room);
+			this.roomServ.save(room);
 			return new ResponseEntity<>(room.getHandRaisedUsers(), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
