@@ -59,10 +59,15 @@ mat-hint {
 }
 
 button {
+    color: #494949;
     margin-top: 2%;
     padding-right: 10%;
     padding-left: 10%;
     display: inline-block;
     font-family: 'Ubuntu', sans-serif;
     font-size: 120%;
+}
+
+#loadingSpinner {
+    margin: auto auto;
 }

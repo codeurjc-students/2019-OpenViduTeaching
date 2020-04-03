@@ -16,6 +16,7 @@ export class InviteComponent implements OnInit {
   password: string;
   nameTaken: boolean = false;
   userErrorMsg: string;
+  loading: boolean = false;
 
   constructor(
     private roomSrv: RoomService,
@@ -33,6 +34,7 @@ export class InviteComponent implements OnInit {
 
   enterRoom() {
     if(this.userSrv.isLogged) { //User is logged
+      this.loading = true;
       this.userName = this.userSrv.user.name;
       if(this.userSrv.isModOfRoom(this.roomName)) { //Direct access if already a mod
         this.router.navigate(['/',this.roomName]);
@@ -43,6 +45,7 @@ export class InviteComponent implements OnInit {
             this.router.navigate(['/', this.roomName]);
           },
           error => {
+            this.loading = false;
             console.log(error)
           }
         );
@@ -53,6 +56,7 @@ export class InviteComponent implements OnInit {
       } else if(this.password == null) {
         this.userErrorMsg = 'You must enter a password';
       } else {
+        this.loading = true;
         this.userSrv.register(this.userName,this.password).subscribe(
           (_) => {
             this.roomSrv.enterRoom(this.code).subscribe(
@@ -62,11 +66,13 @@ export class InviteComponent implements OnInit {
                 this.router.navigate(['/', this.roomName]);
               },
               error => {
+                this.loading = false;
                 console.log(error)
               }
             );
           },
           error => {
+            this.loading = false;
             this.userErrorMsg = 'Username already taken';
           }
         );

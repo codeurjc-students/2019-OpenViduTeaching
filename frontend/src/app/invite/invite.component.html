@@ -22,7 +22,8 @@
                 </mat-form-field>
                 <div></div>
             </div>
-            <button mat-flat-button color="accent" (click)="enterRoom()" [disabled]="!userSrv.isLogged && (!userName || !password)">Access room</button>
+            <button mat-flat-button *ngIf="!loading" color="accent" (click)="enterRoom()" [disabled]="!userSrv.isLogged && (!userName || !password)" id="accessButton">Access room</button>
+            <mat-spinner color="accent" *ngIf="loading" id="loadingSpinner"></mat-spinner>
         </div>
     </div>
 </div>
