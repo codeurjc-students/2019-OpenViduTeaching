@@ -4,6 +4,7 @@ import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { Room } from '../shared/models/room-model';
 import { MatSnackBar, MatDialogRef, MatDialog } from '@angular/material';
+import { InviteLinkComponent } from '../invite/invite-link/invite-link.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -53,13 +54,13 @@ export class DashboardComponent implements OnInit {
   }
 
   getInviteURL(roomName: string, role:string){
-    this.roomSrv.getRoomCode(roomName, role).subscribe(
-      code => {
-        let url:string = window.location.origin + '/#/invite/' + code;
-        this.urlSnackBar.open(url, 'Close');
-      },
-      error => console.error(error)
-    );
+    this.urlSnackBar.openFromComponent(InviteLinkComponent, {
+      data: {
+        roomName: roomName,
+        role: role,
+        dismiss: () => {this.urlSnackBar.dismiss()}
+      }
+    });
   }
 
   openAddRoomDialog() {

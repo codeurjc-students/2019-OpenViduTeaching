@@ -5,6 +5,7 @@ import { UserModel } from '../../models/user-model';
 import { ApiService } from '../../services/api.service';
 import { OvSettings } from '../../models/ov-settings';
 import { MatSnackBar } from '@angular/material';
+import { InviteLinkComponent } from 'src/app/invite/invite-link/invite-link.component';
 
 @Component({
   selector: 'app-toolbar',
@@ -94,13 +95,13 @@ export class ToolbarComponent implements OnInit {
   }
 
   getInviteURL(role:string){
-    this.roomSrv.getRoomCode(this.mySessionId, role).subscribe(
-      code => {
-        let url:string = window.location.origin + '/#/invite/' + code;
-        this.urlSnackBar.open(url, 'Close');
-      },
-      error => console.error(error)
-    );
+    this.urlSnackBar.openFromComponent(InviteLinkComponent, {
+      data: {
+        roomName: this.mySessionId,
+        role: role,
+        dismiss: () => {this.urlSnackBar.dismiss()} 
+      }
+    });
   }
 
   toggleFullscreen() {
