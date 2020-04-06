@@ -1,4 +1,4 @@
-FROM openvidu/openvidu-server-kms:2.11.0
+FROM openvidu/openvidu-server-kms:latest
 
 ARG initialDataFile
 ENV initialDataFileEnv="$initialDataFile"
