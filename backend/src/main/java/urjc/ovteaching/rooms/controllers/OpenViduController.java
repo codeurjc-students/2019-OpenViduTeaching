@@ -166,6 +166,7 @@ public class OpenViduController {
 				// The last user has left the room
 				this.openViduComponent.removeSession(room);
 			}
+			this.roomServ.checkConnectedHandRaisedUsers(room);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {
 			// User didn't have a valid token
