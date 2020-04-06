@@ -27,33 +27,40 @@ In this animation we see how moderators get either of the invite links from the 
 ![Invite links from dashboard](/documentation/images/inviteDashboard.gif)
 Now we see how admins can create new rooms. Only the name of the room is needed. After it is created, the user navigates to it and is made a moderator (and the only user in it for now, obviously). Before entering the actual room we see a dialog that lets as choose the input camera, microphone, screenshare and avatar.
 ![Create room](/documentation/images/createRoom.gif)
-Moderators can also get the invite links from the toolbar in the room itself. In the gif we can also see the other buttons in the toolbar (the same as in OpenViduCall).
+Moderators can also get the invite links from the toolbar in the room itself. In the gif we can also see the other buttons in the toolbar (the same as in OpenViduCall + the raise hand button).
 ![Invite links from room](/documentation/images/inviteRoom.gif)
+Here we can see where new users go when using the invite link. They have the option to either login if they already have an account or create a new one as shown. Then we see that, because the invite link was a participant one the user cannot send video or audio stream (and therefore cannot choose a mic or cam) and can only see the moderator's video.
+![Invite](/documentation/images/invite.gif)
 At the top right corner the user can open the menu, which contains:
   * The chat for all the assistants of the room.
   * The chat for moderators (only if the user is a moderator).
   * A list of all the assistants of the room, their roles and whether they are connected at the moment or not. 
 ![Menu](/documentation/images/menu.gif)
-Here we can see where new users go when using the invite link. They have the option to either login if they already have an account or create a new one as shown. Then we see that, because the invite link was a participant one the user cannot send video or audio stream (and therefore cannot choose a mic or cam) and can only see the moderator's video.
-![Invite](/documentation/images/invite.gif)
+In the next gif we see the button that makes the user raise their hand. The button displays a number of the position in the queue of people who are raising their hand. Then we see the actual popup. Moderators can lower the hand of other people. If there are multiple people with their hand raised only the name of the first one is displayed (hence the queue).
+![Raise hand button](/documentation/images/raiseHand.gif)
+![Raise hand popup](/documentation/images/raiseHandPopup.gif)
+Now we can see the other two kinds of popups: a user who just connected/disconnected and a new chat message.
+![Popups](/documentation/images/popups.gif)
 
 
 ## Project Roadmap ##
 - [X] Roles and role-restricted functionalities
-	* Users will be divided into moderators, presenters and assistants
+	* Users are divided into moderators, presenters and assistants
+- [X] Invite links
+  * Moderators can get invite links to give to new users for them to enter the room
 - [X] Chat
-	* Based on OpenViduCall's chat with added functionalities and restrictions
+	* A chat for all the assistans of a room and a chat for moderators only
+- [X] Pop ups
+	* When a user joins or leaves the session and chat messages
+- [X] Ability to "raise the hand"
+	* Pop up to get the moderator's attention
 - [ ] Basic session recording
 	* Video only recordings
-- [ ] Pop ups
-	* When a new user joins the session, chat messages...
-- [ ] Ability to "raise the hand"
-	* Pop up to get the moderator's attention
 - [ ] Full fledged session recording including chat
 	* Chat messages will be displayed at the time they were posted, with links to the time offset in the video player
 - [ ] Document sharing/presentation
 - [ ] Settings
-- [ ] Whiteboard sharing
+- [ ] Whiteboard sharing 
 - [ ] Polls/quizzes
 - [ ] Mood/status sharing
 	* Users may display their mood for a brief time
