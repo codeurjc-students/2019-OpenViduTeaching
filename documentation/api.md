@@ -17,10 +17,14 @@ This document will explain how is used the Licensoft-Web API.
     * [Check room](#check-room)
     * [Add current user to room](#add-current-user-to-room)
     * [Get assistants](#get-assistants)
+    * [Raise hand](#raise-hand)
+    * [Lower hand](#lower-hand)
+    * [Get hand raised users](#get-hand-raised-users)
 * [OpenVidu requests](#openvidu-requests)
     * [Create session](#create-session)
     * [Get token](#get-token)
     * [Disconnect current user](#disconnect-current-user)
+    * [Send signal](#send-signal)
 
 
 ## Authorization ##
@@ -310,6 +314,108 @@ Gets all people who are in the room, and specifies their role and wheter or not 
     }
     ~~~~
 
+### Raise hand ###
+Makes the user raise their hand. This method does not send signals to other users, it just acknowledges that the user did it in the backend.
+- **URL**  
+   `/ovTeachingApi/room/{roomName}/raiseHand`
+- **Method**  
+    `POST`
+- **Required role**:  
+    System: User
+    Room: Participant
+- **Data Params**
+    Path Variables:
+    * String roomName\
+    * Body:
+        ~~~~ json
+        {
+            "nickname": string,
+            "avatar": string,
+            "connectionId": string
+        }
+        ~~~~
+- **Example**
+  - **Request**: `/ovTeachingApi/room/roomA/raiseHand`\
+    Body:
+    ~~~~ json
+    {
+        "nickname": "teacher",
+        "avatar": "https://randomuser.me/api/portraits/thumb/lego/3.jpg",
+        "connectionId": "con_TEOOVm9ur1"
+    }
+    ~~~~
+    Username: teacher
+    Password: pass
+  - **Response**:
+    ~~~~ json
+    1
+    ~~~~
+
+### Lower hand ###
+Makes the user lower their hand. This method does not send signals to other users, it just acknowledges that the user did it in the backend.
+- **URL**  
+   `/ovTeachingApi/room/{roomName}/raiseHand`
+- **Method**  
+    `DELETE`
+- **Required role**:  
+    System: User
+    Room: Participant
+- **Data Params**
+    Path Variables:
+    * String roomName\
+    * Body:
+        ~~~~ json
+        {
+            "connectionId": string
+        }
+        ~~~~
+- **Example**
+  - **Request**: `/ovTeachingApi/room/roomA/raiseHand`\
+    Body:
+    ~~~~ json
+    {
+        "connectionId": "con_TEOOVm9ur1"
+    }
+    ~~~~
+    Username: teacher
+    Password: pass
+  - **Response**:
+    200 OK
+
+### Get hand raised users ###
+Gets all the users who are raising their hand.
+- **URL**  
+   `/ovTeachingApi/room/{roomName}/raiseHand`
+- **Method**  
+    `GET`
+- **Required role**:  
+    System: User
+    Room: Participant
+- **Data Params**
+    Path Variables:
+    * String roomName
+- **Example**
+  - **Request**: `/ovTeachingApi/room/roomA/raiseHand`
+    Username: teacher
+    Password: pass
+  - **Response**:
+    ~~~~ json
+    [
+        {
+            "nickname": "teacher",
+            "connectionId": "con_TEOOVm9ur1",
+            "avatar": "https://randomuser.me/api/portraits/thumb/lego/3.jpg",
+            "username": "teacher"
+        },
+        {
+            "nickname": "student1",
+            "connectionId": "con_BukCBHZJp3",
+            "avatar": "https://randomuser.me/api/portraits/thumb/lego/4.jpg",
+            "username": "student1"
+        }
+    ]
+    ~~~~
+
 ## OpenVidu requests ##
 
 ### Create session ###
@@ -370,6 +476,42 @@ Removes the current user from the room's session (not the room itself). This als
     * String roomName
 - **Example**
   - **Request**: `/ovTeachingApi/room/roomA/user`
+    Username: teacher
+    Password: pass
+  - **Response**: 
+    200 OK
+
+### Send signal ###
+Send an OpenVidu signal from the backend. Intended for moderators only. Users who are subscribed to the signal get the `from` field as undefined (that's how they know the signal came from the backend).
+- **URL**  
+   `/ovTeachingApi/room/{roomName}/signal/{type}`
+- **Method**  
+    `POST`
+- **Required role**:  
+    System: User
+    Room: Moderator
+- **Data Params**
+    Path Variables:
+    * String roomName
+    * String type: The type of the OpenVidu signal. Users must be subscribed to `signal:{type}`\
+    Body:
+        ~~~~ json
+        {
+            "to": string[],
+            "data": any
+        }
+        ~~~~
+    * to: The array of connectionId of the users who will receive the signal
+    * data: The additional data of the signal
+- **Example**
+  - **Request**: `/ovTeachingApi/room/roomA/signal/lowerYourHand`\
+    Body:
+    ~~~~ json
+    {
+        "to": ["con_BukCBHZJp3"],
+        "data": undefined
+    }
+    ~~~~
     Username: teacher
     Password: pass
   - **Response**: 
