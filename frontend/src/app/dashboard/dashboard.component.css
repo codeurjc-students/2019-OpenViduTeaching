@@ -66,6 +66,10 @@ login-component {
   margin:5% auto;
 }
 
+.invitePresenter {
+  color: rgb(6, 211, 98);
+}
+
 .addRoomButton {
   background-color: rgb(6, 211, 98);
 }

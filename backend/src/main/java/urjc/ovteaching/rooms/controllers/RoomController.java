@@ -92,6 +92,8 @@ public class RoomController {
 					return new ResponseEntity<>(room.getParticipantInviteCode(), HttpStatus.OK);
 				} else if (role.equals("moderator")) {
 					return new ResponseEntity<>(room.getModeratorInviteCode(), HttpStatus.OK);
+				} else if (role.equals("presenter")) {
+					return new ResponseEntity<>(room.getPresenterInviteCode(), HttpStatus.OK);
 				}
 			}
 		}
@@ -134,22 +136,28 @@ public class RoomController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		if (room.isModerator(user)) {
-			// Cannot enter a room if already a mod of it
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
+			//Automatically enter if already a mod 
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		if (code.equals(room.getParticipantInviteCode()) && (room.isParticipant(user)) || room.isPresenter(user)) {
-			// Cannot enter a room as participant if already in it
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		if (code.equals(room.getPresenterInviteCode()) && (room.isModerator(user)) || room.isPresenter(user)) {
+			//Automatically enter as presenter if already a moderator or presenter 
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		if (code.equals(room.getParticipantInviteCode()) && room.isInRoom(user)) {
+			//Automatically enter as participant if already in it
+			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		
 		if (code.equals(room.getParticipantInviteCode())) {
 			user.addParticipatedRoom(room);
-		} else {
+		} else if(code.equals(room.getModeratorInviteCode())){
 			roomServ.makeModerator(user, room);
 			if (!user.getRoles().contains("ROLE_ADMIN")) {
 				// Makes user admin if they weren't
 				user.addRole("ROLE_ADMIN");
 			}
+		} else {
+			roomServ.makePresenter(user, room);
 		}
 		roomServ.save(room);
 		userServ.save(user);

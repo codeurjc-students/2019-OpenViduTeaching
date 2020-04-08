@@ -106,6 +106,10 @@ public class User {
 	public void removeParticipatedRoom(Room room) {
 		this.participatedRooms.remove(room);
 	}
+	
+	public void removePresentedRoom(Room room) {
+		this.presentedRooms.remove(room);
+	}
 
 	public void leaveRoom(Room room) {
 		this.participatedRooms.remove(room);

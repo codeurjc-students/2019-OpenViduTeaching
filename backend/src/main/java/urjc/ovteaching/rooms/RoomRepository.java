@@ -6,8 +6,10 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
 	Room findByName(String name);
 	
-	Room findByCodeParticipant(String uuidParticipant);
+	Room findByCodeParticipant(String inviteCodeParticipant);
 	
-	Room findByCodeModerator(String uuidModerator);
+	Room findByCodeModerator(String inviteCodeModerator);
+	
+	Room findByCodePresenter(String inviteCodePresenter);
 
 }

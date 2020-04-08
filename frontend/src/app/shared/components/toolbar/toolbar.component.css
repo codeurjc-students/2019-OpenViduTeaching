@@ -83,6 +83,10 @@
     border: 1px solid #ffffff !important;
 }
 
+.invitePresenter {
+    color: rgb(6, 211, 98);
+}
+
 #raise_hand {
     max-width: 50%;
     max-height: 50%;

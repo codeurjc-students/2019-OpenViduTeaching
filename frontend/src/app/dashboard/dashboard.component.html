@@ -35,6 +35,9 @@
             <button mat-icon-button (click)="getInviteURL(mod.name,'moderator')">
               <mat-icon color="accent" matTooltip="Invite URL for moderators">link</mat-icon>
             </button>
+            <button mat-icon-button (click)="getInviteURL(mod.name,'presenter')">
+              <mat-icon class="invitePresenter" matTooltip="Invite URL for presenters">link</mat-icon>
+            </button>
             <button mat-icon-button (click)="getInviteURL(mod.name,'participant')">
               <mat-icon matTooltip="Invite URL for participants">link</mat-icon>
             </button>

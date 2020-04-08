@@ -31,6 +31,7 @@ public class Room {
 	private Long id;
 	private String codeParticipant;
 	private String codeModerator;
+	private String codePresenter;
 	@JsonView(NameOnly.class)
 	private String name;
 	@Lob
@@ -52,6 +53,7 @@ public class Room {
 		this.presenters = new HashSet<>();
 		this.codeParticipant = UUID.randomUUID().toString();
 		this.codeModerator = UUID.randomUUID().toString();
+		this.codePresenter = UUID.randomUUID().toString();
 		this.handRaisedUsers = new LinkedList<>();
 		this.name = name;
 	}
@@ -64,13 +66,17 @@ public class Room {
 	}
 
 	public String getParticipantInviteCode() {
-		return codeParticipant.toString();
+		return codeParticipant;
 	}
 
 	public String getModeratorInviteCode() {
-		return codeModerator.toString();
+		return codeModerator;
 	}
 
+	public String getPresenterInviteCode() {
+		return codePresenter;
+	}
+	
 	public boolean isModerator(User user) {
 		return this.mods.contains(user);
 	}

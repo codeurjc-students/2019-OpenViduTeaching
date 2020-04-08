@@ -54,6 +54,14 @@ public class RoomService {
 	public void makeModerator(User user, Room room) {
 		user.addModdedRoom(room);
 		user.removeParticipatedRoom(room);
+		user.removePresentedRoom(room);
+		roomRep.save(room);
+		userServ.save(user);
+	}
+	
+	public void makePresenter(User user, Room room) {
+		user.addPresentedRoom(room);
+		user.removeParticipatedRoom(room);
 		roomRep.save(room);
 		userServ.save(user);
 	}
@@ -69,7 +77,12 @@ public class RoomService {
 		if (room != null) {
 			return room;
 		} else {
-			return roomRep.findByCodeParticipant(code);
+			room = roomRep.findByCodeParticipant(code);
+			if (room != null) {
+				return room;
+			} else {
+				return roomRep.findByCodePresenter(code);
+			}
 		}
 	}
 	
