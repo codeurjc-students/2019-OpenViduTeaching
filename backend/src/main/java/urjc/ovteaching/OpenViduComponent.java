@@ -7,9 +7,11 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -76,6 +78,7 @@ public class OpenViduComponent {
 
 	private Map<Long, Session> roomIdSession;
 	private Map<String, Map<Long, String[]>> sessionIdUserIdToken;
+	private Map<String, List<String>> sessionIdRecordingsId;
 
 	public OpenViduComponent(@Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl) {
 		this.SECRET = secret;
@@ -83,6 +86,7 @@ public class OpenViduComponent {
 		this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
 		this.roomIdSession = new ConcurrentHashMap<>();
 		this.sessionIdUserIdToken = new ConcurrentHashMap<>();
+		this.sessionIdRecordingsId = new ConcurrentHashMap<>();
 		
 		TrustStrategy trustStrategy = new TrustStrategy() {
 			@Override
@@ -116,6 +120,7 @@ public class OpenViduComponent {
 		Session session = this.openVidu.createSession(sp);
 		this.roomIdSession.put(room.getId(), session);
 		this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
+		this.sessionIdRecordingsId.put(session.getSessionId(), new ArrayList<>());
 		return session.getSessionId();
 	}
 
@@ -203,16 +208,26 @@ public class OpenViduComponent {
 	
 	public String startRecording(Room room) {
 		try {
-			return this.openVidu.startRecording(this.roomIdSession.get(room.getId()).getSessionId()). getId();
+			String sessionId = this.roomIdSession.get(room.getId()).getSessionId();
+			String recordingId = this.openVidu.startRecording(sessionId).getId();
+			this.sessionIdRecordingsId.get(sessionId).add(recordingId);
+			return recordingId;
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
+	public boolean isBeingRecorded(Room room) {
+		return this.roomIdSession.get(room.getId()).isBeingRecorded();
+	}
+	
 	public String stopRecording(Room room) {
 		try {
-			return this.openVidu.stopRecording(this.roomIdSession.get(room.getId()).getSessionId()).getId();
+			String sessionId = this.roomIdSession.get(room.getId()).getSessionId();
+			List<String> recordings = this.sessionIdRecordingsId.get(sessionId);
+			String recordingId = recordings.get(recordings.size() - 1);
+			return this.openVidu.stopRecording(recordingId).getId();
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
 			e.printStackTrace();
 		}
