@@ -49,6 +49,7 @@ import { UserService } from './shared/services/user.service';
 import { LoginComponent } from './shared/components/login/login.component';
 import { PopupComponent } from './shared/components/popup/popup.component';
 import { InviteLinkComponent } from './invite/invite-link/invite-link.component';
+import { SettingsComponent } from './shared/components/menu/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { InviteLinkComponent } from './invite/invite-link/invite-link.component'
     AssistantsComponent,
     LoginComponent,
     PopupComponent,
-    InviteLinkComponent
+    InviteLinkComponent,
+    SettingsComponent
   ],
   imports: [
     FormsModule,

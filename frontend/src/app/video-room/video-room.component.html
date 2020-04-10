@@ -101,6 +101,18 @@
             </ng-template>
           </mat-tab>
 
+          <mat-tab class="tab">
+            <ng-template mat-tab-label>
+              <mat-icon>settings</mat-icon>
+              Settings
+            </ng-template>
+            <ng-template matTabContent>
+              <settings-component
+                [roomName]="mySessionId">  
+              </settings-component>
+            </ng-template>
+          </mat-tab>
+
         </mat-tab-group>
       </mat-sidenav>
 
