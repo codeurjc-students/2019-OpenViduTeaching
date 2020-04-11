@@ -83,3 +83,8 @@ login-component {
   color: #dfdfdf;
   opacity: 1;
 }
+
+#videosDrawer{
+  min-width: 20%;
+  background-color: #494949;
+}

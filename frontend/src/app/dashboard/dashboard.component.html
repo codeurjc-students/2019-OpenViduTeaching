@@ -1,79 +1,98 @@
-<div id="section1">
+<mat-drawer-container id="section1" [hasBackdrop]="false">
+  <mat-drawer #videosDrawer id="videosDrawer" [mode]="over" position="end">
+    <mat-nav-list id="videoList">
+      <mat-list-item *ngFor="let video of currentVideos" class="videoItem">
+         <a matLine mat-flat-button routerLink="/" class="videoButton">{{video}}</a>
+      </mat-list-item>
+      <input cdkFocusInitial style="display:none"/>
+    </mat-nav-list>
+  </mat-drawer>
 
-  <mat-toolbar id="header">
-    <a [routerLink]="['']">
-      <img id="header_img" alt="OpenVidu Logo" src="assets/images/openvidu_logo.png">
-    </a>
-    <div id="version">
-      <span>{{version}}</span>
+  <mat-drawer-content>
+    <mat-toolbar id="header">
+      <a [routerLink]="['']">
+        <img id="header_img" alt="OpenVidu Logo" src="assets/images/openvidu_logo.png">
+      </a>
+      <div id="version">
+        <span>{{version}}</span>
+      </div>
+    </mat-toolbar>
+  
+    <div id="ov_info">
+      <img id="ov_img" alt="OpenVidu Logo" src="assets/images/openvidu_vert_white_bg_trans_cropped.png">
     </div>
-  </mat-toolbar>
-
-  <div id="ov_info">
-    <img id="ov_img" alt="OpenVidu Logo" src="assets/images/openvidu_vert_white_bg_trans_cropped.png">
-  </div>
-
-  <login-component
-    (loggedIn)="getRooms()">
-  </login-component>
-
-  <mat-spinner color="accent" id="spinner" *ngIf="loading"></mat-spinner>
-
-  <div id="card_content" *ngIf="this.userSrv.isLogged
-    && !loading
-    && ((this.moddedRooms!==undefined && this.moddedRooms.length>0)
-    || (this.presentedRooms!==undefined && this.presentedRooms.length>0)
-    || (this.participatedRooms!==undefined && this.participatedRooms.length>0))">
-    <mat-card id="room_card">
-      <mat-list>
-        <div *ngIf="this.moddedRooms!==undefined && this.moddedRooms.length>0">
-          <h3 mat-subheader>MODDED ROOMS</h3>
-          <mat-list-item *ngFor="let mod of this.moddedRooms">
-            <a mat-line mat-stroked-button routerLink="{{mod.name}}">
-              {{mod.name}}
-            </a>
-            <button mat-icon-button (click)="getInviteURL(mod.name,'moderator')">
-              <mat-icon color="accent" matTooltip="Invite URL for moderators">link</mat-icon>
-            </button>
-            <button mat-icon-button (click)="getInviteURL(mod.name,'presenter')">
-              <mat-icon class="invitePresenter" matTooltip="Invite URL for presenters">link</mat-icon>
-            </button>
-            <button mat-icon-button (click)="getInviteURL(mod.name,'participant')">
-              <mat-icon matTooltip="Invite URL for participants">link</mat-icon>
-            </button>
-          </mat-list-item>
-        </div>
-
-        <div *ngIf="this.presentedRooms!==undefined && this.presentedRooms.length>0">
-          <h3 mat-subheader>PRESENTED ROOMS</h3>
-          <mat-list-item *ngFor="let pres of this.presentedRooms">
-            <a mat-line mat-stroked-button routerLink="{{pres.name}}">{{pres.name}}</a>
-          </mat-list-item>
-        </div>
-        
-        <div *ngIf="this.participatedRooms!==undefined && this.participatedRooms.length>0">
-          <h3 mat-subheader>PARTICIPATED ROOMS</h3>
-          <mat-list-item *ngFor="let part of this.participatedRooms">
-            <a mat-line mat-stroked-button routerLink="{{part.name}}">{{part.name}}</a>
-          </mat-list-item>
-        </div>
-      </mat-list>
-
-      <button mat-flat-button class="addRoomButton" matTooltip="Create a new room" (click)="openAddRoomDialog()" *ngIf="this.userSrv.isAdmin">
-        <mat-icon>add</mat-icon>
-      </button>
-    </mat-card>
-  </div>
-</div>
-
-<ng-template #addRoomDialog let-dialogRef="dialogRef" id="addRoomDialog">
-  <mat-form-field appearance="outline" color="primary" class="dialogCentered">
-    <mat-label>Room name</mat-label>
-      <input matInput [(ngModel)]="newRoom"  (keypress)="eventKeyPress($event)">
-  </mat-form-field>
-  <div>
-    <button mat-flat-button class="addRoomButton dialogCentered" matTooltip="Create a new room" (click)="createRoom()">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
-</ng-template>
+  
+    <login-component
+      (loggedIn)="getRooms()">
+    </login-component>
+  
+    <mat-spinner color="accent" id="spinner" *ngIf="loading"></mat-spinner>
+  
+    <div id="card_content" *ngIf="this.userSrv.isLogged
+      && !loading
+      && ((this.moddedRooms!==undefined && this.moddedRooms.length>0)
+      || (this.presentedRooms!==undefined && this.presentedRooms.length>0)
+      || (this.participatedRooms!==undefined && this.participatedRooms.length>0))">
+      <mat-card id="room_card">
+        <mat-list>
+          <div *ngIf="this.moddedRooms!==undefined && this.moddedRooms.length>0">
+            <h3 mat-subheader>MODDED ROOMS</h3>
+            <mat-list-item *ngFor="let mod of this.moddedRooms">
+              <a mat-line mat-stroked-button routerLink="{{mod.name}}">
+                {{mod.name}}
+              </a>
+              <button mat-icon-button (click)="getInviteURL(mod.name,'moderator')">
+                <mat-icon color="accent" matTooltip="Invite URL for moderators">link</mat-icon>
+              </button>
+              <button mat-icon-button (click)="getInviteURL(mod.name,'presenter')">
+                <mat-icon class="invitePresenter" matTooltip="Invite URL for presenters">link</mat-icon>
+              </button>
+              <button mat-icon-button (click)="getInviteURL(mod.name,'participant')">
+                <mat-icon matTooltip="Invite URL for participants">link</mat-icon>
+              </button>
+              <button mat-icon-button (click)="openVideos(mod.name)">
+                <mat-icon matTooltip="See recorded videos">video_library</mat-icon>
+              </button>
+            </mat-list-item>
+          </div>
+  
+          <div *ngIf="this.presentedRooms!==undefined && this.presentedRooms.length>0">
+            <h3 mat-subheader>PRESENTED ROOMS</h3>
+            <mat-list-item *ngFor="let pres of this.presentedRooms">
+              <a mat-line mat-stroked-button routerLink="{{pres.name}}">{{pres.name}}</a>
+              <button mat-icon-button (click)="openVideos(pres.name)">
+                <mat-icon matTooltip="See recorded videos">video_library</mat-icon>
+              </button>
+            </mat-list-item>
+          </div>
+          
+          <div *ngIf="this.participatedRooms!==undefined && this.participatedRooms.length>0">
+            <h3 mat-subheader>PARTICIPATED ROOMS</h3>
+            <mat-list-item *ngFor="let part of this.participatedRooms">
+              <a mat-line mat-stroked-button routerLink="{{part.name}}">{{part.name}}</a>
+              <button mat-icon-button (click)="openVideos(part.name)">
+                <mat-icon matTooltip="See recorded videos">video_library</mat-icon>
+              </button>
+            </mat-list-item>
+          </div>
+        </mat-list>
+  
+        <button mat-flat-button class="addRoomButton" matTooltip="Create a new room" (click)="openAddRoomDialog()" *ngIf="this.userSrv.isAdmin">
+          <mat-icon>add</mat-icon>
+        </button>
+      </mat-card>
+    </div>
+    
+    <ng-template #addRoomDialog let-dialogRef="dialogRef" id="addRoomDialog">
+      <mat-form-field appearance="outline" color="primary" class="dialogCentered">
+        <mat-label>Room name</mat-label>
+          <input matInput [(ngModel)]="newRoom"  (keypress)="eventKeyPress($event)">
+      </mat-form-field>
+      <div>
+        <button mat-flat-button class="addRoomButton dialogCentered" matTooltip="Create a new room" (click)="createRoom()">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+    </ng-template>
+  </mat-drawer-content>
+</mat-drawer-container>
