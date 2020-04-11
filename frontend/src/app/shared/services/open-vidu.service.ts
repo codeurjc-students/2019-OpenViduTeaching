@@ -5,6 +5,7 @@ import { OvSettings } from '../models/ov-settings';
 import { Observable, throwError } from 'rxjs';
 import { User, UserService } from './user.service';
 import { map, catchError } from 'rxjs/operators';
+import { Connection } from 'openvidu-browser';
 
 @Injectable({
   providedIn: 'root',

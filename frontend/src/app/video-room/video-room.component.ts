@@ -26,6 +26,7 @@ import { OvSettings } from '../shared/models/ov-settings';
 import { ApiService } from '../shared/services/api.service';
 import { ThrowStmt } from '@angular/compiler';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { SettingsComponent } from '../shared/components/menu/settings/settings.component';
 
 @Component({
   selector: 'app-video-room',
@@ -67,6 +68,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   @ViewChild('chatComponent') chatComponent: ChatComponent;
   @ViewChild('modChatComponent') modChatComponent: ChatComponent;
   @ViewChild('assistants') assistantsComponent: AssistantsComponent;
+  @ViewChild('settings') settingsComponent: SettingsComponent;
   @ViewChildren('popup', { read: ElementRef }) currentPopups: QueryList<ElementRef>;
   @ViewChild('raisedHands', { read: ElementRef }) raisedHandsPopup: ElementRef;
 
@@ -282,6 +284,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
       this.subscribedToChat('chatMod', this.messageListMod, this.modChatComponent);
     }
     this.subscribedToLowerHand();
+    this.subscribedToChangeRecordingStatus();
     this.connectToSession();
   }
 
@@ -806,6 +809,15 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
           },
           error => console.error(error) 
         );
+      }
+    });
+  }
+
+  private subscribedToChangeRecordingStatus() {
+    this.session.on('signal:changeRecordingStatus', (event:any) => {
+      if(event.from===undefined) { 
+        //Only do something if "from" is undefined, which means the signal was called by the backend
+        this.settingsComponent.setRecordingStatus(JSON.parse(event.data).isRecording);
       }
     });
   }

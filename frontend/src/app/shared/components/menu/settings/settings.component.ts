@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { OpenViduService } from 'src/app/shared/services/open-vidu.service';
+import { Connection } from 'openvidu-browser';
 
 @Component({
   selector: 'settings-component',
@@ -9,9 +10,11 @@ import { OpenViduService } from 'src/app/shared/services/open-vidu.service';
 export class SettingsComponent implements OnInit {
 
   @Input() roomName: string;
+  @Input() modConnections: Connection[];
 
   private isBeingRecorded: boolean;
   private changingRecordStatus: boolean;
+  private modConnectionsId: string[] = [];
 
   constructor(
     private openviduSrv: OpenViduService
@@ -19,6 +22,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkIsBeingRecorded();
+    this.updateModConnectionsId();
   }
 
   private checkIsBeingRecorded() {
@@ -36,8 +40,14 @@ export class SettingsComponent implements OnInit {
     this.changingRecordStatus = true;
     this.openviduSrv.startRecording(this.roomName).subscribe(
       () => {
-        this.isBeingRecorded = true
-        this.changingRecordStatus = false;
+        this.updateModConnectionsId();
+        this.openviduSrv.sendSignal(this.roomName, 'changeRecordingStatus', this.modConnectionsId, { 'isRecording': true }).subscribe(
+          (_) => {
+            this.isBeingRecorded = true
+            this.changingRecordStatus = false;
+          },
+          error => console.error(error) 
+        );
       },
       error => console.error(error) 
     );
@@ -47,11 +57,31 @@ export class SettingsComponent implements OnInit {
     this.changingRecordStatus = true;
     this.openviduSrv.stopRecording(this.roomName).subscribe(
       () => {
-        this.isBeingRecorded = false
-        this.changingRecordStatus = false;
+        this.updateModConnectionsId();
+        this.openviduSrv.sendSignal(this.roomName, 'changeRecordingStatus', this.modConnectionsId, { 'isRecording': false }).subscribe(
+          (_) => {
+            this.isBeingRecorded = false
+            this.changingRecordStatus = false;
+          },
+          error => console.error(error) 
+        );
       },
       error => console.error(error) 
     );
   }
 
+  public setRecordingStatus(recordingStatus: boolean) {
+    this.isBeingRecorded = recordingStatus;
+  }
+
+  private updateModConnectionsId() {
+    for(let connection of this.modConnections) {
+      const index:number = this.modConnectionsId.indexOf(connection.connectionId);
+      if(index == -1) {
+        this.modConnectionsId.push(connection.connectionId);
+      } else {
+        this.modConnectionsId[index] = connection.connectionId;
+      }
+    }
+  }
 }
