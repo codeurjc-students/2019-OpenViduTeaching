@@ -11,6 +11,7 @@ export class SettingsComponent implements OnInit {
   @Input() roomName: string;
 
   private isBeingRecorded: boolean;
+  private changingRecordStatus: boolean;
 
   constructor(
     private openviduSrv: OpenViduService
@@ -21,22 +22,34 @@ export class SettingsComponent implements OnInit {
   }
 
   private checkIsBeingRecorded() {
+    this.changingRecordStatus = true;
     this.openviduSrv.isBeingRecorded(this.roomName).subscribe(
-      (isBeingRecorded) => { this.isBeingRecorded = isBeingRecorded },
+      (isBeingRecorded) => {
+        this.isBeingRecorded = isBeingRecorded;
+        this.changingRecordStatus = false;
+      },
       error => console.error(error) 
     );
   }
 
   private startRecording() {
+    this.changingRecordStatus = true;
     this.openviduSrv.startRecording(this.roomName).subscribe(
-      () => { this.isBeingRecorded = true },
+      () => {
+        this.isBeingRecorded = true
+        this.changingRecordStatus = false;
+      },
       error => console.error(error) 
     );
   }
 
   private stopRecording() {
+    this.changingRecordStatus = true;
     this.openviduSrv.stopRecording(this.roomName).subscribe(
-      () => { this.isBeingRecorded = false },
+      () => {
+        this.isBeingRecorded = false
+        this.changingRecordStatus = false;
+      },
       error => console.error(error) 
     );
   }

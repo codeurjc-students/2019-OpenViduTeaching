@@ -194,8 +194,8 @@ public class OpenViduController {
 		if (!room.isInRoom(user)) { // User not in that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		if (!this.openViduComponent.isSessionCreated(room) || this.openViduComponent.isSessionEmpty(room)) {
-			// No session created for that room or it is empty
+		if (!this.openViduComponent.isSessionCreated(room) || this.openViduComponent.isSessionEmpty(room) || this.openViduComponent.isBeingRecorded(room)) {
+			// No session created for that room or it is empty or it is already being recorded
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
 		

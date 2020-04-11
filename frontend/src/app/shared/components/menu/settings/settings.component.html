@@ -1,10 +1,13 @@
 <mat-card id="settingsCard">
-    <button mat-flat-button color="accent" *ngIf="!isBeingRecorded" (click)="startRecording()">
-        <mat-icon>videocam</mat-icon>
-        Start recording
-    </button>
-    <button mat-flat-button color="warn" *ngIf="isBeingRecorded" (click)="stopRecording()">
-        <mat-icon>videocam_off</mat-icon>
-        Stop recording
-    </button>
+    <div id="recordSection">
+        <button mat-flat-button color="accent" *ngIf="!isBeingRecorded" (click)="startRecording()" [disabled]="changingRecordStatus">
+            <mat-icon>videocam</mat-icon>
+            Start recording
+        </button>
+        <button mat-flat-button color="warn" *ngIf="isBeingRecorded" (click)="stopRecording()" [disabled]="changingRecordStatus">
+            <mat-icon>videocam_off</mat-icon>
+            Stop recording
+        </button>
+        <mat-spinner *ngIf="changingRecordStatus" color="accent" [diameter]="40"></mat-spinner>
+    </div>
 </mat-card>

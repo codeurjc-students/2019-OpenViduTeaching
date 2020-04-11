@@ -1,3 +1,9 @@
 #settingsCard {
     margin: 2%;
 }
+
+#recordSection {
+    display: flex;
+    align-items: initial;
+    justify-content: left;
+}
