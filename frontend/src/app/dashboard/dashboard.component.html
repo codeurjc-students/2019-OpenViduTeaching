@@ -1,8 +1,9 @@
 <mat-drawer-container id="section1" [hasBackdrop]="false">
   <mat-drawer #videosDrawer id="videosDrawer" [mode]="over" position="end">
+    <h2 id="drawerTitle">Videos of room "{{currentRoomOfVideos}}"</h2>
     <mat-nav-list id="videoList">
       <mat-list-item *ngFor="let video of currentVideos" class="videoItem">
-         <a matLine mat-flat-button routerLink="/" class="videoButton">{{video}}</a>
+         <a matLine mat-flat-button [routerLink]="'/'+currentRoomOfVideos+'/video/'+video" class="videoButton">{{video}}</a>
       </mat-list-item>
       <input cdkFocusInitial style="display:none"/>
     </mat-nav-list>

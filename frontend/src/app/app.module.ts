@@ -50,6 +50,7 @@ import { LoginComponent } from './shared/components/login/login.component';
 import { PopupComponent } from './shared/components/popup/popup.component';
 import { InviteLinkComponent } from './invite/invite-link/invite-link.component';
 import { SettingsComponent } from './shared/components/menu/settings/settings.component';
+import { VideoComponent } from './video/video.component';
 
 @NgModule({
   declarations: [
@@ -70,7 +71,8 @@ import { SettingsComponent } from './shared/components/menu/settings/settings.co
     LoginComponent,
     PopupComponent,
     InviteLinkComponent,
-    SettingsComponent
+    SettingsComponent,
+    VideoComponent
   ],
   imports: [
     FormsModule,
