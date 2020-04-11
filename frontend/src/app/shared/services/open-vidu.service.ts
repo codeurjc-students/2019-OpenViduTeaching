@@ -95,7 +95,30 @@ export class OpenViduService {
     }
     return this.http.post(this.baseURL + '/room/' + roomName + '/signal/' + type, body)
       .pipe(
-        catchError(error => this.handleError(error))
+        catchError((error) => this.handleError(error))
+      );
+  }
+
+  startRecording(roomName: string) {
+    return this.http.post(this.baseURL + '/room/' + roomName + '/recording/start', { responseType: 'text' })
+      .pipe(
+        map(recordingId => { return recordingId }),
+        catchError((error) => this.handleError(error))
+      );
+  }
+
+  stopRecording(roomName: string) {
+    return this.http.post(this.baseURL + '/room/' + roomName + '/recording/stop', { responseType: 'text' })
+      .pipe(
+        catchError((error) => this.handleError(error))
+      );
+  }
+
+  isBeingRecorded(roomName: string): Observable<boolean> {
+    return this.http.post<boolean>(this.baseURL + '/room/' + roomName + '/recording/isBeingRecorded', {})
+      .pipe(
+        map(isBeingRecorded => { return isBeingRecorded }),
+        catchError((error) => this.handleError(error))  
       );
   }
 

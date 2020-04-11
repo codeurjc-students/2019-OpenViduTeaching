@@ -6,3 +6,5 @@ backend/src/main/resources/static/*
 docker/composed/.env
 
 backend/bin/
+
+docker/videos/

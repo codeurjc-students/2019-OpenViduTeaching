@@ -177,10 +177,10 @@ public class OpenViduController {
 	/**
 	 * Starts recording of a session
 	 * 
-	 * @return HttpStatus of the operation
+	 * @return Recording id
 	 */
 	@PostMapping("/room/{roomName}/recording/start")
-	public ResponseEntity<String> startRecording(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<?> startRecording(@PathVariable String roomName, HttpServletRequest request) {
 		if (!request.isUserInRole("USER")) { // User not logged
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -203,7 +203,7 @@ public class OpenViduController {
 		if(recordingId==null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<>(recordingId, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	/**
@@ -212,7 +212,7 @@ public class OpenViduController {
 	 * @return HttpStatus of the operation
 	 */
 	@PostMapping("/room/{roomName}/recording/stop")
-	public ResponseEntity<String> stopRecording(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<?> stopRecording(@PathVariable String roomName, HttpServletRequest request) {
 		if (!request.isUserInRole("USER")) { // User not logged
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -235,7 +235,34 @@ public class OpenViduController {
 		if(recordingId==null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<>(recordingId, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	/**
+	 * Returns whether a session is being recorded or not
+	 * 
+	 * @return boolean with the status of the recording
+	 */
+	@PostMapping("/room/{roomName}/recording/isBeingRecorded")
+	public ResponseEntity<Boolean> isBeingRecorded(@PathVariable String roomName, HttpServletRequest request) {
+		if (!request.isUserInRole("USER")) { // User not logged
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		Room room = roomServ.findByName(roomName);
+		User user = userServ.findByName(request.getUserPrincipal().getName());
+		// User currentUser = this.userComponent.getLoggedUser();
+
+		if (room == null) { // No room with that name
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		if (!room.isInRoom(user)) { // User not in that room
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		if (!this.openViduComponent.isSessionCreated(room) || this.openViduComponent.isSessionEmpty(room)) {
+			// No session created for that room or it is empty
+			return new ResponseEntity<>(HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<>(this.openViduComponent.isBeingRecorded(room), HttpStatus.OK);
 	}
 	
 	/**
