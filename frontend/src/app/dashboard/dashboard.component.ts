@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Room } from '../shared/models/room-model';
 import { MatSnackBar, MatDialogRef, MatDialog, MatDrawer } from '@angular/material';
 import { InviteLinkComponent } from '../invite/invite-link/invite-link.component';
+import { OpenViduService } from '../shared/services/open-vidu.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,7 +20,7 @@ export class DashboardComponent implements OnInit {
   private presentedRooms: Room[] = [];
   private participatedRooms: Room[] = [];
 
-  private currentVideos: string[] = ["video1", "video2", "video3"];
+  private currentVideos: { name: string, createdAt: Date}[] = [];
   private currentRoomOfVideos: string;
 
   private loading: boolean;
@@ -34,6 +35,7 @@ export class DashboardComponent implements OnInit {
     private router: Router,
     private userSrv: UserService,
     private roomSrv: RoomService,
+    private openviduSrv: OpenViduService,
     private urlSnackBar: MatSnackBar,
     public dialog: MatDialog
   ) {}
@@ -60,12 +62,23 @@ export class DashboardComponent implements OnInit {
   openVideos(roomName: string) {
     const wasOpened = this.videosDrawer.opened;
     this.videosDrawer.close();
-    if(this.currentRoomOfVideos !== roomName) {
-      this.currentRoomOfVideos = roomName;
-      this.currentVideos.push(this.currentRoomOfVideos); /**TODO change*/
-      this.videosDrawer.open();
-    } else if(!wasOpened) {
-      this.videosDrawer.open();
+    this.currentVideos = [];
+    if(this.currentRoomOfVideos !== roomName || !wasOpened) {
+      this.openviduSrv.getRecordings(roomName).subscribe(
+        recordings => {
+          this.currentRoomOfVideos = roomName;
+          for(let recording of recordings) {
+            if(recording.status=="ready") {
+              this.currentVideos.push({
+                name: recording.name,
+                createdAt: new Date(recording.createdAt)
+              });
+            }
+          }
+          this.videosDrawer.open();
+        },
+        error => console.log(error)
+      );
     }
   }
 

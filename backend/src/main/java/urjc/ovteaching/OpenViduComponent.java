@@ -78,7 +78,7 @@ public class OpenViduComponent {
 
 	private Map<Long, Session> roomIdSession;
 	private Map<String, Map<Long, String[]>> sessionIdUserIdToken;
-	private Map<String, List<String>> sessionIdRecordingsId;
+	private Map<Long, List<String>> roomIdRecordingsId;
 
 	public OpenViduComponent(@Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl) {
 		this.SECRET = secret;
@@ -86,7 +86,7 @@ public class OpenViduComponent {
 		this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
 		this.roomIdSession = new ConcurrentHashMap<>();
 		this.sessionIdUserIdToken = new ConcurrentHashMap<>();
-		this.sessionIdRecordingsId = new ConcurrentHashMap<>();
+		this.roomIdRecordingsId = new ConcurrentHashMap<>();
 		
 		TrustStrategy trustStrategy = new TrustStrategy() {
 			@Override
@@ -120,7 +120,7 @@ public class OpenViduComponent {
 		Session session = this.openVidu.createSession(sp);
 		this.roomIdSession.put(room.getId(), session);
 		this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
-		this.sessionIdRecordingsId.put(session.getSessionId(), new ArrayList<>());
+		this.roomIdRecordingsId.put(room.getId(), new ArrayList<>());
 		return session.getSessionId();
 	}
 
@@ -210,7 +210,7 @@ public class OpenViduComponent {
 		try {
 			String sessionId = this.roomIdSession.get(room.getId()).getSessionId();
 			String recordingId = this.openVidu.startRecording(sessionId).getId();
-			this.sessionIdRecordingsId.get(sessionId).add(recordingId);
+			this.roomIdRecordingsId.get(room.getId()).add(recordingId);
 			return recordingId;
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
 			e.printStackTrace();
@@ -224,14 +224,13 @@ public class OpenViduComponent {
 	
 	public String stopRecording(Room room) {
 		try {
-			String sessionId = this.roomIdSession.get(room.getId()).getSessionId();
-			List<String> recordings = this.sessionIdRecordingsId.get(sessionId);
+			List<String> recordings = this.roomIdRecordingsId.get(room.getId());
 			String recordingId = recordings.get(recordings.size() - 1);
 			return this.openVidu.stopRecording(recordingId).getId();
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 	
 	public void sendSignal(Room room, JsonArray to, String type, JsonObject data) throws UnsupportedEncodingException, IOException {
@@ -259,6 +258,25 @@ public class OpenViduComponent {
 			}
 		} finally {
 			EntityUtils.consumeQuietly(response.getEntity());
+		}
+	}
+	
+	public List<Recording> getRecordings(Room room) {
+		List<String> recordingIds = this.roomIdRecordingsId.get(room.getId());
+		if(recordingIds==null) {
+			return new ArrayList<>();
+		}
+		List<Recording> recordings = new ArrayList<>();
+		try {
+			for(Recording recording: this.openVidu.listRecordings()) {
+				if(recordingIds.contains(recording.getId())) {
+					recordings.add(recording);
+				}
+			}
+			return recordings;
+		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			e.printStackTrace();
+			return null;
 		}
 	}
 }

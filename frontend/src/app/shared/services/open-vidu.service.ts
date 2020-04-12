@@ -6,6 +6,7 @@ import { Observable, throwError } from 'rxjs';
 import { User, UserService } from './user.service';
 import { map, catchError } from 'rxjs/operators';
 import { Connection } from 'openvidu-browser';
+import { Recording } from '../models/recording-model';
 
 @Injectable({
   providedIn: 'root',
@@ -120,6 +121,14 @@ export class OpenViduService {
       .pipe(
         map(isBeingRecorded => { return isBeingRecorded }),
         catchError((error) => this.handleError(error))  
+      );
+  }
+
+  getRecordings(roomName: string): Observable<Recording[]> {
+    return this.http.get<Recording[]> (this.baseURL + '/room/' + roomName + '/recordings')
+      .pipe(
+        map(recordings => { return recordings }),
+        catchError((error) => this.handleError(error))
       );
   }
 

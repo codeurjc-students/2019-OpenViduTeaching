@@ -92,3 +92,8 @@ login-component {
 #drawerTitle{
   color: rgb(255, 193, 7);
 }
+
+.videoDate{
+  margin-left: 10%;
+  color: #494949;
+}

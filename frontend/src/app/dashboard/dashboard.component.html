@@ -3,7 +3,10 @@
     <h2 id="drawerTitle">Videos of room "{{currentRoomOfVideos}}"</h2>
     <mat-nav-list id="videoList">
       <mat-list-item *ngFor="let video of currentVideos" class="videoItem">
-         <a matLine mat-flat-button [routerLink]="'/'+currentRoomOfVideos+'/video/'+video" class="videoButton">{{video}}</a>
+        <a matLine mat-flat-button [routerLink]="'/'+currentRoomOfVideos+'/video/'+video" class="videoButton">
+          <span><b>{{video.name}}</b></span>
+          <span class="videoDate">{{video.createdAt.toLocaleString()}}</span>
+        </a>
       </mat-list-item>
       <input cdkFocusInitial style="display:none"/>
     </mat-nav-list>
