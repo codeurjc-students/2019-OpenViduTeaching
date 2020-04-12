@@ -1,10 +1,13 @@
 package urjc.ovteaching.rooms.controllers;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.io.ByteStreams;
 
 import io.openvidu.java.client.Recording;
 import urjc.ovteaching.OpenViduComponent;
@@ -38,6 +43,10 @@ public class RecordingController {
 
 	@Autowired
 	private OpenViduComponent openViduComponent;
+	
+	@Autowired
+    ResourceLoader resourceLoader;
+	
 	
 	/**
 	 * Starts recording of a session
@@ -155,5 +164,37 @@ public class RecordingController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(recordings, HttpStatus.OK);
+	}
+	
+	/**
+	 * Get a video from a room
+	 * 
+	 * @return the video in byte array
+	 */
+	@GetMapping("/room/{roomName}/recording/{video}")
+	public ResponseEntity<byte[]> getVideo(@PathVariable String roomName, @PathVariable String video, HttpServletRequest request) {
+		System.out.println(request);
+		if (!request.isUserInRole("USER")) { // User not logged
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		Room room = roomServ.findByName(roomName);
+		User user = userServ.findByName(request.getUserPrincipal().getName());
+		// User currentUser = this.userComponent.getLoggedUser();
+
+		if (room == null) { // No room with that name
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		if (!room.isInRoom(user)) { // User not in that room
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		try {
+			byte[] bytes = ByteStreams.toByteArray(resourceLoader.getResource("file:/home/diegomzmn/Escritorio/OpenViduTeaching/2019-OpenViduTeaching/docker/videos/" + video + "/" + video + ".mp4").getInputStream());
+
+			final HttpHeaders headers = new HttpHeaders();
+			
+			return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+		} catch(IOException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
 	}
 }

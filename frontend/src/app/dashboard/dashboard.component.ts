@@ -20,7 +20,7 @@ export class DashboardComponent implements OnInit {
   private presentedRooms: Room[] = [];
   private participatedRooms: Room[] = [];
 
-  private currentVideos: { name: string, createdAt: Date}[] = [];
+  private currentVideos: { id: string, name: string, createdAt: Date}[] = [];
   private currentRoomOfVideos: string;
 
   private loading: boolean;
@@ -70,6 +70,7 @@ export class DashboardComponent implements OnInit {
           for(let recording of recordings) {
             if(recording.status=="ready") {
               this.currentVideos.push({
+                id: recording.id,
                 name: recording.name,
                 createdAt: new Date(recording.createdAt)
               });

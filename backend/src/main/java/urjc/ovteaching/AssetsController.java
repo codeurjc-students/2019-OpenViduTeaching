@@ -47,5 +47,5 @@ public class AssetsController {
 		} catch(NoSuchFileException e) {
 			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
 		}
-	} 
+	}
 }

@@ -51,6 +51,7 @@ import { PopupComponent } from './shared/components/popup/popup.component';
 import { InviteLinkComponent } from './invite/invite-link/invite-link.component';
 import { SettingsComponent } from './shared/components/menu/settings/settings.component';
 import { VideoComponent } from './video/video.component';
+import { SecurePipe } from 'src/interceptors/secure.pipe'
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { VideoComponent } from './video/video.component';
     PopupComponent,
     InviteLinkComponent,
     SettingsComponent,
-    VideoComponent
+    VideoComponent,
+    SecurePipe
   ],
   imports: [
     FormsModule,
