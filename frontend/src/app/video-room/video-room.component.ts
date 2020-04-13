@@ -814,11 +814,11 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   }
 
   private subscribedToChangeRecordingStatus() {
-    this.session.on('signal:changeRecordingStatus', (event:any) => {
-      if(event.from===undefined) { 
-        //Only do something if "from" is undefined, which means the signal was called by the backend
-        this.settingsComponent.setRecordingStatus(JSON.parse(event.data).isRecording);
-      }
+    this.session.on('recordingStarted', (event:any) => {
+      this.settingsComponent.setRecordingStatus(true);
+    });
+    this.session.on('recordingStopped', (event:any) => {
+      this.settingsComponent.setRecordingStatus(false);
     });
   }
 

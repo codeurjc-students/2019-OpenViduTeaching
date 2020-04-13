@@ -60,27 +60,23 @@ export class DashboardComponent implements OnInit {
   }
 
   openVideos(roomName: string) {
-    const wasOpened = this.videosDrawer.opened;
-    this.videosDrawer.close();
     this.currentVideos = [];
-    if(this.currentRoomOfVideos !== roomName || !wasOpened) {
-      this.openviduSrv.getRecordings(roomName).subscribe(
-        recordings => {
-          this.currentRoomOfVideos = roomName;
-          for(let recording of recordings) {
-            if(recording.status=="ready") {
-              this.currentVideos.push({
-                id: recording.id,
-                name: recording.name,
-                createdAt: new Date(recording.createdAt)
-              });
-            }
+    this.openviduSrv.getRecordings(roomName).subscribe(
+      recordings => {
+        this.currentRoomOfVideos = roomName;
+        for(let recording of recordings) {
+          if(recording.status=="ready") {
+            this.currentVideos.push({
+              id: recording.id,
+              name: recording.name,
+              createdAt: new Date(recording.createdAt)
+            });
           }
-          this.videosDrawer.open();
-        },
-        error => console.log(error)
-      );
-    }
+        }
+        this.videosDrawer.open();
+      },
+      error => console.log(error)
+    );
   }
 
   getInviteURL(roomName: string, role:string){

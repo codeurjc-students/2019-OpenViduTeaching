@@ -1,4 +1,12 @@
-<video #video
-id="video"
-[src]="'/ovTeachingApi/room/'+roomName+'/recording/'+videoId | secure | async">
+<a [routerLink]="['']">
+    <img id="header_img" alt="OpenVidu Logo" src="assets/images/openvidu_logo.png">
+</a>
+
+<video
+    #video
+    controls
+    disablePictureInPicture 
+    preload="auto"
+    id="video"
+    [src]="'/ovTeachingApi/room/'+roomName+'/recording/'+videoId | secure | async">
 </video>

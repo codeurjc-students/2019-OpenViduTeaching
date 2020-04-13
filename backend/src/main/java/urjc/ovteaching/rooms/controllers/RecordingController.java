@@ -173,7 +173,6 @@ public class RecordingController {
 	 */
 	@GetMapping("/room/{roomName}/recording/{video}")
 	public ResponseEntity<byte[]> getVideo(@PathVariable String roomName, @PathVariable String video, HttpServletRequest request) {
-		System.out.println(request);
 		if (!request.isUserInRole("USER")) { // User not logged
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -194,6 +193,7 @@ public class RecordingController {
 			
 			return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
 		} catch(IOException e) {
+			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}

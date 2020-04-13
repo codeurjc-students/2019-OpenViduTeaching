@@ -14,7 +14,6 @@ export class SettingsComponent implements OnInit {
 
   private isBeingRecorded: boolean;
   private changingRecordStatus: boolean;
-  private modConnectionsId: string[] = [];
 
   constructor(
     private openviduSrv: OpenViduService
@@ -22,7 +21,6 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkIsBeingRecorded();
-    this.updateModConnectionsId();
   }
 
   private checkIsBeingRecorded() {
@@ -40,14 +38,8 @@ export class SettingsComponent implements OnInit {
     this.changingRecordStatus = true;
     this.openviduSrv.startRecording(this.roomName).subscribe(
       () => {
-        this.updateModConnectionsId();
-        this.openviduSrv.sendSignal(this.roomName, 'changeRecordingStatus', this.modConnectionsId, { 'isRecording': true }).subscribe(
-          (_) => {
-            this.isBeingRecorded = true
-            this.changingRecordStatus = false;
-          },
-          error => console.error(error) 
-        );
+        this.isBeingRecorded = true
+        this.changingRecordStatus = false;
       },
       error => console.error(error) 
     );
@@ -57,14 +49,8 @@ export class SettingsComponent implements OnInit {
     this.changingRecordStatus = true;
     this.openviduSrv.stopRecording(this.roomName).subscribe(
       () => {
-        this.updateModConnectionsId();
-        this.openviduSrv.sendSignal(this.roomName, 'changeRecordingStatus', this.modConnectionsId, { 'isRecording': false }).subscribe(
-          (_) => {
-            this.isBeingRecorded = false
-            this.changingRecordStatus = false;
-          },
-          error => console.error(error) 
-        );
+        this.isBeingRecorded = false
+        this.changingRecordStatus = false;
       },
       error => console.error(error) 
     );
@@ -72,16 +58,5 @@ export class SettingsComponent implements OnInit {
 
   public setRecordingStatus(recordingStatus: boolean) {
     this.isBeingRecorded = recordingStatus;
-  }
-
-  private updateModConnectionsId() {
-    for(let connection of this.modConnections) {
-      const index:number = this.modConnectionsId.indexOf(connection.connectionId);
-      if(index == -1) {
-        this.modConnectionsId.push(connection.connectionId);
-      } else {
-        this.modConnectionsId[index] = connection.connectionId;
-      }
-    }
   }
 }

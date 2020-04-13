@@ -5,3 +5,9 @@
     min-width: 100%;
     min-height: 100%;
 }
+
+#header_img {
+    position: absolute;
+    z-index: 9999;
+    max-width: 200px;
+}
