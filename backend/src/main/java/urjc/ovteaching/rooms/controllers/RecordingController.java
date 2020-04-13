@@ -44,10 +44,6 @@ public class RecordingController {
 	@Autowired
 	private OpenViduComponent openViduComponent;
 	
-	@Autowired
-    ResourceLoader resourceLoader;
-	
-	
 	/**
 	 * Starts recording of a session
 	 * 
@@ -132,11 +128,7 @@ public class RecordingController {
 		if (!room.isInRoom(user)) { // User not in that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		if (!this.openViduComponent.isSessionCreated(room) || this.openViduComponent.isSessionEmpty(room)) {
-			// No session created for that room or it is empty
-			return new ResponseEntity<>(HttpStatus.CONFLICT);
-		}
-		return new ResponseEntity<>(this.openViduComponent.isBeingRecorded(room), HttpStatus.OK);
+		return new ResponseEntity<>(this.openViduComponent.isSessionCreated(room) && !this.openViduComponent.isSessionEmpty(room) && this.openViduComponent.isBeingRecorded(room), HttpStatus.OK);
 	}
 
 	/**
@@ -187,11 +179,8 @@ public class RecordingController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		try {
-			byte[] bytes = ByteStreams.toByteArray(resourceLoader.getResource("file:/home/diegomzmn/Escritorio/OpenViduTeaching/2019-OpenViduTeaching/docker/videos/" + video + "/" + video + ".mp4").getInputStream());
-
-			final HttpHeaders headers = new HttpHeaders();
-			
-			return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+			byte[] bytes = this.openViduComponent.getVideo(video);			
+			return new ResponseEntity<>(bytes, new HttpHeaders(), HttpStatus.OK);
 		} catch(IOException e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

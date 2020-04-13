@@ -18,5 +18,10 @@
     "name": "initialDataFile",
     "type": "java.lang.String",
     "description": "The json file where the initial data for the database is taken from"
+  },
+  {
+    "name": "openvidu.recording.path",
+    "type": "java.lang.String",
+    "description": "The local absolute path where OpenVidu recordings are stored"
   }
 ]}

@@ -39,8 +39,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
+import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -70,9 +72,13 @@ public class OpenViduComponent {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+    ResourceLoader resourceLoader;
+	
 	private OpenVidu openVidu;
 	private String OPENVIDU_URL;
 	private String SECRET;
+	private String RECORDING_PATH;
 	
 	private HttpClient httpClient;
 
@@ -80,9 +86,10 @@ public class OpenViduComponent {
 	private Map<String, Map<Long, String[]>> sessionIdUserIdToken;
 	private Map<Long, List<String>> roomIdRecordingsId;
 
-	public OpenViduComponent(@Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl) {
+	public OpenViduComponent(@Value("${openvidu.secret}") String secret, @Value("${openvidu.url}") String openviduUrl, @Value("${openvidu.recording.path}") String recordingPath) {
 		this.SECRET = secret;
 		this.OPENVIDU_URL = openviduUrl;
+		this.RECORDING_PATH = recordingPath;
 		this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
 		this.roomIdSession = new ConcurrentHashMap<>();
 		this.sessionIdUserIdToken = new ConcurrentHashMap<>();
@@ -278,5 +285,9 @@ public class OpenViduComponent {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public byte[] getVideo(String videoId) throws IOException {
+		return ByteStreams.toByteArray(resourceLoader.getResource("file:" + RECORDING_PATH + "/" + videoId + "/" + videoId + ".mp4").getInputStream());
 	}
 }
