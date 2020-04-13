@@ -10,4 +10,17 @@
         </button>
         <mat-spinner *ngIf="changingRecordStatus" color="accent" [diameter]="40"></mat-spinner>
     </div>
+    <br>
+    <div *ngIf="this.userSrv.isModOfRoom(this.roomName)">
+        <b>Invite links:</b>
+        <button mat-icon-button (click)="getInviteURL('moderator')">
+            <mat-icon color="accent" matTooltip="Invite URL for moderators">link</mat-icon>
+        </button>
+        <button mat-icon-button (click)="getInviteURL('presenter')">
+            <mat-icon class="invitePresenter" matTooltip="Invite URL for presenters">link</mat-icon>
+        </button>
+        <button mat-icon-button (click)="getInviteURL('participant')">
+            <mat-icon matTooltip="Invite URL for participants">link</mat-icon>
+        </button>
+    </div>
 </mat-card>

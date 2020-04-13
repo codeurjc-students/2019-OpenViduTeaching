@@ -4,8 +4,6 @@ import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@a
 import { UserModel } from '../../models/user-model';
 import { ApiService } from '../../services/api.service';
 import { OvSettings } from '../../models/ov-settings';
-import { MatSnackBar } from '@angular/material';
-import { InviteLinkComponent } from 'src/app/invite/invite-link/invite-link.component';
 
 @Component({
   selector: 'app-toolbar',
@@ -34,8 +32,7 @@ export class ToolbarComponent implements OnInit {
   constructor(
     private apiSrv: ApiService,
     private userService:UserService,
-    private roomSrv:RoomService,
-    private urlSnackBar: MatSnackBar
+    private roomSrv:RoomService
   ) {}
 
   @HostListener('window:resize', ['$event'])
@@ -92,16 +89,6 @@ export class ToolbarComponent implements OnInit {
         error => console.error(error) 
       );
     }
-  }
-
-  getInviteURL(role:string){
-    this.urlSnackBar.openFromComponent(InviteLinkComponent, {
-      data: {
-        roomName: this.mySessionId,
-        role: role,
-        dismiss: () => {this.urlSnackBar.dismiss()} 
-      }
-    });
   }
 
   toggleFullscreen() {
