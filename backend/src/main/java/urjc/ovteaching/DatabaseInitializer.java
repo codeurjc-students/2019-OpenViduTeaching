@@ -34,7 +34,7 @@ public class DatabaseInitializer {
 	@Autowired
     ResourceLoader resourceLoader;
 	
-	@Value("${initialDataFile}")
+	@Value("${INITIAL_DATA_FILE}")
 	private String initialFile;
 
 	@SuppressWarnings("unchecked")

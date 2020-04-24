@@ -1,26 +1,21 @@
 {"properties": [
   {
-    "name": "openvidu.url",
+    "name": "OPENVIDU_URL",
     "type": "java.lang.String",
     "description": "The URL where the OpenVidu server is deployed"
   },
   {
-    "name": "openvidu.secret",
+    "name": "OPENVIDU_SECRET",
     "type": "java.lang.String",
     "description": "The OpenVidu secret for the server"
   },
   {
-    "name": "openvidu.publicurl",
-    "type": "java.lang.String",
-    "description": "The OpenVidu public URL type (local, ngrok, FINAL_URL)"
-  },
-  {
-    "name": "initialDataFile",
+    "name": "INITIAL_DATA_FILE",
     "type": "java.lang.String",
     "description": "The json file where the initial data for the database is taken from"
   },
   {
-    "name": "openvidu.recording.path",
+    "name": "OPENVIDU_RECORDING_PATH",
     "type": "java.lang.String",
     "description": "The local absolute path where OpenVidu recordings are stored"
   }

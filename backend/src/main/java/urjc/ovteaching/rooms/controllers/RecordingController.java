@@ -61,6 +61,9 @@ public class RecordingController {
 		if (!room.isInRoom(user)) { // User not in that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+		if(!this.openViduComponent.isRecordingEnabled()) {
+			return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+		}
 		if (!this.openViduComponent.isSessionCreated(room) || this.openViduComponent.isSessionEmpty(room) || this.openViduComponent.isBeingRecorded(room)) {
 			// No session created for that room or it is empty or it is already being recorded
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -92,6 +95,9 @@ public class RecordingController {
 		}
 		if (!room.isInRoom(user)) { // User not in that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		if(!this.openViduComponent.isRecordingEnabled()) {
+			return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 		}
 		if (!this.openViduComponent.isSessionCreated(room) || this.openViduComponent.isSessionEmpty(room) || !this.openViduComponent.isBeingRecorded(room)) {
 			// No session created for that room or it is empty or it is not being recorded
@@ -125,6 +131,9 @@ public class RecordingController {
 		if (!room.isInRoom(user)) { // User not in that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+		if(!this.openViduComponent.isRecordingEnabled()) {
+			return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+		}
 		return new ResponseEntity<>(this.openViduComponent.isSessionCreated(room) && !this.openViduComponent.isSessionEmpty(room) && this.openViduComponent.isBeingRecorded(room), HttpStatus.OK);
 	}
 
@@ -147,6 +156,9 @@ public class RecordingController {
 		}
 		if (!room.isInRoom(user)) { // User not in that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		if(!this.openViduComponent.isRecordingEnabled()) {
+			return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 		}
 		List<Recording> recordings = this.openViduComponent.getRecordings(room);
 		if(recordings==null) {
@@ -174,6 +186,9 @@ public class RecordingController {
 		}
 		if (!room.isInRoom(user)) { // User not in that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		if(!this.openViduComponent.isRecordingEnabled()) {
+			return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 		}
 		try {
 			byte[] bytes = this.openViduComponent.getVideo(video);			

@@ -1,2 +1,2 @@
 docker kill openviduteaching 
-docker run --name openviduteaching -p 8080:8080 -e openvidu.url="https://192.168.1.38:4443/" -e openvidu.secret=MY_SECRET -e initialDataFile="/initialData.json" -v %cd%\build\initialData.json:/initialData.json --rm diegomzmn/openviduteaching
+docker run --name openviduteaching -p 8080:8080 -e OPENVIDU_URL="https://192.168.1.38:4443/" -e OPENVIDU_SECRET=MY_SECRET -e INITIAL_DATA_FILE="/initialData.json" -v %cd%\build\initialData.json:/initialData.json --rm diegomzmn/openviduteaching

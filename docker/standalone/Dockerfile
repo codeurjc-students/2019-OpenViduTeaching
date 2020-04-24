@@ -1,7 +1,7 @@
 FROM openvidu/openvidu-server-kms:latest
 
-ARG initialDataFile
-ENV initialDataFileEnv="$initialDataFile"
+ARG INITIAL_DATA_FILE
+ENV initialDataFileEnv="$INITIAL_DATA_FILE"
 
 COPY OpenViduTeaching.jar OpenViduTeaching.jar
 
