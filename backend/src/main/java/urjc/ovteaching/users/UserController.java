@@ -52,8 +52,8 @@ public class UserController {
 		if (!request.isUserInRole("USER")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		User user = userServ.findByName(request.getUserPrincipal().getName());
-		// User user = this.userComponent.getLoggedUser();
+		//User user = userServ.findByName(request.getUserPrincipal().getName());
+		User user = this.userComponent.getLoggedUser();
 		if (user == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}

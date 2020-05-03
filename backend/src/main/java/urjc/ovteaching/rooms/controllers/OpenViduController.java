@@ -60,8 +60,8 @@ public class OpenViduController {
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		User user = userServ.findByName(request.getUserPrincipal().getName());
-		// User user = this.userComponent.getLoggedUser();
+		//User user = userServ.findByName(request.getUserPrincipal().getName());
+		User user = this.userComponent.getLoggedUser();
 		if(!room.isInRoom(user)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -90,8 +90,8 @@ public class OpenViduController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Room room = roomServ.findByName(roomName);
-		User user = userServ.findByName(request.getUserPrincipal().getName());
-		// User user = this.userComponent.getLoggedUser();
+		//User user = userServ.findByName(request.getUserPrincipal().getName());
+		User user = this.userComponent.getLoggedUser();
 		if (!request.isUserInRole("USER")) { // User not logged
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -107,6 +107,7 @@ public class OpenViduController {
 			try {
 				this.openViduComponent.createSession(room);
 			} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+				e.printStackTrace();
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}

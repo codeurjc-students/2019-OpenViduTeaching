@@ -39,7 +39,7 @@ public class Room {
 	private List<JSONObject> handRaisedUsers;
 
 	@ManyToMany(mappedBy = "moddedRooms")
-	private Set<User> mods;
+	private Set<User> moderators;
 
 	@ManyToMany(mappedBy = "participatedRooms")
 	private Set<User> participants;
@@ -48,7 +48,7 @@ public class Room {
 	private Set<User> presenters;
 	
 	public Room(String name) {
-		this.mods = new HashSet<>();
+		this.moderators = new HashSet<>();
 		this.participants = new HashSet<>();
 		this.presenters = new HashSet<>();
 		this.codeParticipant = UUID.randomUUID().toString();
@@ -78,7 +78,7 @@ public class Room {
 	}
 	
 	public boolean isModerator(User user) {
-		return this.mods.contains(user);
+		return this.moderators.contains(user);
 	}
 
 	public boolean isParticipant(User user) {
@@ -98,7 +98,7 @@ public class Room {
 	}
 	
 	public Collection<User> getModerators(){
-		return this.mods;
+		return this.moderators;
 	}
 	
 	public Collection<User> getParticipants(){
