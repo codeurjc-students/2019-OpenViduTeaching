@@ -1,4 +1,4 @@
-package urjc.ovteaching;
+package urjc.ovteaching.openvidu;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

@@ -1,15 +1,15 @@
 package urjc.ovteaching.rooms;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import urjc.ovteaching.OpenViduComponent;
+import urjc.ovteaching.openvidu.OpenViduComponent;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserService;
 
@@ -96,4 +96,9 @@ public class RoomService {
 			}
 		}
 	}
+	
+	public Collection<User> getConnectedAssistants(Room room) {
+		return openviduComponent.getConnectedAssistants(room);
+	}
+	
 }

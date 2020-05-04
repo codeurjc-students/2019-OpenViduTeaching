@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
+import urjc.ovteaching.openvidu.OpenViduComponent;
 import urjc.ovteaching.rooms.Room;
 import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;

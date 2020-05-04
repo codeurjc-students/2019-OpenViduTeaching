@@ -1,13 +1,10 @@
-package urjc.ovteaching.rooms.controllers;
+package urjc.ovteaching.openvidu;
 
 import java.io.IOException;
-import java.util.HashSet;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +22,10 @@ import com.google.gson.JsonObject;
 
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
-import urjc.ovteaching.OpenViduComponent;
 import urjc.ovteaching.rooms.Room;
 import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
-import urjc.ovteaching.users.UserService;
 
 @RequestMapping("/ovTeachingApi")
 @CrossOrigin
@@ -39,9 +34,6 @@ public class OpenViduController {
 
 	@Autowired
 	private RoomService roomServ;
-
-	@Autowired
-	private UserService userServ;
 
 	@Autowired
 	private UserComponent userComponent;
@@ -148,8 +140,8 @@ public class OpenViduController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Room room = roomServ.findByName(roomName);
-		User user = userServ.findByName(request.getUserPrincipal().getName());
-		// User currentUser = this.userComponent.getLoggedUser();
+		//User user = userServ.findByName(request.getUserPrincipal().getName());
+		User user = this.userComponent.getLoggedUser();
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -186,8 +178,8 @@ public class OpenViduController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Room room = roomServ.findByName(roomName);
-		User user = userServ.findByName(request.getUserPrincipal().getName());
-		// User currentUser = this.userComponent.getLoggedUser();
+		//User user = userServ.findByName(request.getUserPrincipal().getName());
+		User user = this.userComponent.getLoggedUser();
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

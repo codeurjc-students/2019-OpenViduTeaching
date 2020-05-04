@@ -1,4 +1,4 @@
-package urjc.ovteaching.rooms.controllers;
+package urjc.ovteaching.openvidu;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,12 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.openvidu.java.client.Recording;
-import urjc.ovteaching.OpenViduComponent;
 import urjc.ovteaching.rooms.Room;
 import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
-import urjc.ovteaching.users.UserService;
 
 @RequestMapping("/ovTeachingApi")
 @CrossOrigin
@@ -31,9 +29,6 @@ public class RecordingController {
 	
 	@Autowired
 	private RoomService roomServ;
-
-	@Autowired
-	private UserService userServ;
 
 	@Autowired
 	private UserComponent userComponent;
@@ -52,8 +47,8 @@ public class RecordingController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Room room = roomServ.findByName(roomName);
-		User user = userServ.findByName(request.getUserPrincipal().getName());
-		// User currentUser = this.userComponent.getLoggedUser();
+		//User user = userServ.findByName(request.getUserPrincipal().getName());
+		User user = this.userComponent.getLoggedUser();
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -87,8 +82,8 @@ public class RecordingController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Room room = roomServ.findByName(roomName);
-		User user = userServ.findByName(request.getUserPrincipal().getName());
-		// User currentUser = this.userComponent.getLoggedUser();
+		//User user = userServ.findByName(request.getUserPrincipal().getName());
+		User user = this.userComponent.getLoggedUser();
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -122,8 +117,8 @@ public class RecordingController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Room room = roomServ.findByName(roomName);
-		User user = userServ.findByName(request.getUserPrincipal().getName());
-		// User currentUser = this.userComponent.getLoggedUser();
+		//User user = userServ.findByName(request.getUserPrincipal().getName());
+		User user = this.userComponent.getLoggedUser();
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -148,8 +143,8 @@ public class RecordingController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Room room = roomServ.findByName(roomName);
-		User user = userServ.findByName(request.getUserPrincipal().getName());
-		// User currentUser = this.userComponent.getLoggedUser();
+		//User user = userServ.findByName(request.getUserPrincipal().getName());
+		User user = this.userComponent.getLoggedUser();
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -178,8 +173,8 @@ public class RecordingController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Room room = roomServ.findByName(roomName);
-		User user = userServ.findByName(request.getUserPrincipal().getName());
-		// User currentUser = this.userComponent.getLoggedUser();
+		//User user = userServ.findByName(request.getUserPrincipal().getName());
+		User user = this.userComponent.getLoggedUser();
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -1,4 +1,4 @@
-package urjc.ovteaching.rooms.controllers;
+package urjc.ovteaching.rooms;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -11,7 +11,6 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,9 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import urjc.ovteaching.OpenViduComponent;
-import urjc.ovteaching.rooms.Room;
-import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
 import urjc.ovteaching.users.UserService;
@@ -44,9 +40,6 @@ public class RoomController {
 
 	@Autowired
 	private UserComponent userComponent;
-
-	@Autowired
-	private OpenViduComponent openviduComponent;
 
 	/**
 	 * Creates a new room
@@ -121,7 +114,7 @@ public class RoomController {
 	/**
 	 * Logs a user into a room
 	 * 
-	 * @return the room with either code (participant or moderator)
+	 * @return the room with a specific code (participant, presenter or moderator)
 	 */
 	@PutMapping("/room/{code}/user")
 	@JsonView(User.WithRooms.class)
@@ -129,8 +122,8 @@ public class RoomController {
 		if (!request.isUserInRole("USER")) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-		User user = userServ.findByName(request.getUserPrincipal().getName());
-		// User currentUser = this.userComponent.getLoggedUser();
+		//User user = userServ.findByName(request.getUserPrincipal().getName());
+		User user = this.userComponent.getLoggedUser();
 		Room room = roomServ.findByInviteCode(code);
 
 		if (room == null) {
@@ -184,7 +177,7 @@ public class RoomController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		if (room.isInRoom(user)) {
-			Collection<User> connected = openviduComponent.getConnectedAssistants(room);
+			Collection<User> connected = this.roomServ.getConnectedAssistants(room);
 			JSONObject response = new JSONObject();
 
 			Set<JSONObject> moderators = new HashSet<>();
