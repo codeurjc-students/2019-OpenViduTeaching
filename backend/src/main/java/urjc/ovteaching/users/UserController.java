@@ -101,7 +101,5 @@ public class UserController {
 		} else {
 			return new ResponseEntity<User>(HttpStatus.CONFLICT);
 		}
-		
-		
 	}
 }
