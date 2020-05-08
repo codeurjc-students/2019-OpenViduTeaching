@@ -44,7 +44,7 @@ public class UserTests {
 	private MockMvc mvc;
 
 	@Spy
-	private final UserController loginController = new UserController();
+	private final UserController userController = new UserController();
 
 	@MockBean
 	private UserComponent userComponent;
@@ -130,7 +130,7 @@ public class UserTests {
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/user/test")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", is("test")));
+				.andExpect(content().string("test"));
 	}
 	
 	@Test

@@ -55,10 +55,10 @@ public class RoomController {
 		if (roomServ.findByName(roomName) != null) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
-		User currentUser = userServ.findByName(request.getUserPrincipal().getName());
-		// User currentUser = this.userComponent.getLoggedUser();
+		//User user = userServ.findByName(request.getUserPrincipal().getName());
+		User user = this.userComponent.getLoggedUser();
 		Room room = new Room(roomName);
-		roomServ.addRoomWithMod(room, currentUser);
+		roomServ.addRoomWithMod(room, user);
 		return new ResponseEntity<>(room, HttpStatus.CREATED);
 	}
 
@@ -133,12 +133,12 @@ public class RoomController {
 			//Automatically enter if already a mod 
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		if (code.equals(room.getPresenterInviteCode()) && (room.isModerator(user)) || room.isPresenter(user)) {
-			//Automatically enter as presenter if already a moderator or presenter 
+		if (code.equals(room.getPresenterInviteCode()) && room.isPresenter(user)) {
+			//Automatically enter as presenter if already a presenter 
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		if (code.equals(room.getParticipantInviteCode()) && room.isInRoom(user)) {
-			//Automatically enter as participant if already in it
+		if (code.equals(room.getParticipantInviteCode()) && (room.isParticipant(user) || room.isPresenter(user))) {
+			//Automatically enter if already in it
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		
