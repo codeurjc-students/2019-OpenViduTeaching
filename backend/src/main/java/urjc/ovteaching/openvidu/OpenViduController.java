@@ -3,6 +3,7 @@ package urjc.ovteaching.openvidu;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.http.HTTPException;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import io.openvidu.java.client.OpenViduHttpException;
-import io.openvidu.java.client.OpenViduJavaClientException;
 import urjc.ovteaching.rooms.Room;
 import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;
@@ -58,14 +57,13 @@ public class OpenViduController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		try {
-			String sessionId;
 			if (!this.openViduComponent.isSessionCreated(room)) {
-				sessionId = this.openViduComponent.createSession(room);
+				return new ResponseEntity<>(this.openViduComponent.createSession(room), HttpStatus.CREATED);
 			} else {
-				sessionId = this.openViduComponent.getSession(room);
+				return new ResponseEntity<>(this.openViduComponent.getSession(room), HttpStatus.OK);
 			}
-			return new ResponseEntity<>(sessionId, HttpStatus.CREATED);
-		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+		} catch (IOException e) {
+			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -98,7 +96,7 @@ public class OpenViduController {
 		if (!this.openViduComponent.isSessionCreated(room)) { // Create session if there isn't
 			try {
 				this.openViduComponent.createSession(room);
-			} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
@@ -109,18 +107,18 @@ public class OpenViduController {
 			this.openViduComponent.addUserWithTokenToRoom(room, user, token);
 			json.put("token", token);
 			return new ResponseEntity<>(json, HttpStatus.OK);
-		} catch (OpenViduJavaClientException e1) {
+		} catch (IOException e1) {
 			// Internal error generate
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (OpenViduHttpException e2) {
-			if (404 == e2.getStatus()) {
+		} catch (HTTPException e2) {
+			if (404 == e2.getStatusCode()) {
 				// Invalid sessionId (user left unexpectedly). Session object is not valid
 				// anymore. Must clean invalid session and create a new one
 				try {
 					String token = this.openViduComponent.replaceSession(room, user);
 					json.put("token", token);
 					return new ResponseEntity<>(json, HttpStatus.OK);
-				} catch (OpenViduJavaClientException | OpenViduHttpException e3) {
+				} catch (IOException  e3) {
 					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 				}
 			} else {

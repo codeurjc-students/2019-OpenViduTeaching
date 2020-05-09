@@ -29,8 +29,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import urjc.ovteaching.openvidu.OpenViduComponent;
+import urjc.ovteaching.openvidu.RecordingController;
 import urjc.ovteaching.rooms.Room;
-import urjc.ovteaching.rooms.RoomController;
 import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
@@ -46,7 +46,7 @@ public class RecordingTests {
 	private MockMvc mvc;
 
 	@Spy
-	private final RoomController roomController = new RoomController();
+	private final RecordingController recordingController = new RecordingController();
 
 	@MockBean
 	private UserComponent userComponent;

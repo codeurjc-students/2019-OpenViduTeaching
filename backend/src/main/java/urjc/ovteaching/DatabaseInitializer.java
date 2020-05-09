@@ -102,7 +102,7 @@ public class DatabaseInitializer {
 		
 		userServ.save(user);
 		
-		System.out.println("Added user:" + userName);
+		System.out.println("Added user: " + userName);
 	}
 
 }

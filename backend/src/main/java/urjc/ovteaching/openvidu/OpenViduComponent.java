@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
+import javax.xml.ws.http.HTTPException;
 
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -119,15 +120,19 @@ public class OpenViduComponent {
 		return this.roomIdSession.get(room.getId()) != null;
 	}
 
-	public String createSession(Room room) throws OpenViduJavaClientException, OpenViduHttpException {
-		SessionProperties sp = new SessionProperties.Builder().customSessionId(room.getName()).build();
-		Session session = this.openVidu.createSession(sp);
-		this.roomIdSession.put(room.getId(), session);
-		this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
-		if(RECORDING_ENABLED) {
-			this.roomIdRecordingsId.put(room.getId(), new ArrayList<>());
+	public String createSession(Room room) throws IOException {
+		try {
+			SessionProperties sp = new SessionProperties.Builder().customSessionId(room.getName()).build();
+			Session session = this.openVidu.createSession(sp);
+			this.roomIdSession.put(room.getId(), session);
+			this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
+			if(RECORDING_ENABLED) {
+				this.roomIdRecordingsId.put(room.getId(), new ArrayList<>());
+			}
+			return session.getSessionId();
+		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			throw new IOException(e);
 		}
-		return session.getSessionId();
 	}
 
 	public String getSession(Room room) {
@@ -146,27 +151,37 @@ public class OpenViduComponent {
 		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), tokens);
 	}
 
-	public String generateToken(Room room, User user) throws OpenViduJavaClientException, OpenViduHttpException {
-		Session session = this.roomIdSession.get(room.getId());
-		OpenViduRole role = this.getRole(user, room);
-		TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
-		return session.generateToken(tokenOpts);
+	public String generateToken(Room room, User user) throws IOException {
+		try {
+			Session session = this.roomIdSession.get(room.getId());
+			OpenViduRole role = this.getRole(user, room);
+			TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
+			return session.generateToken(tokenOpts);
+		} catch (OpenViduJavaClientException e) {
+			throw new IOException(e);
+		} catch (OpenViduHttpException e) {
+			throw new HTTPException(e.getStatus());
+		}
 	}
 
-	public String replaceSession(Room room, User user) throws OpenViduJavaClientException, OpenViduHttpException {
-		Session session = this.roomIdSession.get(room.getId());
-		this.sessionIdUserIdToken.remove(session.getSessionId());
-		SessionProperties sp = new SessionProperties.Builder().customSessionId(room.getName()).build();
-		session = this.openVidu.createSession(sp);
-		this.roomIdSession.put(room.getId(), session);
-		this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
-		OpenViduRole role = this.getRole(user, room);
-		TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
-		String token = session.generateToken(tokenOpts);
-		String[] tokens = new String[2];
-		tokens[0] = token; // Cam token
-		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), tokens);
-		return token;
+	public String replaceSession(Room room, User user) throws IOException {
+		try {
+			Session session = this.roomIdSession.get(room.getId());
+			this.sessionIdUserIdToken.remove(session.getSessionId());
+			SessionProperties sp = new SessionProperties.Builder().customSessionId(room.getName()).build();
+			session = this.openVidu.createSession(sp);
+			this.roomIdSession.put(room.getId(), session);
+			this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
+			OpenViduRole role = this.getRole(user, room);
+			TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
+			String token = session.generateToken(tokenOpts);
+			String[] tokens = new String[2];
+			tokens[0] = token; // Cam token
+			this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), tokens);
+			return token;
+		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			throw new IOException(e);
+		}
 	}
 	
 	private OpenViduRole getRole(User user, Room room) {
