@@ -117,7 +117,7 @@ export class OpenViduService {
   }
 
   isBeingRecorded(roomName: string): Observable<boolean> {
-    return this.http.post<boolean>(this.baseURL + '/room/' + roomName + '/recording/isBeingRecorded', {})
+    return this.http.get<boolean>(this.baseURL + '/room/' + roomName + '/recording/isBeingRecorded', {})
       .pipe(
         map(isBeingRecorded => { return isBeingRecorded }),
         catchError((error) => this.handleError(error))  

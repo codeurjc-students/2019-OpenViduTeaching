@@ -53,7 +53,7 @@ public class RecordingController {
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		if (!room.isInRoom(user)) { // User not in that room
+		if (!room.isModerator(user)) { // User not a mod of that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		if(!this.openViduComponent.isRecordingEnabled()) {
@@ -88,7 +88,7 @@ public class RecordingController {
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		if (!room.isInRoom(user)) { // User not in that room
+		if (!room.isModerator(user)) { // User not a mod of that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		if(!this.openViduComponent.isRecordingEnabled()) {
@@ -111,7 +111,7 @@ public class RecordingController {
 	 * 
 	 * @return boolean with the status of the recording
 	 */
-	@PostMapping("/room/{roomName}/recording/isBeingRecorded")
+	@GetMapping("/room/{roomName}/recording/isBeingRecorded")
 	public ResponseEntity<Boolean> isBeingRecorded(@PathVariable String roomName, HttpServletRequest request) {
 		if (!request.isUserInRole("USER")) { // User not logged
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -123,7 +123,7 @@ public class RecordingController {
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		if (!room.isInRoom(user)) { // User not in that room
+		if (!room.isModerator(user)) { // User not a mod of that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		if(!this.openViduComponent.isRecordingEnabled()) {
