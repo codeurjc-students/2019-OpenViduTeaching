@@ -182,7 +182,7 @@ public class OpenViduController {
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		if (!room.isModerator(user)) { // User not in that room
+		if (!room.isModerator(user)) { // User not a mod of the room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		if (!this.openViduComponent.isSessionCreated(room) || this.openViduComponent.isSessionEmpty(room)) {
@@ -194,7 +194,7 @@ public class OpenViduController {
 			JsonObject gsonBody = new Gson().fromJson(body.toString(), JsonObject.class);
 			this.openViduComponent.sendSignal(room, gsonBody.getAsJsonArray("to"), type, gsonBody.getAsJsonObject("data"));
 		} catch (IOException e) {
-			System.err.println(e.toString());
+			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);

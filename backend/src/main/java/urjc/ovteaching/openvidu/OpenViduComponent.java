@@ -1,7 +1,6 @@
 package urjc.ovteaching.openvidu;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -262,7 +261,7 @@ public class OpenViduComponent {
 		return null;
 	}
 	
-	public void sendSignal(Room room, JsonArray to, String type, JsonObject data) throws UnsupportedEncodingException, IOException {
+	public void sendSignal(Room room, JsonArray to, String type, JsonObject data) throws IOException {
 		Session session = this.roomIdSession.get(room.getId());
 		
 		HttpPost request = new HttpPost(this.OPENVIDU_URL + "/api/signal");

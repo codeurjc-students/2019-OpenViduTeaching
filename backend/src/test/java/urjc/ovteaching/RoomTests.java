@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -278,11 +279,15 @@ public class RoomTests {
 				.andExpect(status().isOk())
 				.andExpect(content().string("1"));
 		
+		verify(roomService, times(1)).checkConnectedHandRaisedUsers(this.roomService.findByName("testRoom"));
+		
 		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/testRoom/raiseHand")
 				.content("{\"nickname\": \"test2\",\"avatar\": \"testAvatar2\",\"connectionId\": \"con_test2\"}")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().string("2"));
+		
+		verify(roomService, times(2)).checkConnectedHandRaisedUsers(this.roomService.findByName("testRoom"));
 	}
 	
 	@Test
@@ -340,10 +345,14 @@ public class RoomTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(0)));
 		
+		verify(roomService, times(1)).checkConnectedHandRaisedUsers(this.roomService.findByName("testRoom"));
+		
 		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/testRoom/raiseHand")
 				.content("{\"nickname\": \"test\",\"avatar\": \"testAvatar\",\"connectionId\": \"con_test\"}")
 				.contentType(MediaType.APPLICATION_JSON));
 		
+		verify(roomService, times(2)).checkConnectedHandRaisedUsers(this.roomService.findByName("testRoom"));
+
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/testRoom/raiseHand")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -351,6 +360,8 @@ public class RoomTests {
 				.andExpect(jsonPath("$[0].nickname", is("test")))
 				.andExpect(jsonPath("$[0].avatar", is("testAvatar")))
 				.andExpect(jsonPath("$[0].connectionId", is("con_test")));
+		
+		verify(roomService, times(3)).checkConnectedHandRaisedUsers(this.roomService.findByName("testRoom"));
 	}
 	
 	@Test
