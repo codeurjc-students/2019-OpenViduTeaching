@@ -78,9 +78,6 @@ public class RecordingController {
 	 */
 	@PostMapping("/room/{roomName}/recording/stop")
 	public ResponseEntity<?> stopRecording(@PathVariable String roomName, HttpServletRequest request) {
-		if (!request.isUserInRole("USER")) { // User not logged
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 

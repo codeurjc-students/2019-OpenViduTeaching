@@ -148,6 +148,7 @@ public class UserTests {
 		
 		given(this.userComponent.isLoggedUser()).willReturn(true);
 		given(this.userComponent.getLoggedUser()).willReturn(user);
+		given(this.userService.findByName("test")).willReturn(user);
 		
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/user/rooms")
 				.contentType(MediaType.APPLICATION_JSON))
@@ -157,5 +158,20 @@ public class UserTests {
 				.andExpect(jsonPath("$.modded[1].name", is("roomTest2")))
 				.andExpect(jsonPath("$.presented", hasSize(0)))
 				.andExpect(jsonPath("$.participated", hasSize(0)));
+	}
+	
+	@Test
+	public void getUserRoomsNotFound() throws Exception {
+		User user = new User("test", "pass", "ROLE_ADMIN", "ROLE_USER");
+		user.addModdedRoom(new Room("roomTest1"));
+		user.addModdedRoom(new Room("roomTest2"));
+		
+		given(this.userComponent.isLoggedUser()).willReturn(true);
+		given(this.userComponent.getLoggedUser()).willReturn(user);
+		given(this.userService.findByName("test")).willReturn(null);
+		
+		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/user/rooms")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
 	}
 }

@@ -76,6 +76,7 @@ public class OpenViduTests {
 		
 		given(this.userComponent.isLoggedUser()).willReturn(true);
 		given(this.userComponent.getLoggedUser()).willReturn(user);
+		given(this.userService.findByName("test")).willReturn(user);
 		given(this.roomService.findByName("testRoom")).willReturn(room);
 	}
 	
@@ -108,6 +109,27 @@ public class OpenViduTests {
 	}
 	
 	@Test
+	public void createSessionNotFound() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/nonExistant/session")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
+		
+		verify(openviduComponent, never()).createSession(any());
+	}
+	
+	@Test
+	public void createSessionUnauthorized() throws Exception {
+		Room room = new Room("otherRoom");
+		given(this.roomService.findByName("otherRoom")).willReturn(room);
+		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/otherRoom/session")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized());
+		
+		verify(openviduComponent, never()).createSession(any());
+	}
+	
+	@Test
 	public void createSessionOpenViduError() throws Exception {
 		Room room = this.roomService.findByName("testRoom");
 		
@@ -137,6 +159,29 @@ public class OpenViduTests {
 		
 		verify(openviduComponent).generateToken(room, user);
 		verify(openviduComponent).addUserWithTokenToRoom(room, user, token);
+	}
+	
+	@Test
+	public void getTokenUnauthorized() throws Exception {
+		Room room = new Room("otherRoom");
+		given(this.roomService.findByName("otherRoom")).willReturn(room);
+		
+		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/otherRoom/token")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized());
+		
+		verify(openviduComponent, never()).generateToken(any(), any());
+		verify(openviduComponent, never()).addUserWithTokenToRoom(any(), any(), any());
+	}
+	
+	@Test
+	public void getTokenNotFound() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/nonExistant/token")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
+		
+		verify(openviduComponent, never()).generateToken(any(), any());
+		verify(openviduComponent, never()).addUserWithTokenToRoom(any(), any(), any());
 	}
 	
 	@Test
@@ -254,8 +299,48 @@ public class OpenViduTests {
 				.andExpect(status().isOk());
 		
 		verify(openviduComponent).removeUser(room, user);
-		verify(openviduComponent, never()).removeSession(room);
+		verify(openviduComponent, never()).removeSession(any());
 		verify(roomService).checkConnectedHandRaisedUsers(room);
+	}
+	
+	@Test
+	public void removeUserNotFound() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.delete("/ovTeachingApi/room/nonExistant/user")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
+		
+		verify(openviduComponent, never()).removeUser(any(), any());
+		verify(openviduComponent, never()).removeSession(any());
+		verify(roomService, never()).checkConnectedHandRaisedUsers(any());
+	}
+	
+	@Test
+	public void removeUserUnauthorized() throws Exception {
+		Room room = new Room("otherRoom");
+		given(this.roomService.findByName("otherRoom")).willReturn(room);
+		
+		mvc.perform(MockMvcRequestBuilders.delete("/ovTeachingApi/room/otherRoom/user")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized());
+		
+		verify(openviduComponent, never()).removeUser(any(), any());
+		verify(openviduComponent, never()).removeSession(any());
+		verify(roomService, never()).checkConnectedHandRaisedUsers(any());
+	}
+	
+	@Test
+	public void removeUserNoSession() throws Exception {
+		Room room = this.roomService.findByName("testRoom");
+		
+		given(this.openviduComponent.isSessionCreated(room)).willReturn(false);
+		
+		mvc.perform(MockMvcRequestBuilders.delete("/ovTeachingApi/room/testRoom/user")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict());
+		
+		verify(openviduComponent, never()).removeUser(any(), any());
+		verify(openviduComponent, never()).removeSession(any());
+		verify(roomService, never()).checkConnectedHandRaisedUsers(any());
 	}
 	
 	@Test
@@ -314,6 +399,16 @@ public class OpenViduTests {
 	}
 	
 	@Test
+	public void sendSignalNotFound() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/nonExistant/signal/testType")
+				.content("{\"to\": [\"testConnection\"],\"data\": { \"testProperty\": \"testValue\"}}")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
+		
+		verify(openviduComponent, never()).sendSignal(any(), any(), any(), any());
+	}
+	
+	@Test
 	public void sendSignalOpenViduError() throws Exception {
 		Room room = this.roomService.findByName("testRoom");
 		
@@ -350,6 +445,21 @@ public class OpenViduTests {
 				.content("{\"to\": [\"testConnection\"],\"data\": { \"testProperty\": \"testValue\"}}")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized());
+		
+		verify(openviduComponent, never()).sendSignal(any(), any(), any(), any());
+	}
+	
+	@Test
+	public void sendSignalNoSession() throws Exception {
+		Room room = this.roomService.findByName("testRoom");
+		
+		given(this.openviduComponent.isSessionCreated(room)).willReturn(false);
+		given(this.openviduComponent.isSessionEmpty(room)).willReturn(true);
+		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/testRoom/signal/testType")
+				.content("{\"to\": [\"testConnection\"],\"data\": { \"testProperty\": \"testValue\"}}")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict());
 		
 		verify(openviduComponent, never()).sendSignal(any(), any(), any(), any());
 	}
