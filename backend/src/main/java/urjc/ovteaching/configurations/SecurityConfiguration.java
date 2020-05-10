@@ -13,8 +13,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.antMatcher("/ovTeachingApi/**");
 
+		//Users
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/user/rooms").hasAnyRole("USER");
+		
+		//Rooms
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/ovTeachingApi/room/*").hasAnyRole("ADMIN");
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/room/*/inviteCode/*").hasAnyRole("ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.PUT, "/ovTeachingApi/room/*/user").hasAnyRole("USER");
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/room/*/assistants").hasAnyRole("USER");
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/ovTeachingApi/room/*/raiseHand").hasAnyRole("USER");
+		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/ovTeachingApi/room/*/raiseHand").hasAnyRole("USER");
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/room/*/raiseHand").hasAnyRole("USER");
+
+		//OpenVidu
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/room/*/token").hasAnyRole("USER");
+		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/ovTeachingApi/room/*/user").hasAnyRole("USER");
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/ovTeachingApi/room/*/signal/*").hasAnyRole("ADMIN");
+				
+		//Recording
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/room/*/recordings").hasAnyRole("USER");
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/room/*/recording/*").hasAnyRole("USER");
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/ovTeachingApi/room/*/recording/start").hasAnyRole("ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/ovTeachingApi/room/*/recording/stop").hasAnyRole("ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/room/*/recording/isBeingRecorded").hasAnyRole("ADMIN");
 		
 		http.authorizeRequests().anyRequest().permitAll();
 

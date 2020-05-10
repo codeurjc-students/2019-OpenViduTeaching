@@ -43,9 +43,6 @@ public class RecordingController {
 	 */
 	@PostMapping("/room/{roomName}/recording/start")
 	public ResponseEntity<?> startRecording(@PathVariable String roomName, HttpServletRequest request) {
-		if (!request.isUserInRole("USER")) { // User not logged
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
 		Room room = roomServ.findByName(roomName);
 		//User user = userServ.findByName(request.getUserPrincipal().getName());
 		User user = this.userComponent.getLoggedUser();
@@ -113,9 +110,6 @@ public class RecordingController {
 	 */
 	@GetMapping("/room/{roomName}/recording/isBeingRecorded")
 	public ResponseEntity<Boolean> isBeingRecorded(@PathVariable String roomName, HttpServletRequest request) {
-		if (!request.isUserInRole("USER")) { // User not logged
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
 		Room room = roomServ.findByName(roomName);
 		//User user = userServ.findByName(request.getUserPrincipal().getName());
 		User user = this.userComponent.getLoggedUser();
@@ -139,9 +133,6 @@ public class RecordingController {
 	 */
 	@GetMapping("/room/{roomName}/recordings")
 	public ResponseEntity<List<Recording>> getRecordings(@PathVariable String roomName, HttpServletRequest request) {
-		if (!request.isUserInRole("USER")) { // User not logged
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
 		Room room = roomServ.findByName(roomName);
 		//User user = userServ.findByName(request.getUserPrincipal().getName());
 		User user = this.userComponent.getLoggedUser();
@@ -169,9 +160,6 @@ public class RecordingController {
 	 */
 	@GetMapping("/room/{roomName}/recording/{video}")
 	public ResponseEntity<byte[]> getVideo(@PathVariable String roomName, @PathVariable String video, HttpServletRequest request) {
-		if (!request.isUserInRole("USER")) { // User not logged
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
 		Room room = roomServ.findByName(roomName);
 		//User user = userServ.findByName(request.getUserPrincipal().getName());
 		User user = this.userComponent.getLoggedUser();

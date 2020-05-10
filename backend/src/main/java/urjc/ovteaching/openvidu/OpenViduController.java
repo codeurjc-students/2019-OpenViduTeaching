@@ -76,15 +76,9 @@ public class OpenViduController {
 	@SuppressWarnings("unchecked")
 	@GetMapping("/room/{roomName}/token")
 	public ResponseEntity<JSONObject> generateToken(@PathVariable String roomName, HttpServletRequest request) {
-		if (!request.isUserInRole("USER")) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
 		Room room = roomServ.findByName(roomName);
 		//User user = userServ.findByName(request.getUserPrincipal().getName());
 		User user = this.userComponent.getLoggedUser();
-		if (!request.isUserInRole("USER")) { // User not logged
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -134,9 +128,6 @@ public class OpenViduController {
 	 */
 	@DeleteMapping("/room/{roomName}/user")
 	public ResponseEntity<String> removeUser(@PathVariable String roomName, HttpServletRequest request) {
-		if (!request.isUserInRole("USER")) { // User not logged
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
 		Room room = roomServ.findByName(roomName);
 		//User user = userServ.findByName(request.getUserPrincipal().getName());
 		User user = this.userComponent.getLoggedUser();
@@ -172,9 +163,6 @@ public class OpenViduController {
 	 */
 	@PostMapping("/room/{roomName}/signal/{type}")
 	public ResponseEntity<?> sendSignal(@PathVariable String roomName, @PathVariable String type, @RequestBody JSONObject body, HttpServletRequest request) {
-		if (!request.isUserInRole("USER")) { // User not logged
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
 		Room room = roomServ.findByName(roomName);
 		//User user = userServ.findByName(request.getUserPrincipal().getName());
 		User user = this.userComponent.getLoggedUser();

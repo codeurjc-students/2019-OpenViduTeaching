@@ -49,9 +49,6 @@ public class UserController {
 	@GetMapping("/user/rooms")
 	@JsonView(Room.NameOnly.class)
 	public ResponseEntity<JSONObject> getRooms(HttpServletRequest request) {
-		if (!request.isUserInRole("USER")) {
-			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		}
 		//User user = userServ.findByName(request.getUserPrincipal().getName());
 		User user = this.userComponent.getLoggedUser();
 		if (user == null) {
