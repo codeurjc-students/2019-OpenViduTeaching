@@ -20,6 +20,7 @@ export class DashboardComponent implements OnInit {
   private presentedRooms: Room[] = [];
   private participatedRooms: Room[] = [];
 
+  private isRecordingEnabled: boolean = false;
   private currentVideos: { id: string, name: string, createdAt: Date}[] = [];
   private currentRoomOfVideos: string;
 
@@ -43,6 +44,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     if(this.userSrv.isLogged) {
       this.getRooms();
+      this.checkIsRecordingEnabled();
     }
   }
 
@@ -56,6 +58,15 @@ export class DashboardComponent implements OnInit {
         this.loading = false;
       },
       error => console.log(error)
+    );
+  }
+
+  private checkIsRecordingEnabled() {
+    this.openviduSrv.isRecordingEnabled().subscribe(
+      (isRecordingEnabled) => {
+        this.isRecordingEnabled = isRecordingEnabled;
+      },
+      error => console.error(error) 
     );
   }
 

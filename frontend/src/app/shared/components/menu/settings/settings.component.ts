@@ -15,6 +15,7 @@ export class SettingsComponent implements OnInit {
   @Input() roomName: string;
   @Input() modConnections: Connection[];
 
+  private isRecordingEnabled: boolean = false;
   private isBeingRecorded: boolean;
   private changingRecordStatus: boolean;
 
@@ -25,7 +26,19 @@ export class SettingsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.checkIsBeingRecorded();
+    this.checkIsRecordingEnabled();
+  }
+
+  private checkIsRecordingEnabled() {
+    this.openviduSrv.isRecordingEnabled().subscribe(
+      (isRecordingEnabled) => {
+        this.isRecordingEnabled = isRecordingEnabled;
+        if(this.isRecordingEnabled) {
+          this.checkIsBeingRecorded();
+        }
+      },
+      error => console.error(error) 
+    );
   }
 
   private checkIsBeingRecorded() {

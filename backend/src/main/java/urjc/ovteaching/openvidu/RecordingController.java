@@ -126,6 +126,16 @@ public class RecordingController {
 		}
 		return new ResponseEntity<>(this.openViduComponent.isSessionCreated(room) && !this.openViduComponent.isSessionEmpty(room) && this.openViduComponent.isBeingRecorded(room), HttpStatus.OK);
 	}
+	
+	/**
+	 * Returns whether recording is enabled
+	 * 
+	 * @return boolean with the enabling of the recording
+	 */
+	@GetMapping("/isRecordingEnabled")
+	public ResponseEntity<Boolean> isRecordingEnabled(HttpServletRequest request) {
+		return new ResponseEntity<>(this.openViduComponent.isRecordingEnabled(), HttpStatus.OK);
+	}
 
 	/**
 	 * Get a list of recordings of a room

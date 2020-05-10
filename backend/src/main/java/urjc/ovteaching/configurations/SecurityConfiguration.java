@@ -36,6 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/ovTeachingApi/room/*/recording/start").hasAnyRole("ADMIN");
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/ovTeachingApi/room/*/recording/stop").hasAnyRole("ADMIN");
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/room/*/recording/isBeingRecorded").hasAnyRole("ADMIN");
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/isRecordingEnabled").hasAnyRole("USER");
 		
 		http.authorizeRequests().anyRequest().permitAll();
 

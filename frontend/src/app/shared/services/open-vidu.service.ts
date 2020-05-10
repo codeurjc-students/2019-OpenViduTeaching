@@ -124,6 +124,14 @@ export class OpenViduService {
       );
   }
 
+  isRecordingEnabled(): Observable<boolean> {
+    return this.http.get<boolean>(this.baseURL + '/isRecordingEnabled', {})
+      .pipe(
+        map(isRecordingEnabled => { return isRecordingEnabled }),
+        catchError((error) => this.handleError(error))  
+      );
+  }
+
   getRecordings(roomName: string): Observable<Recording[]> {
     return this.http.get<Recording[]> (this.baseURL + '/room/' + roomName + '/recordings')
       .pipe(

@@ -54,7 +54,7 @@
               <button mat-icon-button (click)="getInviteURL(mod.name,'participant')">
                 <mat-icon matTooltip="Invite URL for participants">link</mat-icon>
               </button>
-              <button mat-icon-button (click)="openVideos(mod.name)">
+              <button mat-icon-button (click)="openVideos(mod.name)" *ngIf="isRecordingEnabled">
                 <mat-icon matTooltip="See recorded videos">video_library</mat-icon>
               </button>
             </mat-list-item>
@@ -64,7 +64,7 @@
             <h3 mat-subheader>PRESENTED ROOMS</h3>
             <mat-list-item *ngFor="let pres of this.presentedRooms">
               <a mat-line mat-stroked-button routerLink="{{pres.name}}">{{pres.name}}</a>
-              <button mat-icon-button (click)="openVideos(pres.name)">
+              <button mat-icon-button (click)="openVideos(pres.name)" *ngIf="isRecordingEnabled">
                 <mat-icon matTooltip="See recorded videos">video_library</mat-icon>
               </button>
             </mat-list-item>
@@ -74,7 +74,7 @@
             <h3 mat-subheader>PARTICIPATED ROOMS</h3>
             <mat-list-item *ngFor="let part of this.participatedRooms">
               <a mat-line mat-stroked-button routerLink="{{part.name}}">{{part.name}}</a>
-              <button mat-icon-button (click)="openVideos(part.name)">
+              <button mat-icon-button (click)="openVideos(part.name)" *ngIf="isRecordingEnabled">
                 <mat-icon matTooltip="See recorded videos">video_library</mat-icon>
               </button>
             </mat-list-item>
