@@ -52,8 +52,7 @@ public class RoomController {
 		if (roomServ.findByName(roomName) != null) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		Room room = new Room(roomName);
 		roomServ.addRoomWithMod(room, user);
 		return new ResponseEntity<>(room, HttpStatus.CREATED);
@@ -69,8 +68,7 @@ public class RoomController {
 	@GetMapping("/room/{roomName}/inviteCode/{role}")
 	public ResponseEntity<String> getInviteCode(HttpServletRequest request, @PathVariable String roomName, @PathVariable String role) {
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room != null) {
 			if (!room.isModerator(user)) {
 				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -112,8 +110,7 @@ public class RoomController {
 	@PutMapping("/room/{code}/user")
 	@JsonView(User.WithRooms.class)
 	public ResponseEntity<User> newUserInRoom(HttpServletRequest request, @PathVariable String code) {
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		Room room = roomServ.findByInviteCode(code);
 
 		if (room == null) {
@@ -158,8 +155,7 @@ public class RoomController {
 	@GetMapping("/room/{roomName}/assistants")
 	public ResponseEntity<JSONObject> getAssistants(@PathVariable String roomName, HttpServletRequest request) {
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -209,8 +205,7 @@ public class RoomController {
 	@PostMapping("/room/{roomName}/raiseHand")
 	public ResponseEntity<Integer> raiseHand(@PathVariable String roomName, @RequestBody JSONObject handRaisedUser, HttpServletRequest request) {
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -236,8 +231,7 @@ public class RoomController {
 	@DeleteMapping("/room/{roomName}/raiseHand")
 	public ResponseEntity<?> lowerHand(@PathVariable String roomName, @RequestBody JSONObject body, HttpServletRequest request) {
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -261,8 +255,7 @@ public class RoomController {
 	@GetMapping("/room/{roomName}/raiseHand")
 	public ResponseEntity<List<JSONObject>> getRaisedHands(@PathVariable String roomName, HttpServletRequest request) {
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}

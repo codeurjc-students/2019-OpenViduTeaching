@@ -25,6 +25,7 @@ import urjc.ovteaching.rooms.Room;
 import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
+import urjc.ovteaching.users.UserService;
 
 @RequestMapping("/ovTeachingApi")
 @CrossOrigin
@@ -33,6 +34,9 @@ public class OpenViduController {
 
 	@Autowired
 	private RoomService roomServ;
+	
+	@Autowired
+	private UserService userServ;
 
 	@Autowired
 	private UserComponent userComponent;
@@ -51,8 +55,7 @@ public class OpenViduController {
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if(!room.isInRoom(user)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -77,8 +80,7 @@ public class OpenViduController {
 	@GetMapping("/room/{roomName}/token")
 	public ResponseEntity<JSONObject> generateToken(@PathVariable String roomName, HttpServletRequest request) {
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
@@ -129,8 +131,7 @@ public class OpenViduController {
 	@DeleteMapping("/room/{roomName}/user")
 	public ResponseEntity<String> removeUser(@PathVariable String roomName, HttpServletRequest request) {
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -164,8 +165,7 @@ public class OpenViduController {
 	@PostMapping("/room/{roomName}/signal/{type}")
 	public ResponseEntity<?> sendSignal(@PathVariable String roomName, @PathVariable String type, @RequestBody JSONObject body, HttpServletRequest request) {
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

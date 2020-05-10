@@ -21,6 +21,7 @@ import urjc.ovteaching.rooms.Room;
 import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
+import urjc.ovteaching.users.UserService;
 
 @RequestMapping("/ovTeachingApi")
 @CrossOrigin
@@ -29,6 +30,9 @@ public class RecordingController {
 	
 	@Autowired
 	private RoomService roomServ;
+	
+	@Autowired
+	private UserService userServ;
 
 	@Autowired
 	private UserComponent userComponent;
@@ -44,8 +48,7 @@ public class RecordingController {
 	@PostMapping("/room/{roomName}/recording/start")
 	public ResponseEntity<?> startRecording(@PathVariable String roomName, HttpServletRequest request) {
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -79,8 +82,7 @@ public class RecordingController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -111,8 +113,7 @@ public class RecordingController {
 	@GetMapping("/room/{roomName}/recording/isBeingRecorded")
 	public ResponseEntity<Boolean> isBeingRecorded(@PathVariable String roomName, HttpServletRequest request) {
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -134,8 +135,7 @@ public class RecordingController {
 	@GetMapping("/room/{roomName}/recordings")
 	public ResponseEntity<List<Recording>> getRecordings(@PathVariable String roomName, HttpServletRequest request) {
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -161,8 +161,7 @@ public class RecordingController {
 	@GetMapping("/room/{roomName}/recording/{video}")
 	public ResponseEntity<byte[]> getVideo(@PathVariable String roomName, @PathVariable String video, HttpServletRequest request) {
 		Room room = roomServ.findByName(roomName);
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -49,8 +49,7 @@ public class UserController {
 	@GetMapping("/user/rooms")
 	@JsonView(Room.NameOnly.class)
 	public ResponseEntity<JSONObject> getRooms(HttpServletRequest request) {
-		//User user = userServ.findByName(request.getUserPrincipal().getName());
-		User user = this.userComponent.getLoggedUser();
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (user == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
