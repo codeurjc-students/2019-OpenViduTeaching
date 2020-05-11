@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InviteLinkComponent } from './invite-link.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MAT_SNACK_BAR_DATA } from '@angular/material';
 
 describe('InviteLinkComponent', () => {
   let component: InviteLinkComponent;
@@ -8,6 +10,10 @@ describe('InviteLinkComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [
+        { provide: MAT_SNACK_BAR_DATA, useValue: {} }
+      ],
       declarations: [ InviteLinkComponent ]
     })
     .compileComponents();
