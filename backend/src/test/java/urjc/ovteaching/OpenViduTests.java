@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.http.HTTPException;
 
 import org.junit.Before;
@@ -63,9 +62,6 @@ public class OpenViduTests {
 	
 	@MockBean
 	private UserService userService;  
-
-	@MockBean
-	private HttpServletRequest request;
 
 	@Before
 	public void initialize() {
@@ -157,6 +153,7 @@ public class OpenViduTests {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.token", is(token)));
 		
+		verify(openviduComponent, never()).createSession(any());
 		verify(openviduComponent).generateToken(room, user);
 		verify(openviduComponent).addUserWithTokenToRoom(room, user, token);
 	}

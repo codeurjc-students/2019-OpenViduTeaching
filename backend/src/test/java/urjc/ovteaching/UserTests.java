@@ -1,8 +1,7 @@
 package urjc.ovteaching;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -11,12 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -51,9 +47,6 @@ public class UserTests {
 
 	@MockBean
 	private UserService userService;
-
-	@MockBean
-	private HttpServletRequest request;
 
 	@Before
 	public void initialize() {
@@ -112,7 +105,6 @@ public class UserTests {
 
 	@Test
 	public void testRegister() throws Exception {
-		Mockito.doNothing().when(request).login(any(), any());
 		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/register/new/pass")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());

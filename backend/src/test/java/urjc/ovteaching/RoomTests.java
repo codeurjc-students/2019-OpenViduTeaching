@@ -10,8 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,15 +52,11 @@ public class RoomTests {
 	@MockBean
 	private UserService userService;  
 
-	@MockBean
-	private HttpServletRequest request;
-
 	@Before
 	public void initialize() {
 		User user = new User("test", "pass", "ROLE_ADMIN", "ROLE_USER");
 		Room room = new Room("testRoom");
 		user.addModdedRoom(room);
-		//We need to add the user to the room because JPA will not add it by itself
 		room.getModerators().add(user);
 		
 		given(this.userComponent.isLoggedUser()).willReturn(true);

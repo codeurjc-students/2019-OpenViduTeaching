@@ -11,8 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,9 +57,6 @@ public class RecordingTests {
 	
 	@MockBean
 	private UserService userService;  
-
-	@MockBean
-	private HttpServletRequest request;
 
 	@Before
 	public void initialize() {
