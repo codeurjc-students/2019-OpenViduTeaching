@@ -68,5 +68,5 @@
     "start": "ng serve --proxy-config proxy.conf.json",
     "test": "ng test"
   },
-  "version": "0.2.0"
+  "version": "0.3.0"
 }
