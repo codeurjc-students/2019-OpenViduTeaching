@@ -81,6 +81,9 @@ public class OpenViduComponent {
 	private Map<Long, List<String>> roomIdRecordingsId;
 
 	public OpenViduComponent(@Value("${OPENVIDU_SECRET}") String secret, @Value("${OPENVIDU_URL}") String openviduUrl, @Value("${OPENVIDU_RECORDING}") boolean isRecordingEnabled, @Value("${OPENVIDU_RECORDING_PATH}") String recordingPath) {
+		System.out.println("Starting OpenViduComponent with:");
+		System.out.println("OPENVIDU_URL: " + openviduUrl);
+		System.out.println("OPENVIDU_SECRET: " + secret);
 		this.SECRET = secret;
 		this.OPENVIDU_URL = openviduUrl;
 		this.RECORDING_ENABLED = isRecordingEnabled;
@@ -120,6 +123,7 @@ public class OpenViduComponent {
 	}
 
 	public String createSession(Room room) throws IOException {
+		System.out.println("Creating session for room: " + room.getName());
 		try {
 			SessionProperties sp = new SessionProperties.Builder().customSessionId(room.getName()).build();
 			Session session = this.openVidu.createSession(sp);
@@ -130,6 +134,7 @@ public class OpenViduComponent {
 			}
 			return session.getSessionId();
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			System.out.println(e.toString());
 			throw new IOException(e);
 		}
 	}
@@ -151,14 +156,17 @@ public class OpenViduComponent {
 	}
 
 	public String generateToken(Room room, User user) throws IOException {
+		System.out.println("Generating token for room: " + room.getName() + " and user: " + user.getName());
 		try {
 			Session session = this.roomIdSession.get(room.getId());
 			OpenViduRole role = this.getRole(user, room);
 			TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
 			return session.generateToken(tokenOpts);
 		} catch (OpenViduJavaClientException e) {
+			System.out.println(e.toString());
 			throw new IOException(e);
 		} catch (OpenViduHttpException e) {
+			System.out.println(e.toString());
 			throw new HTTPException(e.getStatus());
 		}
 	}
@@ -179,6 +187,7 @@ public class OpenViduComponent {
 			this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), tokens);
 			return token;
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+			System.out.println(e.toString());
 			throw new IOException(e);
 		}
 	}
@@ -238,6 +247,7 @@ public class OpenViduComponent {
 				this.roomIdRecordingsId.get(room.getId()).add(recordingId);
 				return recordingId;
 			} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+				System.out.println(e.toString());
 				e.printStackTrace();
 			}
 		}
@@ -255,6 +265,7 @@ public class OpenViduComponent {
 				String recordingId = recordings.get(recordings.size() - 1);
 				return this.openVidu.stopRecording(recordingId).getId();
 			} catch (OpenViduJavaClientException | OpenViduHttpException e) {
+				System.out.println(e.toString());
 				e.printStackTrace();
 			}
 		}
@@ -304,6 +315,7 @@ public class OpenViduComponent {
 			return recordings;
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
 			e.printStackTrace();
+			System.out.println(e.toString());
 			return null;
 		}
 	}
