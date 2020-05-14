@@ -25,6 +25,13 @@ This document will explain how is used the Licensoft-Web API.
     * [Get token](#get-token)
     * [Disconnect current user](#disconnect-current-user)
     * [Send signal](#send-signal)
+* [Recording requests](#recording-requests)
+    * [Start recording](#start-recording)
+    * [Stop recording](#stop-recording)
+    * [Get recording status](#get-recording-status)
+    * [Get recording enabled](#get-recording-enabled)
+    * [Get recordings' info](#get-recordings'-info)
+    * [Get video](#get-video)
 
 
 ## Authorization ##
@@ -210,12 +217,12 @@ Gets the invite code for a room which will grant permissions to the specified ro
 - **Method**  
     `GET`
 - **Required role**:  
-    System: NA
+    System: Admin
     Room: Moderator
 - **Data Params**
     Path Variables:
     * String roomName
-    * String role (moderator or participant)
+    * String role (moderator, presenter or participant)
 - **Example**
   - **Request**: `/ovTeachingApi/room/roomA/inviteCode/participant`
   - **Response**:
@@ -488,7 +495,7 @@ Send an OpenVidu signal from the backend. Intended for moderators only. Users wh
 - **Method**  
     `POST`
 - **Required role**:  
-    System: User
+    System: Admin
     Room: Moderator
 - **Data Params**
     Path Variables:
@@ -516,3 +523,143 @@ Send an OpenVidu signal from the backend. Intended for moderators only. Users wh
     Password: pass
   - **Response**: 
     200 OK
+
+## Recording requests ##
+
+### Start recording ###
+Start the recording of a session.
+- **URL**  
+   `/ovTeachingApi/room/{roomName}/recording/start`
+- **Method**  
+    `POST`
+- **Required role**:  
+    System: Admin
+    Room: Moderator
+- **Data Params**
+    Path Variables:
+    * String roomName
+- **Example**
+  - **Request**: `/ovTeachingApi/room/roomA/recording/start` \
+    Username: teacher
+    Password: pass
+  - **Response**: 
+    200 OK
+
+### Stop recording ###
+Stop the recording of a session.
+- **URL**  
+   `/ovTeachingApi/room/{roomName}/recording/stop`
+- **Method**  
+    `POST`
+- **Required role**:  
+    System: Admin
+    Room: Moderator
+- **Data Params**
+    Path Variables:
+    * String roomName
+- **Example**
+  - **Request**: `/ovTeachingApi/room/roomA/recording/stop` \
+    Username: teacher
+    Password: pass
+  - **Response**: 
+    200 OK
+
+### Get recording status ###
+Check whether the room is being recorded or not.
+- **URL**  
+   `/ovTeachingApi/room/{roomName}/recording/isBeingRecorded`
+- **Method**  
+    `GET`
+- **Required role**:  
+    System: Admin
+    Room: Moderator
+- **Data Params**
+    Path Variables:
+    * String roomName
+- **Example**
+  - **Request**: `/ovTeachingApi/room/roomA/recording/isBeingRecorded` \
+    Username: teacher
+    Password: pass
+  - **Response**:
+    ~~~~ json
+    false
+    ~~~~
+
+### Get recording enabled ###
+Check whether recording was enabled in the server. It it disabled by default and cannot be changed once the server was started.
+- **URL**  
+   `/ovTeachingApi/isRecordingEnabled`
+- **Method**  
+    `GET`
+- **Required role**:  
+    System: User
+    Room: NA
+- **Example**
+  - **Request**: `/ovTeachingApi/isRecordingEnabledd` \
+    Username: teacher
+    Password: pass
+  - **Response**:
+    ~~~~ json
+    true
+    ~~~~
+
+### Get recordings' info ###
+Get the info of the recordings of a room.
+- **URL**  
+   `/ovTeachingApi/room/{roomName}/recordings`
+- **Method**  
+    `GET`
+- **Required role**:  
+    System: User
+    Room: Participant
+- **Data Params**
+    Path Variables:
+    * String roomName
+- **Example**
+  - **Request**: `/ovTeachingApi/room/roomA/recordings` \
+    Username: teacher
+    Password: pass
+  - **Response**:
+    ~~~~ json
+    {
+        "count": 1,
+        "items": [
+            {
+                "id": "roomA-2",
+                "sessionId": "room",
+                "name": "roomA-2",
+                "outputMode": "COMPOSED",
+                "hasAudio": true,
+                "hasVideo": true,
+                "recordingLayout": "BEST_FIT",
+                "resolution": "1920x1080",
+                "createdAt": 1521202349460,
+                "size": 22887561,
+                "duration": 132.08,
+                "url": "https://localhost:4443/recordings/roomA-2/roomA-2.mp4",
+                "status": "available"
+            }
+        ]
+    }
+    ~~~~
+
+### Get video ###
+Get a video of a previous recording
+- **URL**  
+   `/ovTeachingApi/room/{roomName}/recording/{video}`
+- **Method**  
+    `GET`
+- **Required role**:  
+    System: User
+    Room: Participant
+- **Data Params**
+    Path Variables:
+    * String roomName
+    * String video: The video id
+- **Example**
+  - **Request**: `/ovTeachingApi/room/roomA/recording/roomA-2` \
+    Username: teacher
+    Password: pass
+  - **Response**:
+    The video in byte array form
+    

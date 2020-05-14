@@ -1,5 +1,5 @@
 ## Deploying the app ##
-You have four options for deploying the app. However, the first three options are not ideal for a real production enviroment and it is highly encouraged to use the last one:
+You have four options for deploying the app. However, the first three options are not ideal for a real production enviroment (connections outside the same LAN will not work correctly) and it is highly encouraged to use the last one:
 
 ### OpenViduTeaching standalone Docker container ###
 
@@ -88,7 +88,9 @@ services:
         ports:
             - "5442:8080"
         environment:
-            OPENVIDU_URL: https://${OPENVIDU_DOMAIN_OR_PUBLIC_IP}
+            OPENVIDU_URL: https://${DOMAIN_OR_PUBLIC_IP}
             OPENVIDU_SECRET: ${OPENVIDU_SECRET}
-            INITIAL_DATA_FILE: ${DOCKER_INITIAL_FILE_PATH}
+			INITIAL_DATA_FILE: ${DOCKER_INITIAL_FILE_PATH}
+			OPENVIDU_RECORDING: ${OPENVIDU_RECORDING}
+			OPENVIDU_RECORDING_PATH: ${OPENVIDU_RECORDING_PATH}
 ````
