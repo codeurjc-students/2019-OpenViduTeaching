@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/codeurjc-students/2019-OpenViduTeaching.svg?branch=master)](https://travis-ci.org/codeurjc-students/2019-OpenViduTeaching)
+
 # 2019-OpenViduTeaching #
 OpenVidu application tailored for teaching activities.
 
