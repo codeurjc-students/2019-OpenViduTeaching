@@ -42,6 +42,10 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.loggedIn();
+  }
+
+  loggedIn() {
     if(this.userSrv.isLogged) {
       this.getRooms();
       this.checkIsRecordingEnabled();

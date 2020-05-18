@@ -2,6 +2,7 @@
   <mat-drawer #videosDrawer id="videosDrawer" [mode]="over" position="end">
     <h2 id="drawerTitle">Videos of room "{{currentRoomOfVideos}}"</h2>
     <mat-nav-list id="videoList">
+      <h4 *ngIf="currentVideos.length==0" id="noVideosMessage">This room doesn't have any recorded videos</h4>
       <mat-list-item *ngFor="let video of currentVideos" class="videoItem">
         <a matLine mat-flat-button [routerLink]="'/'+currentRoomOfVideos+'/video/'+video.id" class="videoButton">
           <span><b>{{video.name}}</b></span>
@@ -27,7 +28,7 @@
     </div>
   
     <login-component
-      (loggedIn)="getRooms()">
+      (loggedIn)="loggedIn()">
     </login-component>
   
     <mat-spinner color="accent" id="spinner" *ngIf="loading"></mat-spinner>

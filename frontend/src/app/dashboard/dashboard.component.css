@@ -93,6 +93,11 @@ login-component {
   color: rgb(255, 193, 7);
 }
 
+#noVideosMessage {
+  color: #dfdfdf;
+  margin: 5%;
+}
+
 .videoDate{
   margin-left: 10%;
   color: #494949;
