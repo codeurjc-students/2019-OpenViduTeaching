@@ -85,6 +85,7 @@ services:
         restart: on-failure
         volumes:
             - ${LOCAL_INITIAL_FILE_PATH}:${DOCKER_INITIAL_FILE_PATH}
+			- ${OPENVIDU_RECORDING_PATH}:${OPENVIDU_RECORDING_PATH}
         ports:
             - "5442:8080"
         environment:
