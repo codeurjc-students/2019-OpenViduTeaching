@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,7 +46,7 @@ public class RoomController {
 	 */
 	@PostMapping("/room/{roomName}")
 	@JsonView(Room.NameOnly.class)
-	public ResponseEntity<Room> createNewRoom(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<Room> createNewRoom(@PathVariable String roomName) {
 		if (roomServ.findByName(roomName) != null) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
@@ -66,7 +64,7 @@ public class RoomController {
 	 * @return the invite code
 	 */
 	@GetMapping("/room/{roomName}/inviteCode/{role}")
-	public ResponseEntity<String> getInviteCode(HttpServletRequest request, @PathVariable String roomName, @PathVariable String role) {
+	public ResponseEntity<String> getInviteCode(@PathVariable String roomName, @PathVariable String role) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room != null) {
@@ -109,7 +107,7 @@ public class RoomController {
 	 */
 	@PutMapping("/room/{code}/user")
 	@JsonView(User.WithRooms.class)
-	public ResponseEntity<User> newUserInRoom(HttpServletRequest request, @PathVariable String code) {
+	public ResponseEntity<User> newUserInRoom(@PathVariable String code) {
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		Room room = roomServ.findByInviteCode(code);
 
@@ -153,7 +151,7 @@ public class RoomController {
 	@SuppressWarnings("unchecked")
 	@JsonView(User.NameOnly.class)
 	@GetMapping("/room/{roomName}/assistants")
-	public ResponseEntity<JSONObject> getAssistants(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<JSONObject> getAssistants(@PathVariable String roomName) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) {
@@ -203,7 +201,7 @@ public class RoomController {
 	 */
 	@SuppressWarnings("unchecked")
 	@PostMapping("/room/{roomName}/raiseHand")
-	public ResponseEntity<Integer> raiseHand(@PathVariable String roomName, @RequestBody JSONObject handRaisedUser, HttpServletRequest request) {
+	public ResponseEntity<Integer> raiseHand(@PathVariable String roomName, @RequestBody JSONObject handRaisedUser) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) {
@@ -229,7 +227,7 @@ public class RoomController {
 	 * @return the httpStatus of the operation
 	 */
 	@DeleteMapping("/room/{roomName}/raiseHand")
-	public ResponseEntity<?> lowerHand(@PathVariable String roomName, @RequestBody JSONObject body, HttpServletRequest request) {
+	public ResponseEntity<?> lowerHand(@PathVariable String roomName, @RequestBody JSONObject body) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) {
@@ -253,7 +251,7 @@ public class RoomController {
 	 * @return the list of the users raising their hand
 	 */
 	@GetMapping("/room/{roomName}/raiseHand")
-	public ResponseEntity<List<JSONObject>> getRaisedHands(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<List<JSONObject>> getRaisedHands(@PathVariable String roomName) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) {

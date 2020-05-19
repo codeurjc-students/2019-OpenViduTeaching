@@ -3,8 +3,6 @@ package urjc.ovteaching.openvidu;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,7 +44,7 @@ public class RecordingController {
 	 * @return Recording id
 	 */
 	@PostMapping("/room/{roomName}/recording/start")
-	public ResponseEntity<?> startRecording(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<?> startRecording(@PathVariable String roomName) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
@@ -77,7 +75,7 @@ public class RecordingController {
 	 * @return HttpStatus of the operation
 	 */
 	@PostMapping("/room/{roomName}/recording/stop")
-	public ResponseEntity<?> stopRecording(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<?> stopRecording(@PathVariable String roomName) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
@@ -108,7 +106,7 @@ public class RecordingController {
 	 * @return boolean with the status of the recording
 	 */
 	@GetMapping("/room/{roomName}/recording/isBeingRecorded")
-	public ResponseEntity<Boolean> isBeingRecorded(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<Boolean> isBeingRecorded(@PathVariable String roomName) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
@@ -130,7 +128,7 @@ public class RecordingController {
 	 * @return boolean with the enabling of the recording
 	 */
 	@GetMapping("/isRecordingEnabled")
-	public ResponseEntity<Boolean> isRecordingEnabled(HttpServletRequest request) {
+	public ResponseEntity<Boolean> isRecordingEnabled() {
 		return new ResponseEntity<>(this.openViduComponent.isRecordingEnabled(), HttpStatus.OK);
 	}
 
@@ -140,7 +138,7 @@ public class RecordingController {
 	 * @return the list of recordings
 	 */
 	@GetMapping("/room/{roomName}/recordings")
-	public ResponseEntity<List<Recording>> getRecordings(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<List<Recording>> getRecordings(@PathVariable String roomName) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
@@ -166,7 +164,7 @@ public class RecordingController {
 	 * @return the video in byte array
 	 */
 	@GetMapping("/room/{roomName}/recording/{video}")
-	public ResponseEntity<byte[]> getVideo(@PathVariable String roomName, @PathVariable String video, HttpServletRequest request) {
+	public ResponseEntity<byte[]> getVideo(@PathVariable String roomName, @PathVariable String video) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 

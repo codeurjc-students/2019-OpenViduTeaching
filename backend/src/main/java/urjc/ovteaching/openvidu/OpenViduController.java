@@ -2,7 +2,6 @@ package urjc.ovteaching.openvidu;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.http.HTTPException;
 
 import org.json.simple.JSONObject;
@@ -50,7 +49,7 @@ public class OpenViduController {
 	 * @return the session's id
 	 */
 	@PostMapping("/room/{roomName}/session")
-	public ResponseEntity<String> createSession(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<String> createSession(@PathVariable String roomName) {
 		Room room = roomServ.findByName(roomName);
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -78,7 +77,7 @@ public class OpenViduController {
 	 */
 	@SuppressWarnings("unchecked")
 	@GetMapping("/room/{roomName}/token")
-	public ResponseEntity<JSONObject> generateToken(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<JSONObject> generateToken(@PathVariable String roomName) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) { // No room with that name
@@ -104,7 +103,7 @@ public class OpenViduController {
 			json.put("token", token);
 			return new ResponseEntity<>(json, HttpStatus.OK);
 		} catch (IOException e1) {
-			// Internal error generate
+			// Internal error
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (HTTPException e2) {
 			if (404 == e2.getStatusCode()) {
@@ -129,7 +128,7 @@ public class OpenViduController {
 	 * @return HttpStatus of the operation
 	 */
 	@DeleteMapping("/room/{roomName}/user")
-	public ResponseEntity<String> removeUser(@PathVariable String roomName, HttpServletRequest request) {
+	public ResponseEntity<String> removeUser(@PathVariable String roomName) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
@@ -163,7 +162,7 @@ public class OpenViduController {
 	 * @return HttpStatus of the operation
 	 */
 	@PostMapping("/room/{roomName}/signal/{type}")
-	public ResponseEntity<?> sendSignal(@PathVariable String roomName, @PathVariable String type, @RequestBody JSONObject body, HttpServletRequest request) {
+	public ResponseEntity<?> sendSignal(@PathVariable String roomName, @PathVariable String type, @RequestBody JSONObject body) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 

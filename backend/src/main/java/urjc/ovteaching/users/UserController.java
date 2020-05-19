@@ -2,7 +2,6 @@ package urjc.ovteaching.users;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
@@ -48,7 +47,7 @@ public class UserController {
 	@SuppressWarnings("unchecked")
 	@GetMapping("/user/rooms")
 	@JsonView(Room.NameOnly.class)
-	public ResponseEntity<JSONObject> getRooms(HttpServletRequest request) {
+	public ResponseEntity<JSONObject> getRooms() {
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (user == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -84,7 +83,7 @@ public class UserController {
 	
 	@RequestMapping("/register/{user}/{pass}")
 	@JsonView(User.WithRooms.class)
-	public ResponseEntity<User> register(@PathVariable String user, @PathVariable String pass, HttpServletRequest request, HttpServletResponse httpServletResponse) {
+	public ResponseEntity<User> register(@PathVariable String user, @PathVariable String pass, HttpServletRequest request) {
 		User newUser = userServ.findByName(user);
 		if (newUser == null) {
 			newUser = userServ.save(new User(user, pass, "ROLE_USER"));
