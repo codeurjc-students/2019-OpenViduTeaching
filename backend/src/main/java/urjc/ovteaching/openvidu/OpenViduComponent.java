@@ -125,7 +125,8 @@ public class OpenViduComponent {
 	public String createSession(Room room) throws IOException {
 		System.out.println("Creating session for room: " + room.getName());
 		try {
-			SessionProperties sp = new SessionProperties.Builder().customSessionId(room.getName()).build();
+			SessionProperties sp = new SessionProperties.Builder()
+					.customSessionId(room.getName()).build();
 			Session session = this.openVidu.createSession(sp);
 			this.roomIdSession.put(room.getId(), session);
 			this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
@@ -156,11 +157,15 @@ public class OpenViduComponent {
 	}
 
 	public String generateToken(Room room, User user) throws IOException {
-		System.out.println("Generating token for room: " + room.getName() + " and user: " + user.getName());
+		System.out.print("Generating token for ");
+		System.out.print("room: " + room.getName());
+		System.out.println(" and user: " + user.getName());
 		try {
 			Session session = this.roomIdSession.get(room.getId());
 			OpenViduRole role = this.getRole(user, room);
-			TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
+			TokenOptions tokenOpts = new TokenOptions.Builder()
+					.role(role)
+					.data("SERVER=" + user.getName()).build();
 			return session.generateToken(tokenOpts);
 		} catch (OpenViduJavaClientException e) {
 			System.out.println(e.toString());

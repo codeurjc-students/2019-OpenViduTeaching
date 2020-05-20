@@ -87,8 +87,8 @@ public class OpenViduController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
-		JSONObject json = new JSONObject();
-		if (!this.openViduComponent.isSessionCreated(room)) { // Create session if there isn't
+		// Create session if there isn't
+		if (!this.openViduComponent.isSessionCreated(room)) {
 			try {
 				this.openViduComponent.createSession(room);
 			} catch (IOException e) {
@@ -97,6 +97,7 @@ public class OpenViduController {
 			}
 		}
 
+		JSONObject json = new JSONObject();
 		try {
 			String token = this.openViduComponent.generateToken(room, user);
 			this.openViduComponent.addUserWithTokenToRoom(room, user, token);
