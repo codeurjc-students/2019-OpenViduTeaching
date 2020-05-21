@@ -16,6 +16,6 @@ services:
         ports:
             - "8080:8080"
         environment:
-            OPENVIDU_URL: https://${OPENVIDU_SERVER_IP}:4443/
+            OPENVIDU_URL: https://${DOMAIN_OR_PUBLIC_IP}:4443/
             OPENVIDU_SECRET: ${OPENVIDU_SECRET}
             INITIAL_DATA_FILE: ${DOCKER_INITIAL_FILE_PATH}
