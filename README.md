@@ -25,24 +25,29 @@ Rooms are where the videoconference/classes will take place. For each room there
 
 Here we see the login process. Just a username and a password are needed. After the login we see the dashboard containing all the rooms the user is in, and the role they have in them.
 ![Login](/documentation/images/login.gif)
-In this animation we see how moderators get either of the invite links from the dashboard. Then they would have to share this link to give other users access to the room. Once they have gained access they don't need to use this link again. Each link would grant a different role to those who use it: moderator or participant.
+In this animation we see how moderators get either of the invite links from the dashboard. Then they would have to share this link to give other users access to the room. Once they have gained access they don't need to use this link again. Each link would grant a different role to those who use it: moderator, presenter or participant.
 ![Invite links from dashboard](/documentation/images/inviteDashboard.gif)
 Now we see how admins can create new rooms. Only the name of the room is needed. After it is created, the user navigates to it and is made a moderator (and the only user in it for now, obviously). Before entering the actual room we see a dialog that lets as choose the input camera, microphone, screenshare and avatar.
 ![Create room](/documentation/images/createRoom.gif)
-Moderators can also get the invite links from the toolbar in the room itself. In the gif we can also see the other buttons in the toolbar (the same as in OpenViduCall + the raise hand button).
+Moderators can also get the invite links from the settings component in the room itself.
 ![Invite links from room](/documentation/images/inviteRoom.gif)
 Here we can see where new users go when using the invite link. They have the option to either login if they already have an account or create a new one as shown. Then we see that, because the invite link was a participant one the user cannot send video or audio stream (and therefore cannot choose a mic or cam) and can only see the moderator's video.
 ![Invite](/documentation/images/invite.gif)
 At the top right corner the user can open the menu, which contains:
   * The chat for all the assistants of the room.
   * The chat for moderators (only if the user is a moderator).
-  * A list of all the assistants of the room, their roles and whether they are connected at the moment or not. 
+  * A list of all the assistants of the room, their roles and whether they are connected at the moment or not.
+  * The settings where moderators can get the invite links and start/stop recordings. 
 ![Menu](/documentation/images/menu.gif)
 In the next gif we see the button that makes the user raise their hand. The button displays a number of the position in the queue of people who are raising their hand. Then we see the actual popup. Moderators can lower the hand of other people. If there are multiple people with their hand raised only the name of the first one is displayed (hence the queue).
 ![Raise hand button](/documentation/images/raiseHand.gif)
 ![Raise hand popup](/documentation/images/raiseHandPopup.gif)
 Now we can see the other two kinds of popups: a user who just connected/disconnected and a new chat message.
 ![Popups](/documentation/images/popups.gif)
+In the next gif we can see how moderators can start and stop a recording.
+![Recording](/documentation/images/recording.gif)
+In the last gif we can see how to access the previous recordings of a room. It can only be done from the dashboard, or with the URL {roomName}/video/{videoId}
+![Video](/documentation/images/video.gif)
 
 
 ## Project Roadmap ##
@@ -56,8 +61,8 @@ Now we can see the other two kinds of popups: a user who just connected/disconne
 	* When a user joins or leaves the session and chat messages
 - [X] Ability to "raise the hand"
 	* Pop up to get the moderator's attention
-- [ ] Basic session recording
-	* Video only recordings
+- [X] Basic session recording
+	* Video only recordings with composed layout
 - [ ] Full fledged session recording including chat
 	* Chat messages will be displayed at the time they were posted, with links to the time offset in the video player
 - [ ] Document sharing/presentation
@@ -66,10 +71,11 @@ Now we can see the other two kinds of popups: a user who just connected/disconne
 - [ ] Polls/quizzes
 - [ ] Mood/status sharing
 	* Users may display their mood for a brief time
+
 Note that this roadmap may change throughout development.
 
 ## Development & Installation ##
 
-For information on how to get the the app working [CLICK HERE](/documentation/deploy.md).\
+For information on how to deploy the app [CLICK HERE](/documentation/deploy.md).\
 For information on how to develop the app [CLICK HERE](/documentation/development.md).\
 For information on the REST API [CLICK HERE](/documentation/api.md).

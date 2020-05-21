@@ -621,26 +621,23 @@ Get the info of the recordings of a room.
     Password: pass
   - **Response**:
     ~~~~ json
-    {
-        "count": 1,
-        "items": [
-            {
-                "id": "roomA-2",
-                "sessionId": "room",
-                "name": "roomA-2",
-                "outputMode": "COMPOSED",
-                "hasAudio": true,
-                "hasVideo": true,
-                "recordingLayout": "BEST_FIT",
-                "resolution": "1920x1080",
-                "createdAt": 1521202349460,
-                "size": 22887561,
-                "duration": 132.08,
-                "url": "https://localhost:4443/recordings/roomA-2/roomA-2.mp4",
-                "status": "available"
-            }
-        ]
-    }
+    [
+        {
+            "id": "roomA-2",
+            "sessionId": "roomA",
+            "name": "roomA-2",
+            "outputMode": "COMPOSED",
+            "hasAudio": true,
+            "hasVideo": true,
+            "recordingLayout": "BEST_FIT",
+            "resolution": "1920x1080",
+            "createdAt": 1521202349460,
+            "size": 22887561,
+            "duration": 132.08,
+            "url": "https://localhost:4443/recordings/roomA-2/roomA-2.mp4",
+            "status": "available"
+        }
+    ]
     ~~~~
 
 ### Get video ###
