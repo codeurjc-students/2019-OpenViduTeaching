@@ -4,17 +4,17 @@
   height: 100%;
 }
 
-.popup {
-  position: absolute;
-  right: 2%;
-  min-width: 20%;
-  width: fit-content;
-  max-width: 60%;
-  z-index: 999;
-}
-
 .stream-container {
   padding: 0;
+}
+
+.reconnecting-container{
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background-color: black;
+  opacity: 80%;
+  position: absolute;
 }
 
 .sidenav-container {
@@ -24,31 +24,15 @@
   min-height: -webkit-fill-available;
   overflow: hidden;
 }
-
-.sidenav-menu {
+.sidenav-chat {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 400px;
+  width: 450px;
   background-color: #494949;
   border-left: none;
   position: absolute;
 }
-
-::ng-deep .mat-tab-body-wrapper {
-  height: 100%;
-}
-
-.tab-group {
-  height: 100%;
-  width: 100%;
-}
-
-::ng-deep.mat-tab-label, ::ng-deep.mat-tab-label-active{
-  min-width: 0!important;
-  padding: 0 1em!important;
-  margin: 0 0!important;
- }
 
 .mat-drawer-container {
   background-color: #494949;
@@ -67,7 +51,7 @@
   left: 0;
   right: 0;
   top: 40px;
-  bottom: 0;
+  bottom: 25px;
   min-width: 400px !important;
   width: inherit;
 }
@@ -905,18 +889,9 @@
   margin-top: 40px;
 }
 
-@media (min-width: 1440px) {
-  .sidenav-menu{
-    width: 33%;
-  }
-}
-@media (max-width: 1440px) and (min-width: 1024px){
-  .sidenav-menu{
-    width: 30%;
-  }
-}
-@media (max-width: 1024px) and (min-width: 790px){
-  .sidenav-menu{
-    width: 350px;
+@media only screen and (max-width: 600px) {
+  #videoRoomNavBar {
+    width: 100%;
+    /* position: fixed; */
   }
 }

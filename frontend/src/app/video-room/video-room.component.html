@@ -1,207 +1,89 @@
 <div *ngIf="!!ovSettings" id="videoRoomNavBar" [class.boundsLight]="lightTheme">
-  <app-dialog-choose-room
-    *ngIf="showDialogChooseRoom && this.userService.isLogged"
-    [userNickname]="userService.user.name"
-    [sessionName]="sessionName"
+  <app-room-config
+    *ngIf="showConfigRoomCard"
     [ovSettings]="ovSettings"
-    (join)="toggleDialogChooseRoom($event)"
-    (leaveSession)="exitSession()"
-  ></app-dialog-choose-room>
+    [externalConfig]="externalConfig"
+    (join)="onConfigRoomJoin()"
+    (leaveSession)="leaveSession()"
+    (publisherCreated)="emitPublisher($event)"
+  ></app-room-config>
 
-  <div *ngIf="localUsers && localUsers[0]">
+  <div *ngIf="localUsers && localUsers.length > 0">
+    <div *ngIf="isConnectionLost" class="reconnecting-container"></div>
     <app-toolbar
       [lightTheme]="lightTheme"
-      [newMessagesNum]="newMessages"
       [compact]="compact"
-      [localUser]="localUsers[0]"
       [mySessionId]="mySessionId"
       [ovSettings]="ovSettings"
+      [hasVideoDevices]="hasVideoDevices"
+      [hasAudioDevices]="hasAudioDevices"
+      [isWebcamVideoEnabled]="oVSessionService.hasWebcamVideoActive()"
+      [isWebcamAudioEnabled]="toolbarMicIconEnabled()"
+      [isScreenEnabled]="oVSessionService.isScreenShareEnabled()"
+      [isAutoLayout]="isAutoLayout"
+      [isConnectionLost]="isConnectionLost"
       (camButtonClicked)="toggleCam()"
       (micButtonClicked)="toggleMic()"
-      (screenShareClicked)="screenShareAndChangeScreen()"
-      (stopScreenSharingClicked)="stopScreenSharing()"
-      (exitButtonClicked)="exitSession()"
-      (menuButtonClicked)="toggleMenu()"
-      (raiseHandClicked)="raiseHand()"
+      (screenShareClicked)="toggleScreenShare()"
+      (layoutButtonClicked)="toggleSpeakerLayout()"
+      (leaveSessionButtonClicked)="leaveSession()"
     ></app-toolbar>
 
-    <app-dialog-extension
-      *ngIf="showDialogExtension"
-      [nickname]="localUsers[0].getNickname()"
-      (cancel)="toggleDialogExtension()"
-    ></app-dialog-extension>
-    
     <mat-sidenav-container class="sidenav-container" id="room-container" [class.boundsLight]="lightTheme" fullscreen>
       <mat-sidenav
         #sidenav
         mode="{{sidenavMode}}"
         position="end"
-        class="sidenav-menu"
+        class="sidenav-chat"
         [class.boundsLight]="lightTheme"
         fixedInViewport="true"
         fixedTopGap="40"
         fixedBottomGap="0"
-        *ngIf="localUsers && (localUsers[0].getStreamManager())"
+        *ngIf="ovSettings | hasChat"
       >
-      
-        <mat-tab-group #tabGroup class="tab-group" backgroundColor="primary" animationDuration="0ms" (selectedTabChange)="tabChanged($event)">
-
-          <mat-tab class="tab" *ngIf="!this.ovSettings || (this.ovSettings && this.ovSettings.chat)">
-            <ng-template mat-tab-label>
-              <mat-icon matBadge="{{newMessagesAssistants}}" [matBadgeHidden]="newMessagesAssistants === 0"  matBadgePosition="above before" matBadgeColor="accent">chat</mat-icon>
-              <span *ngIf="userService.canStream(mySessionId)">Assistants chat</span>
-              <span *ngIf="!userService.canStream(mySessionId)">Chat</span>
-            </ng-template>
-            <chat-component
-              #chatComponent
-              [signal]="'chat'"
-              [session]="this.session"
-              [sessionScreen]="this.sessionScreen"
-              [user]="this.localUsers[0]"
-              [menuOpened]="menuOpened"
-              [lightTheme]="lightTheme"
-              [messageList]="messageList"
-              [roomName]="roomName"
-              [connections]="[]"
-              (closeMenu)="toggleMenu()"
-            ></chat-component>
-          </mat-tab>
-
-          <mat-tab class="tab" *ngIf="(!this.ovSettings || (this.ovSettings && this.ovSettings.chat)) && userService.canStream(mySessionId)">
-            <ng-template mat-tab-label>
-              <mat-icon matBadge="{{newMessagesModerators}}" [matBadgeHidden]="newMessagesModerators === 0"  matBadgePosition="above before" matBadgeColor="accent">chat_bubble</mat-icon>
-              Moderators chat
-            </ng-template>
-            <chat-component
-              #modChatComponent
-              [signal]="'chatMod'"
-              [session]="this.session"
-              [sessionScreen]="this.sessionScreen"
-              [user]="this.localUsers[0]"
-              [menuOpened]="menuOpened"
-              [lightTheme]="lightTheme"
-              [messageList]="messageListMod"
-              [roomName]="roomName"
-              [connections]="modConnections"
-              (closeMenu)="toggleMenu()"
-            ></chat-component>
-          </mat-tab>
-
-          <mat-tab class="tab">
-            <ng-template mat-tab-label>
-              <mat-icon>people</mat-icon>
-              Assistants
-            </ng-template>
-            <ng-template matTabContent>
-              <assistants-component
-                #assistants
-                [session]="session"
-                [userName]="userService.user.name">
-              </assistants-component>
-            </ng-template>
-          </mat-tab>
-
-          <mat-tab class="tab" *ngIf="userService.isModOfRoom(mySessionId)">
-            <ng-template mat-tab-label>
-              <mat-icon>settings</mat-icon>
-              Settings
-            </ng-template>
-            <settings-component
-              #settings
-              [roomName]="mySessionId">
-            </settings-component>
-          </mat-tab>
-
-        </mat-tab-group>
+        <chat-component
+          #chatComponent
+          [lightTheme]="lightTheme"
+        ></chat-component>
       </mat-sidenav>
 
       <mat-sidenav-content class="sidenav-main">
-
-        <popup-component
-          *ngFor="let notification of this.currentNotifications"
-          class="popup"
-          #popup
-          @popup
-          [style.top]="notification.top"
-          [subtitle]="notification.subtitle"
-          [userName]="notification.nickname"
-          [userAvatar]="notification.userAvatar"
-          [content]="notification.content"
-          [color]="notification.color"
-          [isRaiseHand]="false"
-          [roomName]="this.mySessionId"
-          [connectionId]="undefined">
-        </popup-component>
-
-        <popup-component
-          *ngIf="this.handsRaised.length>0"
-          class="popup"
-          #raisedHands
-          @popup
-          [style.top]="'5%'"
-          [subtitle]="undefined"
-          [userName]="handsRaised[0].nickname"
-          [userAvatar]="handsRaised[0].avatar"
-          [content]="handsRaisedMessage"
-          [color]="'accent'"
-          [isRaiseHand]="true"
-          [roomName]="this.mySessionId"
-          [connectionId]="handsRaised[0].connectionId">
-        </popup-component>
-
         <div id="layout" class="bounds" [class.boundsLight]="lightTheme">
-          <ng-container *ngIf="userService.canStream(mySessionId)">
-            <div
-              class="OT_root OT_publisher custom-class"
-              id="localUser"
-              *ngFor="let localUser of localUsers"
-              (dblclick)="enlargeElement($event)">
-              <stream-component
-                *ngIf="localUser.getStreamManager()"
-                #videoStream
-                [user]="localUser"
-                [localUser]="localUsers[0]"
-                [lightTheme]="lightTheme"
-                [newMessagesNum]="newMessages"
-                [compact]="compact"
-                [menuOpened]="menuOpened"
-                [canEditNickname]="true"
-                (nicknameClicked)="nicknameChanged($event)"
-                (camButtonClicked)="toggleCam()"
-                (micButtonClicked)="toggleMic()"
-                (exitButtonClicked)="exitSession()"
-                (menuButtonClicked)="toggleMenu()"
-                (screenShareClicked)="screenShareAndChangeScreen()"
-                (stopScreenSharingClicked)="stopScreenSharing()">
-              </stream-component>
-            </div>
-          </ng-container>
+          <div
+            class="OT_root OT_publisher custom-class"
+            id="localUser"
+            *ngFor="let localUser of localUsers"
+            [style.display]="!localUser.streamManager?.stream?.videoActive ? 'none' : 'block'"
+          >
+          <!-- Only webcam video will be shown if webcamera is available -->
+            <stream-component
+              [user]="localUser"
+              [videoSizeBig]="localUser.videoSizeBig"
+              (nicknameClicked)="onNicknameUpdate($event)"
+              (replaceScreenTrackClicked)="onReplaceScreenTrack($event)"
+              (toggleVideoSizeClicked)="onToggleVideoSize($event)"
+            ></stream-component>
+          </div>
 
           <div
-            *ngFor="let user of this.remoteStreamers"
+            *ngFor="let user of remoteUsers"
             class="OT_root OT_publisher custom-class"
-            id="remoteStreamers"
-            (dblclick)="enlargeElement($event)"
+            id="remoteUsers"
+            [style.display]="!user.streamManager?.stream?.videoActive ? 'none' : 'block'"
           >
             <stream-component
-              #videoStream
               [user]="user"
-              [localUser]="localUsers[0]"
-              [lightTheme]="lightTheme"
-              [newMessagesNum]="newMessages"
-              [compact]="compact"
-              [menuOpened]="menuOpened"
-              [canEditNickname]="false"
-              (camButtonClicked)="toggleCam()"
-              (micButtonClicked)="toggleMic()"
-              (exitButtonClicked)="exitSession()"
-              (menuButtonClicked)="toggleMenu()"
-              (screenShareClicked)="screenShareAndChangeScreen()"
-              (stopScreenSharingClicked)="stopScreenSharing()"
+              [videoSizeBig]="user.videoSizeBig"
+              (toggleVideoSizeClicked)="onToggleVideoSize($event)"
             ></stream-component>
           </div>
         </div>
       </mat-sidenav-content>
     </mat-sidenav-container>
+
+    <app-footer
+      [lightTheme]="lightTheme"
+      [participants]="remoteUsers"
+    ></app-footer>
   </div>
 </div>

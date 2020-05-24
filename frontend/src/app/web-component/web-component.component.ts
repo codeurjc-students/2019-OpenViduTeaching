@@ -1,133 +1,129 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ISessionCongif } from '../shared/models/webcomponent-config';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { VideoRoomComponent } from '../video-room/video-room.component';
-import { OvSettings } from '../shared/models/ov-settings';
+import { OvSettings } from '../shared/types/ov-settings';
+import { WebComponentModel } from '../shared/models/webcomponent-model';
+import { LoggerService } from '../shared/services/logger/logger.service';
+import { ILogger } from '../shared/types/logger-type';
+import { ConnectionEvent, Publisher } from 'openvidu-browser';
+import { ISessionConfig } from '../shared/types/webcomponent-config';
+
 
 @Component({
-  selector: 'app-web-component',
-  template: `
-    <app-video-room
-      #videoRoom
-      *ngIf="display"
-      [theme]="theme"
-      [sessionName]="_sessionName"
-      [user]="_user"
-      [openviduServerUrl]="openviduServerUrl"
-      [tokens]="_tokens"
-      [ovSettings]="ovSettings"
-      [isWebComponent]="true"
-      (leaveSession)="emitLeaveSessionEvent($event)"
-      (joinSession)="emitJoinSessionEvent($event)"
-      (error)="emitErrorEvent($event)"
-    >
-    </app-video-room>
-  `,
-  styleUrls: ['./web-component.component.css'],
+	selector: 'app-web-component',
+	template: `
+		<app-video-room
+			#videoRoom
+			*ngIf="display"
+			[externalConfig]="webComponent"
+			(_error)="emitErrorEvent($event)"
+			(_session)="emitSession($event)"
+			(_publisher)="emitPublisher($event)"
+			(_leaveSession)="emitLeaveSessionEvent($event)"
+			(_joinSession)="emitJoinSessionEvent($event)"
+		>
+		</app-video-room>
+	`,
+	styleUrls: ['./web-component.component.css']
 })
-export class WebComponentComponent implements OnInit {
-  _sessionName: string;
-  _user: string;
-  _tokens: string[];
+export class WebComponentComponent {
 
-  @Input() openviduServerUrl: string;
-  @Input() theme: string;
-  @Input() ovSettings: OvSettings;
-  @Output() joinSession = new EventEmitter<any>();
-  @Output() leaveSession = new EventEmitter<any>();
-  @Output() error = new EventEmitter<any>();
+	@Input() ovSettings: OvSettings;
+	@Output() sessionCreated = new EventEmitter<any>();
+	@Output() publisherCreated = new EventEmitter<any>();
+	@Output() error = new EventEmitter<any>();
 
-  @ViewChild('videoRoom') videoRoom: VideoRoomComponent;
+	// !Deprecated
+	@Output() joinSession = new EventEmitter<any>();
+	// !Deprecated
+	@Output() leaveSession = new EventEmitter<any>();
+	@ViewChild('videoRoom') videoRoom: VideoRoomComponent;
 
-  public display = false;
+	display = false;
 
-  constructor() {
-    this.ovSettings = {
-      chat: true,
-      autopublish: false,
-      toolbarButtons: {
-        video: true,
-        audio: true,
-        fullscreen: true,
-        screenShare: true,
-        exit: true,
-      },
-    };
-  }
+	webComponent: WebComponentModel = new WebComponentModel();
 
-  @Input('sessionConfig')
-  set sessionConfig(config: any) {
-    let sessionConfig: ISessionCongif;
-    console.log('Session config input ', config);
-    sessionConfig = config;
-    if (typeof config === 'string') {
-      sessionConfig = JSON.parse(config);
-    }
-    if (sessionConfig) {
-      this._sessionName = sessionConfig.sessionName;
-      this._user = sessionConfig.user;
-      this._tokens = sessionConfig.tokens;
-      if (sessionConfig.ovSettings && this.isOvSettingsType(sessionConfig.ovSettings)) {
-        this.ovSettings = sessionConfig.ovSettings;
-      }
-      if (this.validateParameters()) {
-        this.display = true;
-      }
-    } else {
-      this.videoRoom.exitSession();
-    }
-  }
+	private log: ILogger;
 
-  ngOnInit() {}
+	constructor(private loggerSrv: LoggerService) {
+		this.log = this.loggerSrv.get('WebComponentComponent');
+	}
 
-  validateParameters(): boolean {
-    console.log('TOKENS', this._tokens);
-    if (
-      (this._sessionName && this.openviduServerUrl && this._user) ||
-      (this._tokens && this._tokens.length > 0 && this._user)
-    ) {
-      if (this._tokens && this._tokens.length === 1) {
-        this.ovSettings.toolbarButtons.screenShare = false;
-        console.warn('Screen share funcionality has been disabled. OpenVidu Angular has received only one token.');
-      }
-      return true;
-    }
-    return false;
-  }
+	@Input('sessionConfig')
+	set sessionConfig(config: string | ISessionConfig | Object) {
+		this.log.d('Webcomponent sessionConfig: ', config);
+		setTimeout(() => {
+			if (typeof config === 'string') {
+				try {
+					config = JSON.parse(config);
+				} catch (error) {
+					this.log.e('Unexpected JSON', error);
+					return;
+				}
+			}
+			// Leave session when sessionConfig is an empty Object
+			if (this.isEmpty(config)) {
+				this.log.w('Parameters received are incorrect.', config);
+				this.log.w('Exit session');
+				this.videoRoom?.leaveSession();
+				return;
+			}
 
-  emitJoinSessionEvent(event): void {
-    this.joinSession.emit(event);
-    this.videoRoom.checkSizeComponent();
-  }
+			this.webComponent.setSessionConfig(config);
+			this.display = this.webComponent.canJoinToSession();
 
-  emitLeaveSessionEvent(event): void {
-    this.leaveSession.emit(event);
-    this.display = false;
-  }
+		}, 200);
+	}
 
-  emitErrorEvent(event): void {
-    setTimeout(() => this.error.emit(event), 20);
-  }
+	@Input()
+	set theme(theme: string) {
+		this.webComponent.setTheme(theme);
+	}
 
-  private isOvSettingsType(obj) {
-    return (
-      'chat' in obj &&
-      typeof obj['chat'] === 'boolean' &&
-      'autopublish' in obj &&
-      typeof obj['autopublish'] === 'boolean' &&
-      'toolbarButtons' in obj &&
-      typeof obj['toolbarButtons'] === 'object' &&
-      'audio' in obj.toolbarButtons &&
-      typeof obj.toolbarButtons['audio'] === 'boolean' &&
-      'audio' in obj.toolbarButtons &&
-      typeof obj.toolbarButtons['audio'] === 'boolean' &&
-      'video' in obj.toolbarButtons &&
-      typeof obj.toolbarButtons['video'] === 'boolean' &&
-      'screenShare' in obj.toolbarButtons &&
-      typeof obj.toolbarButtons['screenShare'] === 'boolean' &&
-      'fullscreen' in obj.toolbarButtons &&
-      typeof obj.toolbarButtons['fullscreen'] === 'boolean' &&
-      'exit' in obj.toolbarButtons &&
-      typeof obj.toolbarButtons['exit'] === 'boolean'
-    );
-  }
+	@Input()
+	set openviduServerUrl(url: string) {
+		this.webComponent.setOvServerUrl(url);
+	}
+
+	@Input()
+	set openviduSecret(secret: string) {
+		this.webComponent.setOvSecret(secret);
+	}
+
+	emitErrorEvent(event) {
+		setTimeout(() => this.error.emit(event), 20);
+	}
+
+	emitSession(session: any) {
+		session.on('sessionDisconnected', (e) => this.display = false);
+		session.on('connectionCreated', (e: ConnectionEvent) => {
+			this.videoRoom.checkSizeComponent();
+		});
+		this.sessionCreated.emit(session);
+	}
+
+	emitPublisher(publisher: Publisher) {
+		this.publisherCreated.emit(publisher);
+	}
+
+	// !Deprecated
+	emitJoinSessionEvent(event): void {
+		// Do not work. Observers always are 1 in webcomponent.
+		// if (this.joinSession.observers.length > 0) {
+		// 	this.log.w('joinSession event is DEPRECATED. Please consider to use sessionCreated event');
+		// }
+		this.joinSession.emit(event);
+	  }
+
+	  // !Deprecated
+	  emitLeaveSessionEvent(event): void {
+		// Do not work. Observers always are 1 in webcomponent.
+		// if (this.leaveSession.observers.length > 0) {
+		// 	this.log.w('leaveSession event is DEPRECATED. Please consider to use sessionCreated event');
+		// }
+		this.leaveSession.emit(event);
+	  }
+
+	private isEmpty(obj: any): boolean {
+		return Object.keys(obj).length === 0;
+	}
 }

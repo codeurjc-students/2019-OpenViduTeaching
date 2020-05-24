@@ -1,6 +1,7 @@
 
 html {
   height: 100%;
+  overflow: hidden;
 }
 body {
   margin: 0;
@@ -31,4 +32,12 @@ body {
   direction: ltr;
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
+}
+
+.tooltipList {
+  white-space: pre;
+  font-size: small !important;
+}
+.messageSnackbar {
+  margin-top: 50px !important;
 }

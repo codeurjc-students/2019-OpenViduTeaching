@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "openvidu-teaching": {
+    "openvidu-call": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/openvidu-teaching",
+            "aot": true,
+            "outputPath": "dist/openvidu-call",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -35,6 +36,12 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -52,6 +59,12 @@
               "buildOptimizer": true
             },
             "ci": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -73,18 +86,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "openvidu-teaching:build"
+            "browserTarget": "openvidu-call:build",
+            "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
-              "browserTarget": "openvidu-teaching:build:production"
+              "browserTarget": "openvidu-call:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "openvidu-teaching:build"
+            "browserTarget": "openvidu-call:build"
           }
         },
         "test": {
@@ -94,14 +108,16 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles.css",
-              "src/theme.scss"
-            ],
+            "codeCoverage": true,
+            "styles": [],
             "scripts": [],
             "assets": [
               "src/favicon.ico",
               "src/assets"
+            ],
+            "codeCoverageExclude": [
+              "/**/*mock*.ts",
+              "/**/openvidu-layout.ts"
             ]
           }
         },
@@ -119,7 +135,7 @@
         }
       }
     },
-    "openvidu-teaching-e2e": {
+    "openvidu-call-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -127,7 +143,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "openvidu-teaching:serve"
+            "devServerTarget": "openvidu-call:serve"
           }
         },
         "lint": {
@@ -155,7 +171,8 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/openvidu-angular/ng-package.prod.json"
+              "project": "projects/openvidu-angular/ng-package.prod.json",
+              "tsConfig": "projects/openvidu-angular/tsconfig.lib.prod.json"
             }
           }
         },
@@ -182,8 +199,8 @@
       }
     }
   },
-  "defaultProject": "openvidu-teaching",
+  "defaultProject": "openvidu-call",
   "cli": {
-    "analytics": "67b94364-25e3-4d93-9e2f-d99a6e7f1420"
+    "analytics": "f17912cf-0c44-4f6a-b9f7-5beff4709cd8"
   }
 }

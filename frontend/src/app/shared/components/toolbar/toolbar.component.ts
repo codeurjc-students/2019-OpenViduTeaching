@@ -1,102 +1,97 @@
-import { RoomService } from './../../services/room.service';
-import { UserService } from '../../services/user.service';
-import { Component, OnInit, Input, EventEmitter, Output, HostListener } from '@angular/core';
-import { UserModel } from '../../models/user-model';
-import { ApiService } from '../../services/api.service';
-import { OvSettings } from '../../models/ov-settings';
+import { Component, OnInit, Input, EventEmitter, Output, HostListener, OnDestroy } from '@angular/core';
+import { UtilsService } from '../../services/utils/utils.service';
+import { VideoFullscreenIcon } from '../../types/icon-type';
+import { OvSettingsModel } from '../../models/ovSettings';
+import { ChatService } from '../../services/chat/chat.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
-  selector: 'app-toolbar',
-  templateUrl: './toolbar.component.html',
-  styleUrls: ['./toolbar.component.css'],
+	selector: 'app-toolbar',
+	templateUrl: './toolbar.component.html',
+	styleUrls: ['./toolbar.component.css']
 })
-export class ToolbarComponent implements OnInit {
-  fullscreenIcon = 'fullscreen';
+export class ToolbarComponent implements OnInit, OnDestroy {
+	@Input() lightTheme: boolean;
+	@Input() mySessionId: boolean;
+	@Input() compact: boolean;
+	@Input() showNotification: boolean;
+	@Input() ovSettings: OvSettingsModel;
 
-  @Input() lightTheme: boolean;
-  @Input() mySessionId: string;
-  @Input() localUser: UserModel;
-  @Input() compact: boolean;
-  @Input() showNotification: boolean;
-  @Input() newMessagesNum: number;
-  @Input() ovSettings: OvSettings;
+	@Input() isWebcamVideoEnabled: boolean;
+	@Input() isWebcamAudioEnabled: boolean;
+	@Input() isScreenEnabled: boolean;
+	@Input() isAutoLayout: boolean;
+	@Input() isConnectionLost: boolean;
+	@Input() hasVideoDevices: boolean;
+	@Input() hasAudioDevices: boolean;
+	@Output() micButtonClicked = new EventEmitter<any>();
+	@Output() camButtonClicked = new EventEmitter<any>();
+	@Output() screenShareClicked = new EventEmitter<any>();
+	@Output() layoutButtonClicked = new EventEmitter<any>();
+	@Output() leaveSessionButtonClicked = new EventEmitter<any>();
 
-  @Output() micButtonClicked = new EventEmitter<any>();
-  @Output() camButtonClicked = new EventEmitter<any>();
-  @Output() screenShareClicked = new EventEmitter<any>();
-  @Output() exitButtonClicked = new EventEmitter<any>();
-  @Output() menuButtonClicked = new EventEmitter<any>();
-  @Output() stopScreenSharingClicked = new EventEmitter<any>();
-  @Output() raiseHandClicked = new EventEmitter<any>();
+	newMessagesNum: number;
+	private chatServiceSubscription: Subscription;
 
-  constructor(
-    private apiSrv: ApiService,
-    private userService:UserService,
-    private roomSrv:RoomService
-  ) {}
+	fullscreenIcon = VideoFullscreenIcon.BIG;
+	logoUrl = 'https://raw.githubusercontent.com/OpenVidu/openvidu-call/master/openvidu-call-front/src/assets/images/';
 
-  @HostListener('window:resize', ['$event'])
-  sizeChange(event) {
-    const maxHeight = window.screen.height;
-    const maxWidth = window.screen.width;
-    const curHeight = window.innerHeight;
-    const curWidth = window.innerWidth;
-    if (maxWidth !== curWidth && maxHeight !== curHeight) {
-      this.fullscreenIcon = 'fullscreen';
-    }
-  }
+	participantsNames: string[] = [];
 
-  ngOnInit() {}
+	constructor(private utilsSrv: UtilsService, private chatService: ChatService) {
+		this.chatServiceSubscription = this.chatService.messagesUnreadObs.subscribe((num) => {
+			this.newMessagesNum = num;
+		});
+	}
+	ngOnDestroy(): void {
+		this.chatServiceSubscription.unsubscribe();
+	}
 
-  micStatusChanged() {
-    this.micButtonClicked.emit();
-  }
+	@HostListener('window:resize', ['$event'])
+	sizeChange(event) {
+		const maxHeight = window.screen.height;
+		const maxWidth = window.screen.width;
+		const curHeight = window.innerHeight;
+		const curWidth = window.innerWidth;
+		if (maxWidth !== curWidth && maxHeight !== curHeight) {
+			this.fullscreenIcon = VideoFullscreenIcon.BIG;
+		}
+	}
 
-  camStatusChanged() {
-    this.camButtonClicked.emit();
-  }
+	ngOnInit() {
+		if (this.lightTheme) {
+			this.logoUrl += 'openvidu_logo_grey.png';
+			return;
+		}
+		this.logoUrl += 'openvidu_logo.png';
+	}
 
-  screenShare() {
-    this.screenShareClicked.emit();
-  }
+	toggleMicrophone() {
+		this.micButtonClicked.emit();
+	}
 
-  stopScreenSharing() {
-    this.stopScreenSharingClicked.emit();
-  }
+	toggleCamera() {
+		this.camButtonClicked.emit();
+	}
 
-  exitSession() {
-    this.exitButtonClicked.emit();
-  }
+	toggleScreenShare() {
+		this.screenShareClicked.emit();
+	}
 
-  toggleMenu() {
-    this.menuButtonClicked.emit();
-  }
+	toggleSpeakerLayout() {
+		this.layoutButtonClicked.emit();
+	}
 
-  raiseHand() {
-    if(!this.localUser.isHandRaised()) {
-      this.roomSrv.raiseHand(this.mySessionId, this.localUser.getNickname(), this.localUser.getAvatar(), this.localUser.getConnectionId()).subscribe(
-        position => {
-          this.localUser.setPositionInHandRaiseQueue(position);
-          this.raiseHandClicked.emit();
-        },
-        error => console.error(error) 
-      );
-    } else {
-      this.roomSrv.lowerHand(this.mySessionId, this.localUser.getConnectionId()).subscribe(
-        (_) => {
-          this.raiseHandClicked.emit();
-        },
-        error => console.error(error) 
-      );
-    }
-  }
+	leaveSession() {
+		this.leaveSessionButtonClicked.emit();
+	}
 
-  toggleFullscreen() {
-    const state = this.apiSrv.toggleFullscreen('videoRoomNavBar');
-    if (state === 'fullscreen') {
-      this.fullscreenIcon = 'fullscreen_exit';
-    } else {
-      this.fullscreenIcon = 'fullscreen';
-    }
-  }
+	toggleChat() {
+		this.chatService.toggleChat();
+	}
+
+	toggleFullscreen() {
+		this.utilsSrv.toggleFullscreen('videoRoomNavBar');
+		this.fullscreenIcon = this.fullscreenIcon === VideoFullscreenIcon.BIG ? VideoFullscreenIcon.NORMAL : VideoFullscreenIcon.BIG;
+	}
 }
