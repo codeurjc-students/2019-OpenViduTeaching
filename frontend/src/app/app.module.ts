@@ -63,6 +63,7 @@ import { ChatService } from './shared/services/chat/chat.service';
 import { LoggerService } from './shared/services/logger/logger.service';
 import { NotificationService } from './shared/services/notifications/notification.service';
 import { StorageService } from './shared/services/storage/storage.service';
+import { InviteComponent } from './invite/invite.component';
 
 @NgModule({
 	declarations: [
@@ -87,7 +88,8 @@ import { StorageService } from './shared/services/storage/storage.service';
 		HasLayoutSpeakingPipe,
 		HasExitPipe,
 		TooltipListPipe,
-		FooterComponent
+		FooterComponent,
+		InviteComponent
 	],
 	imports: [
 		FormsModule,

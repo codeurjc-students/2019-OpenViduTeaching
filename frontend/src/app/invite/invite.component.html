@@ -1,0 +1,31 @@
+<div id="background">
+    <div id="component">
+        <div id="ov_info">
+            <a [routerLink]="['']">
+                <img id="ov_img" alt="OpenVidu Logo" src="assets/images/openvidu_vert_white_bg_trans_cropped.png">
+            </a>
+        </div>
+        <div id="roomName">Joining "{{roomName}}"<span *ngIf="this.userSrv.isLogged"> as {{this.userSrv.user.name}}</span></div>
+        <div>
+            <div *ngIf="!this.userSrv.isLogged">
+                <login-component></login-component><p id="loginMsg"> to enter the room</p>
+                <p>or create an account:</p>
+                <mat-form-field appearance="outline" color="primary">
+                    <mat-label>Username</mat-label>
+                    <input matInput [(ngModel)]="userName" (keypress)="eventKeyPress($event)">
+                    <mat-hint *ngIf=this.userErrorMsg id="userErrorMsg">{{userErrorMsg}}</mat-hint>
+                </mat-form-field>
+                <div></div>
+                <mat-form-field appearance="outline" color="primary">
+                    <mat-label>Password</mat-label>
+                    <input matInput [(ngModel)]="password" (keypress)="eventKeyPress($event)" type="password">
+                </mat-form-field>
+                <div></div>
+            </div>
+            <ng-container *ngIf="!loading">
+                <button mat-flat-button  color="accent" (click)="enterRoom()" [disabled]="!userSrv.isLogged && (!userName || !password)" id="accessButton">Access room</button>
+            </ng-container>
+            <mat-spinner color="accent" *ngIf="loading" id="loadingSpinner"></mat-spinner>
+        </div>
+    </div>
+</div>
