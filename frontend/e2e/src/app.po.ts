@@ -2,10 +2,10 @@
 
 import { by, element, protractor, ElementFinder, ProtractorBrowser } from 'protractor';
 
-export class OpenViduCall {
+export class OpenViduTeaching {
   constructor() {}
 
-  getInputDashboard(browser) {
+  getInputDashboard(browser): ElementFinder {
     return browser.element(by.css('#room_card input'));
   }
 

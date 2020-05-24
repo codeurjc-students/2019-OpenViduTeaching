@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "openvidu-call": {
+    "openvidu-teaching": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -14,7 +14,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "aot": true,
-            "outputPath": "dist/openvidu-call",
+            "outputPath": "dist/openvidu-teaching",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -86,19 +86,19 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "openvidu-call:build",
+            "browserTarget": "openvidu-teaching:build",
             "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
-              "browserTarget": "openvidu-call:build:production"
+              "browserTarget": "openvidu-teaching:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "openvidu-call:build"
+            "browserTarget": "openvidu-teaching:build"
           }
         },
         "test": {
@@ -135,7 +135,7 @@
         }
       }
     },
-    "openvidu-call-e2e": {
+    "openvidu-teaching-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -143,7 +143,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "openvidu-call:serve"
+            "devServerTarget": "openvidu-teaching:serve"
           }
         },
         "lint": {
@@ -199,7 +199,7 @@
       }
     }
   },
-  "defaultProject": "openvidu-call",
+  "defaultProject": "openvidu-teaching",
   "cli": {
     "analytics": "f17912cf-0c44-4f6a-b9f7-5beff4709cd8"
   }

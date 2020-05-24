@@ -1,12 +1,12 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { VideoRoomComponent } from './video-room/video-room.component';
+import { VideoRoomComponent } from 'src/app/video-room/video-room.component';
 import { Session, ConnectionEvent, Publisher } from 'openvidu-browser';
-import { UserModel } from './shared/models/user-model';
-import { AngularLibraryModel } from './shared/models/angular-library';
-import { OpenViduLayout, OpenViduLayoutOptions } from './shared/layout/openvidu-layout';
-import { LoggerService } from './shared/services/logger/logger.service';
-import { ILogger } from './shared/types/logger-type';
-import { OvSettings } from './shared/types/ov-settings';
+import { UserModel } from 'src/app/shared/models/user-model';
+import { AngularLibraryModel } from 'src/app/shared/models/angular-library';
+import { OpenViduLayout, OpenViduLayoutOptions } from 'src/app/shared/layout/openvidu-layout';
+import { LoggerService } from 'src/app/shared/services/logger/logger.service';
+import { ILogger } from 'src/app/shared/types/logger-type';
+import { OvSettings } from 'src/app/shared/types/ov-settings';
 
 @Component({
 	selector: 'opv-session',

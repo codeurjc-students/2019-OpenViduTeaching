@@ -24,7 +24,7 @@ import { StorageService } from '../../services/storage/storage.service';
 })
 export class RoomConfigComponent implements OnInit, OnDestroy {
 
-	private readonly USER_NICKNAME = 'openviduCallNickname';
+	private readonly USER_NICKNAME = 'openviduTeachingNickname';
 	@ViewChild('bodyCard') bodyCard: ElementRef;
 
 	@Input() externalConfig: ExternalConfigModel;

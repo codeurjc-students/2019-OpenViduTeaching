@@ -10,8 +10,8 @@ import { StorageService } from '../storage/storage.service';
 	providedIn: 'root'
 })
 export class DevicesService {
-	private readonly VIDEO_DEVICE = 'openviduCallVideoDevice';
-	private readonly AUDIO_DEVICE = 'openviduCallAudioDevice';
+	private readonly VIDEO_DEVICE = 'openviduTeachingVideoDevice';
+	private readonly AUDIO_DEVICE = 'openviduTeachingAudioDevice';
 
 	private OV: OpenVidu = null;
 	private devices: Device[];

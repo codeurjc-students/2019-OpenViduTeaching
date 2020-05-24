@@ -58,3 +58,4 @@ docker/videos/
 # System Files
 **.DS_Store
 **Thumbs.db
+frontend/debug.log
