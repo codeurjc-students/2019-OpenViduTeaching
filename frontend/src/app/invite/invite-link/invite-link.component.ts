@@ -1,6 +1,7 @@
-import { RoomService } from './../../shared/services/room.service';
+
 import { Component, OnInit, Inject } from '@angular/core';
-import { MAT_SNACK_BAR_DATA } from '@angular/material';
+import { RoomService } from 'src/app/shared/services/room/room.service';
+import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-invite-link',
@@ -29,11 +30,11 @@ export class InviteLinkComponent implements OnInit {
     );
   }
 
-  private dismiss() {
+  dismiss() {
     this.data.dismiss();
   }
 
-  private copyToClipboard() {
+  copyToClipboard() {
     let selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';
@@ -46,5 +47,4 @@ export class InviteLinkComponent implements OnInit {
     document.execCommand('copy');
     document.body.removeChild(selBox);
   }
-
 }

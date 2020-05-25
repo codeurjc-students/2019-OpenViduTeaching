@@ -1,3 +1,4 @@
+import { InviteLinkComponent } from './invite/invite-link/invite-link.component';
 import { UserService } from './shared/services/user/user.service';
 import { RoomService } from './shared/services/room/room.service';
 import { VideoComponent } from './video/video.component';
@@ -100,7 +101,9 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		InviteComponent,
 		SecurePipe,
 		LoginComponent,
-		VideoComponent
+		VideoComponent,
+		InviteLinkComponent,
+		InviteComponent
 	],
 	imports: [
 		FormsModule,
