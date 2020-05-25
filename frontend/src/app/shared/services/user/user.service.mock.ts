@@ -1,6 +1,6 @@
 import { User } from './user.service';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 @Injectable()
 export class UserServiceMock {
@@ -35,7 +35,7 @@ export class UserServiceMock {
 	}
 
 	checkUserName(userName: string): Observable<string> {
-        return Observable.throw("Server error (" + 404 + ")");
+        return throwError("Server error (" + 404 + ")");
     }
 
     getRoomsForUser() {

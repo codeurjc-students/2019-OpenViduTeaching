@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { Room } from '../../models/room-model';
 
 export interface User {
@@ -85,7 +85,7 @@ export class UserService {
     }
 
     private handleError(error: any) {
-        return Observable.throw("Server error (" + error.status + "): " + error.message)
+        return throwError("Server error (" + error.status + "): " + error.message)
     }
 
     saveUser(user: User, auth?: string) {

@@ -22,6 +22,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatListModule } from '@angular/material/list';
 import { AppRoutingModule } from './/app-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { createCustomElement } from '@angular/elements';
@@ -122,6 +123,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		MatSliderModule,
 		MatSidenavModule,
 		MatSnackBarModule,
+		MatListModule,
 		AppRoutingModule,
 		HttpClientModule,
 		FlexLayoutModule,

@@ -2,7 +2,7 @@ import { Room } from '../../models/room-model';
 import { UserService, User } from '../user/user.service';
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { map, catchError } from "rxjs/operators";
 
 @Injectable({
@@ -95,6 +95,6 @@ export class RoomService {
 
   private handleError(error: any) {
     console.error(error);
-    return Observable.throw("Server error (" + error.status + "): " + error.message)
+    return throwError("Server error (" + error.status + "): " + error.message)
   }
 }
