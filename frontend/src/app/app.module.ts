@@ -1,3 +1,7 @@
+import { UserService } from 'src/app/shared/services/user/user.service';
+import { RoomService } from './shared/services/room/room.service';
+import { VideoComponent } from './video/video.component';
+import { LoginComponent } from './login/login.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, Injector } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -93,7 +97,11 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		TooltipListPipe,
 		FooterComponent,
 		InviteComponent,
-		SecurePipe
+		SecurePipe,
+		LoginComponent,
+		VideoComponent,
+		RoomService,
+		UserService
 	],
 	imports: [
 		FormsModule,

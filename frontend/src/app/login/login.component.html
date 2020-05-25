@@ -1,0 +1,50 @@
+<ng-container id="component">
+    <ng-container *ngIf="!userService.isLogged">
+        <span>
+            <button mat-flat-button color="accent" (click)='openLoginDialog()'>
+                Login
+            </button>
+        </span>
+    </ng-container>
+    
+    <ng-container *ngIf="userService.isLogged">
+        <span id="username">
+            {{userService.user.name}}
+        </span>
+        <span>
+            <button mat-flat-button color="warn" (click)='logOut()'>
+                Logout
+            </button>
+        </span>
+    </ng-container>
+    
+    <ng-template #loginDialog let-dialogRef="dialogRef" id="loginDialog">
+        <mat-card>
+            <mat-card-content>
+                <form>
+                    <div layout="column">
+                        <div>
+                            <mat-form-field appearance="outline" color="primary" class="centered">
+                                <mat-label>User</mat-label>
+                                <input #user matInput placeholder="User" (keypress)="eventKeyPress($event, user.value, pass.value)">
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <mat-form-field appearance="outline" color="primary" class="centered">
+                                <mat-label>Password</mat-label>
+                                <input #pass matInput placeholder="Password" type="password" (keypress)="eventKeyPress($event, user.value, pass.value)">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </form>
+            </mat-card-content>
+            <mat-card-actions>
+                <div layout="column">
+                    <a mat-flat-button (click)="logIn($event, user.value, pass.value)" class="text-upper centered" color="primary">
+                        <span>Login</span>
+                    </a>
+                </div>
+            </mat-card-actions>
+        </mat-card>
+    </ng-template>
+</ng-container>
