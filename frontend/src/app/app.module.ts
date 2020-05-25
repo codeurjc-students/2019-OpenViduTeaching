@@ -1,4 +1,4 @@
-import { UserService } from 'src/app/shared/services/user/user.service';
+import { UserService } from './shared/services/user/user.service';
 import { RoomService } from './shared/services/room/room.service';
 import { VideoComponent } from './video/video.component';
 import { LoginComponent } from './login/login.component';
@@ -99,9 +99,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		InviteComponent,
 		SecurePipe,
 		LoginComponent,
-		VideoComponent,
-		RoomService,
-		UserService
+		VideoComponent
 	],
 	imports: [
 		FormsModule,
@@ -140,6 +138,8 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		ChatService,
 		NotificationService,
 		StorageService,
+		UserService,
+		RoomService,
     	{ provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     	{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
 	],

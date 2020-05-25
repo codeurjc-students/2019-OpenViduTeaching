@@ -98,4 +98,8 @@ export class InviteComponent implements OnInit {
       this.enterRoom();
     }
   }
+
+  isLogged(): boolean {
+    return this.userSrv.isLogged;
+  }
 }

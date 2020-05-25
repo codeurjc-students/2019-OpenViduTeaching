@@ -65,7 +65,7 @@
         "e2e": "ng e2e",
         "lint": "ng lint",
         "pack:openvidu-angular": "cd dist/openvidu-angular && npm pack",
-        "start": "ng serve --open --proxy-config proxy.conf.json",
+        "start": "ng serve --proxy-config proxy.conf.json",
         "test": "ng test openvidu-teaching --watch=false --code-coverage"
     },
     "version": "1.0.0"
