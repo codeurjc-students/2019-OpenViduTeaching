@@ -12,10 +12,6 @@
   color: #ffffff;
 }
 
-.roomError{
-  font-size: 16px;
-  color: #c01515;
-}
 .footer {
   position: absolute;
   bottom: 0;
@@ -25,8 +21,8 @@
 
 .footer a {
   color: #ffffff;
-
 }
+
 #header_img {
   max-width: 200px;
   margin-right: 10px;
@@ -44,16 +40,60 @@
   margin: auto;
 }
 
-#card_content {
-  height: 50%;
+login-component {
+  max-width: 200%;
+  max-height: 200%;
 }
 
-h4 {
-  font-size: 25px;
-  font-weight: 500;
-  color: #fff;
-  position: relative;
-  padding-bottom: 5px;
+#card_content {
+  height: 50%;
+  margin-top: 10px;
+}
+
+#room_card mat-form-field {
+  margin: auto;
+  padding: 0px 5px;
+}
+
+#spinner {
+  margin:5% auto;
+}
+
+.invitePresenter {
+  color: rgb(6, 211, 98);
+}
+
+.addRoomButton {
+  background-color: rgb(6, 211, 98);
+}
+
+.dialogCentered {
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #dfdfdf;
+  opacity: 1;
+}
+
+#videosDrawer{
+  min-width: 20%;
+  background-color: #494949;
+}
+
+#drawerTitle{
+  color: rgb(255, 193, 7);
+}
+
+#noVideosMessage {
+  color: #dfdfdf;
+  margin: 5%;
+}
+
+.videoDate{
+  margin-left: 10%;
+  color: #494949;
 }
 
 #room_card {
@@ -65,23 +105,14 @@ h4 {
   background: rgba(221, 221, 221, 0.856);
 }
 
-#room_card mat-form-field {
-  margin: auto;
-  padding: 0px 5px;
-}
-
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
   #header_img, .ovVersion, .footer {
     display: none;
   }
-  .joinForm, .ovLogo {
+  .ovLogo {
     max-width: 80%;
   }
-  .inputForm, h4 {
-    font-size: 16px ;
-  }
-
 }
 
 .container {
@@ -93,57 +124,6 @@ h4 {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
-.formContainer {
-  font-size: 20px;
-  text-align: center;
-}
-
-
-.joinForm {
-  min-width: 300px;
-  margin: 10px auto;
-  max-width: 50%;
-  background: #fff;
-  padding: 6px 10px;
-  position: relative;
-  border-radius: 10px 5px 10px 0px;
-  text-align: left;
-}
-
-.inputForm {
-  border: 0;
-  padding: 4px 8px;
-  font-size: 17px;
-  width: calc(100% - 90px);
-  outline: none;
-  caret-color: #000000;
-  color: #303030;
-}
-
-.joinButton {
-  position: absolute;
-  top: 0;
-  right: -2px;
-  bottom: 0;
-  border: 0;
-  background: none;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 0 20px;
-  background: #00ad4e;
-  color: #fff;
-  border-radius: 0px 5px 10px 0px;
-  transition: 0.3s;
-  box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
-  margin: 0px;
-}
-
-.joinButton:hover {
-  background: #009242;
-}
-
-
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
@@ -161,9 +141,6 @@ h4 {
 @media only screen and (min-width: 992px) {
   .ovLogo {
     max-width: 60%;
-  }
-  .inputForm {
-    font-size: 20px !important;
   }
 }
 
