@@ -19,7 +19,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppRoutingModule } from './/app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { createCustomElement } from '@angular/elements';
 import { ElementZoneStrategyFactory } from 'elements-zone-strategy';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
@@ -64,6 +64,9 @@ import { LoggerService } from './shared/services/logger/logger.service';
 import { NotificationService } from './shared/services/notifications/notification.service';
 import { StorageService } from './shared/services/storage/storage.service';
 import { InviteComponent } from './invite/invite.component';
+import { SecurePipe } from './shared/pipes/secure.pipe';
+import { BasicAuthInterceptor } from 'src/interceptors/auth.interceptor';
+import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 
 @NgModule({
 	declarations: [
@@ -89,7 +92,8 @@ import { InviteComponent } from './invite/invite.component';
 		HasExitPipe,
 		TooltipListPipe,
 		FooterComponent,
-		InviteComponent
+		InviteComponent,
+		SecurePipe
 	],
 	imports: [
 		FormsModule,
@@ -127,7 +131,9 @@ import { InviteComponent } from './invite/invite.component';
 		LoggerService,
 		ChatService,
 		NotificationService,
-		StorageService
+		StorageService,
+    	{ provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
+    	{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
 	],
 	bootstrap: [AppComponent]
 })
