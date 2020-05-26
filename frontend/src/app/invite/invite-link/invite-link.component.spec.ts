@@ -1,8 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { InviteLinkComponent } from './invite-link.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MAT_SNACK_BAR_DATA } from '@angular/material';
+import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
 describe('InviteLinkComponent', () => {
   let component: InviteLinkComponent;
