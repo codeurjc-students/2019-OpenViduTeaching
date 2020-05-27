@@ -10,7 +10,7 @@ matrix:
     
     - language: node_js
       node_js:
-        - '12'
+        - '8'
     
       addons:
       apt:
