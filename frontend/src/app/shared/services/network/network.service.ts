@@ -15,7 +15,7 @@ export class NetworkService {
 
 	constructor(private http: HttpClient, private loggerSrv: LoggerService) {
 		this.log = this.loggerSrv.get('NetworkService');
-		this.baseHref = '/' + (!!window.location.pathname.split('/')[1] ? window.location.pathname.split('/')[1] + '/' : '');
+		this.baseHref = '/' + (!!window.location.pathname.split('/')[1] ? window.location.pathname.split('/')[1] + '/' : '') + 'ovTeachingApi';
 	}
 
 	async getToken(sessionId: string, openviduServerUrl: string, openviduSecret: string): Promise<string> {
@@ -25,8 +25,11 @@ export class NetworkService {
 		}
 		try {
 			this.log.d('Getting token from backend');
-			return await this.http.post<any>(this.baseHref + 'call', {sessionId}).toPromise();
+			return await this.http.get<any>(this.baseHref + `/room/${sessionId}/token`).toPromise();
 		} catch (error) {
+			if (error.status === 200) {
+				return error.error.text;
+			}
 			if (error.status === 404) {
 				throw {status: error.status, message: 'Cannot connect with backend. ' + error.url + ' not found'};
 			}

@@ -75,9 +75,8 @@ public class OpenViduController {
 	 * 
 	 * @return The token
 	 */
-	@SuppressWarnings("unchecked")
 	@GetMapping("/room/{roomName}/token")
-	public ResponseEntity<JSONObject> generateToken(@PathVariable String roomName) {
+	public ResponseEntity<String> generateToken(@PathVariable String roomName) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) { // No room with that name
@@ -97,12 +96,10 @@ public class OpenViduController {
 			}
 		}
 
-		JSONObject json = new JSONObject();
 		try {
 			String token = this.openViduComponent.generateToken(room, user);
 			this.openViduComponent.addUserWithTokenToRoom(room, user, token);
-			json.put("token", token);
-			return new ResponseEntity<>(json, HttpStatus.OK);
+			return new ResponseEntity<>(token, HttpStatus.OK);
 		} catch (IOException e1) {
 			// Internal error
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,8 +109,7 @@ public class OpenViduController {
 				// anymore. Must clean invalid session and create a new one
 				try {
 					String token = this.openViduComponent.replaceSession(room, user);
-					json.put("token", token);
-					return new ResponseEntity<>(json, HttpStatus.OK);
+					return new ResponseEntity<>(token, HttpStatus.OK);
 				} catch (IOException  e3) {
 					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 				}
