@@ -17,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
-import javax.xml.ws.http.HTTPException;
 
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -37,7 +36,9 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.google.common.io.ByteStreams;
 import com.google.gson.JsonArray;
@@ -156,7 +157,7 @@ public class OpenViduComponent {
 		this.sessionIdUserIdToken.get(session.getSessionId()).put(user.getId(), tokens);
 	}
 
-	public String generateToken(Room room, User user) throws IOException {
+	public String generateToken(Room room, User user) throws IOException, HttpClientErrorException {
 		System.out.print("Generating token for ");
 		System.out.print("room: " + room.getName());
 		System.out.println(" and user: " + user.getName());
@@ -172,7 +173,7 @@ public class OpenViduComponent {
 			throw new IOException(e);
 		} catch (OpenViduHttpException e) {
 			System.out.println(e.toString());
-			throw new HTTPException(e.getStatus());
+			throw new HttpClientErrorException(HttpStatus.resolve(e.getStatus()));
 		}
 	}
 
