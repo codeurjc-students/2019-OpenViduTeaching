@@ -22,11 +22,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -234,7 +236,7 @@ public class OpenViduTests {
 		verify(openviduComponent, never()).addUserWithTokenToRoom(any(), any(), any());
 		
 		//HTTPException (not 404)
-		Mockito.doThrow(new HTTPException(400)).when(openviduComponent).generateToken(room, user);
+		Mockito.doThrow(new HttpClientErrorException(HttpStatus.resolve(400))).when(openviduComponent).generateToken(room, user);
 		
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/testRoom/token")
 				.contentType(MediaType.APPLICATION_JSON))
@@ -251,7 +253,7 @@ public class OpenViduTests {
 		String token = "testToken";
 		
 		given(this.openviduComponent.isSessionCreated(room)).willReturn(true);
-		Mockito.doThrow(new HTTPException(404)).when(openviduComponent).generateToken(room, user);
+		Mockito.doThrow(new HttpClientErrorException(HttpStatus.resolve(404))).when(openviduComponent).generateToken(room, user);
 		given(this.openviduComponent.replaceSession(room, user)).willReturn(token);
 		
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/testRoom/token")
@@ -270,7 +272,7 @@ public class OpenViduTests {
 		User user = this.userComponent.getLoggedUser();
 		
 		given(this.openviduComponent.isSessionCreated(room)).willReturn(true);
-		Mockito.doThrow(new HTTPException(404)).when(openviduComponent).generateToken(room, user);
+		Mockito.doThrow(new HttpClientErrorException(HttpStatus.resolve(404))).when(openviduComponent).generateToken(room, user);
 		Mockito.doThrow(new IOException()).when(openviduComponent).replaceSession(room, user);
 		
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/testRoom/token")
