@@ -11,8 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.IOException;
 
-import javax.xml.ws.http.HTTPException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
