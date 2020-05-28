@@ -2,8 +2,6 @@ package urjc.ovteaching.openvidu;
 
 import java.io.IOException;
 
-import javax.xml.ws.http.HTTPException;
-
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -106,8 +105,8 @@ public class OpenViduController {
 		} catch (IOException e1) {
 			// Internal error
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (HTTPException e2) {
-			if (404 == e2.getStatusCode()) {
+		} catch (HttpClientErrorException e2) {
+			if (404 == e2.getRawStatusCode()) {
 				// Invalid sessionId (user left unexpectedly). Session object is not valid
 				// anymore. Must clean invalid session and create a new one
 				try {
