@@ -53,7 +53,6 @@ import { DialogErrorComponent } from './shared/components/dialog-error/dialog-er
 import { ToolbarComponent } from './shared/components/toolbar/toolbar.component';
 import { ToolbarLogoComponent } from './shared/components/toolbar/logo.component';
 import { RoomConfigComponent } from './shared/components/room-config/room-config.component';
-import { WebComponentComponent } from './web-component/web-component.component';
 import { VideoRoomComponent } from './video-room/video-room.component';
 import { HomeComponent } from './home/home.component';
 import { AppComponent } from './app.component';
@@ -84,7 +83,6 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		OpenViduVideoComponent,
 		DialogErrorComponent,
 		RoomConfigComponent,
-		WebComponentComponent,
 		ToolbarComponent,
 		ToolbarLogoComponent,
 		LinkifyPipe,
@@ -132,7 +130,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		FlexLayoutModule,
 		NgxLinkifyjsModule.forRoot()
 	],
-	entryComponents: [DialogErrorComponent, WebComponentComponent],
+	entryComponents: [DialogErrorComponent],
 	providers: [
 		NetworkService,
 		OpenViduSessionService,
@@ -152,9 +150,6 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 })
 export class AppModule {
 	constructor(private injector: Injector) {
-		const strategyFactory = new ElementZoneStrategyFactory(WebComponentComponent, this.injector);
-		const element = createCustomElement(WebComponentComponent, { injector: this.injector, strategyFactory });
-		customElements.define('openvidu-webcomponent', element);
 	}
 
 	ngDoBootstrap() {}
