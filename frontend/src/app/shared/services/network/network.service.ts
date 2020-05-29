@@ -27,9 +27,6 @@ export class NetworkService {
 			this.log.d('Getting token from backend');
 			return await this.http.get<any>(this.baseHref + `/room/${sessionId}/token`).toPromise();
 		} catch (error) {
-			if (error.status === 200) {
-				return error.error.text;
-			}
 			if (error.status === 404) {
 				throw {status: error.status, message: 'Cannot connect with backend. ' + error.url + ' not found'};
 			}

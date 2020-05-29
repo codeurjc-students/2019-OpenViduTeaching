@@ -98,7 +98,7 @@ public class OpenViduController {
 		try {
 			String token = this.openViduComponent.generateToken(room, user);
 			this.openViduComponent.addUserWithTokenToRoom(room, user, token);
-			return new ResponseEntity<>(token, HttpStatus.OK);
+			return new ResponseEntity<>("\"" + token + "\"", HttpStatus.OK);
 		} catch (IOException e1) {
 			// Internal error
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -108,7 +108,7 @@ public class OpenViduController {
 				// anymore. Must clean invalid session and create a new one
 				try {
 					String token = this.openViduComponent.replaceSession(room, user);
-					return new ResponseEntity<>(token, HttpStatus.OK);
+					return new ResponseEntity<>("\"" + token + "\"", HttpStatus.OK);
 				} catch (IOException  e3) {
 					return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 				}

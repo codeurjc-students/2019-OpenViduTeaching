@@ -32,8 +32,9 @@ export class RemoteUsersService {
 		let avatar = '';
 		const connectionId = event.stream.connection.connectionId;
 		try {
-			nickname = JSON.parse(event.stream.connection.data)?.clientData;
-			avatar = JSON.parse(event.stream.connection.data)?.avatar;
+			const data = JSON.parse(event.stream.connection.data.split("%/%")[0]);
+			nickname = data?.clientData;
+			avatar = data?.avatar;
 		} catch (error) {
 			nickname = 'Unknown';
 		}
