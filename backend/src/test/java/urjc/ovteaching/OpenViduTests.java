@@ -150,7 +150,7 @@ public class OpenViduTests {
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/testRoom/token")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(content().string(token));
+				.andExpect(content().string("\"" + token + "\""));
 		
 		verify(openviduComponent, never()).createSession(any());
 		verify(openviduComponent).generateToken(room, user);
@@ -192,7 +192,7 @@ public class OpenViduTests {
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/testRoom/token")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(content().string(token));
+				.andExpect(content().string("\"" + token + "\""));
 		
 		verify(openviduComponent).createSession(room);
 		verify(openviduComponent).generateToken(room, user);
@@ -256,7 +256,7 @@ public class OpenViduTests {
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/testRoom/token")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(content().string(token));
+				.andExpect(content().string("\"" + token + "\""));
 		
 		verify(openviduComponent).generateToken(room, user);
 		verify(openviduComponent).replaceSession(room, user);
