@@ -1,6 +1,6 @@
 <div *ngIf="!!ovSettings" id="videoRoomNavBar" [class.boundsLight]="lightTheme">
   <app-room-config
-    *ngIf="showConfigRoomCard"
+    *ngIf="showConfigRoomCard && this.userService.isLogged"
     [ovSettings]="ovSettings"
     [externalConfig]="externalConfig"
     (join)="onConfigRoomJoin()"

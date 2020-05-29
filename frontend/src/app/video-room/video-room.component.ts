@@ -104,6 +104,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	}
 
 	async ngOnInit() {
+		if(!this.userService.isLogged) {
+			this.utilsSrv.showErrorMessage('You need to be logged in to enter a room', 'Rooms can only be accessed with an invite link');
+		}
 		this.route.paramMap.subscribe(params => {
 			this.roomName = params.get("roomName");
 			this.lightTheme = this.externalConfig?.getTheme() === Theme.LIGHT;

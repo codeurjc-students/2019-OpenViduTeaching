@@ -1,3 +1,4 @@
+import { UserServiceMock } from './../shared/services/user/user.service.mock';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { VideoRoomComponent } from './video-room.component';
@@ -15,6 +16,7 @@ import { ChatServiceMock } from '../shared/services/chat/chat.service.mock';
 import { DevicesServiceMock } from '../shared/services/devices/devices.service.mock';
 import { UtilsServiceMock } from '../shared/services/utils/utils.service.mock';
 import { RemoteUsersServiceMock } from '../shared/services/remote-users/remote-users.service.mock';
+import { UserService } from '../shared/services/user/user.service';
 
 describe('VideoRoomComponent unit test', () => {
 	let component: VideoRoomComponent;
@@ -24,6 +26,7 @@ describe('VideoRoomComponent unit test', () => {
 		TestBed.configureTestingModule({
 			declarations: [VideoRoomComponent],
 			providers: [
+				{ provide: UserService, useClass: UserServiceMock },
 				{ provide: LoggerService, useClass: LoggerServiceMock },
 				{ provide: NetworkService, useClass: NetworkServiceMock },
 				{ provide: UtilsService, useClass: UtilsServiceMock },
