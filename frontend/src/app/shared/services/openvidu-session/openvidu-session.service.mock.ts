@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { PublisherProperties, Publisher, Session } from 'openvidu-browser';
+import { PublisherProperties, Publisher, Session, OpenVidu } from 'openvidu-browser';
 import { AvatarType } from '../../types/chat-type';
 import { Observable } from 'rxjs/internal/Observable';
 import { UserModel } from '../../models/user-model';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -10,8 +11,8 @@ import { UserModel } from '../../models/user-model';
 export class OpenViduSessionServiceMock {
 
 
-	OVUsers: Observable<UserModel[]>;
-
+	OVUsers: Observable<UserModel[]> = <BehaviorSubject<UserModel[]>>new BehaviorSubject([]).asObservable();
+	OV: OpenVidu = new OpenVidu();
 
 	constructor() {}
 
@@ -58,7 +59,7 @@ export class OpenViduSessionServiceMock {
 	disableScreenUser() {}
 
 	initCamPublisher(targetElement: string | HTMLElement, properties: PublisherProperties): Publisher {
-		return null;
+		return this.OV.initPublisher(targetElement, properties);
 	}
 
 	publishVideo(isVideoActive: boolean) {}
