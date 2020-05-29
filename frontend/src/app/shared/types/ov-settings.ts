@@ -8,5 +8,6 @@ export interface OvSettings {
 		fullscreen: boolean;
 		layoutSpeaking: boolean;
 		exit: boolean;
+		raiseHand: boolean;
 	};
 }

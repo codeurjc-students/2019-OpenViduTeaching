@@ -1,3 +1,4 @@
+import { UserService } from './../services/user/user.service';
 import { OvSettings } from '../types/ov-settings';
 
 export class OvSettingsModel {
@@ -13,7 +14,8 @@ export class OvSettingsModel {
 				fullscreen: true,
 				screenShare: true,
 				layoutSpeaking: true,
-				exit: true
+				exit: true,
+				raiseHand: true
 			}
 		};
 	}
@@ -55,5 +57,22 @@ export class OvSettingsModel {
 
 	public setScreenSharing(screenShare: boolean) {
 		this.ovSettings.toolbarButtons.screenShare = screenShare;
+	}
+
+	public setDefaultTeachingSettings(userService: UserService, roomName: string): OvSettingsModel {
+		this.ovSettings = {
+			chat: true,
+			autopublish: false,
+			toolbarButtons: {
+				video: userService.canStream(roomName),
+				audio: userService.canStream(roomName),
+				fullscreen: true,
+				screenShare: userService.canStream(roomName),
+				layoutSpeaking: true,
+				exit: true,
+				raiseHand: true
+			}
+		};
+		return this;
 	}
 }

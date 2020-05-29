@@ -1,6 +1,7 @@
+import { UserService } from './../shared/services/user/user.service';
 import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import {
 	Publisher,
 	Subscriber,
@@ -62,6 +63,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	openviduLayout: OpenViduLayout;
 	openviduLayoutOptions: OpenViduLayoutOptions;
 	mySessionId: string;
+	roomName: string;
 	localUsers: UserModel[] = [];
 	remoteUsers: UserModel[] = [];
 	isConnectionLost: boolean;
@@ -76,12 +78,14 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	constructor(
 		private networkSrv: NetworkService,
 		private router: Router,
+		private route: ActivatedRoute,
 		private utilsSrv: UtilsService,
 		private remoteUsersService: RemoteUsersService,
 		public oVSessionService: OpenViduSessionService,
 		private oVDevicesService: DevicesService,
 		private loggerSrv: LoggerService,
-		private chatService: ChatService
+		private chatService: ChatService,
+		private userService: UserService
 	) {
 		this.log = this.loggerSrv.get('VideoRoomComponent');
 	}
@@ -100,9 +104,12 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	}
 
 	async ngOnInit() {
-		this.lightTheme = this.externalConfig?.getTheme() === Theme.LIGHT;
-		this.ovSettings = !!this.externalConfig ? this.externalConfig.getOvSettings() : new OvSettingsModel();
-		this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());
+		this.route.paramMap.subscribe(params => {
+			this.roomName = params.get("roomName");
+			this.lightTheme = this.externalConfig?.getTheme() === Theme.LIGHT;
+			this.ovSettings = !!this.externalConfig ? this.externalConfig.getOvSettings() : new OvSettingsModel().setDefaultTeachingSettings(this.userService, this.roomName);
+			this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());
+		});
 	}
 
 	ngOnDestroy() {
