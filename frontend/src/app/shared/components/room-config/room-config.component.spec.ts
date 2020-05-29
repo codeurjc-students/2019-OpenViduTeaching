@@ -1,3 +1,5 @@
+import { UserServiceMock } from './../../services/user/user.service.mock';
+import { UserService } from 'src/app/shared/services/user/user.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RoomConfigComponent } from './room-config.component';
@@ -27,6 +29,7 @@ describe('RoomConfigComponent', () => {
 				{provide: OpenViduSessionService, useClass: OpenViduSessionServiceMock},
 				{provide: DevicesService, useClass: DevicesServiceMock},
 				{provide: StorageService, useClass: StorageServiceMock},
+				{provide: UserService, useClass: UserServiceMock},
 			],
 			imports: [RouterTestingModule.withRoutes([])],
 		}).compileComponents();

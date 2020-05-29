@@ -16,6 +16,7 @@ import { ScreenType } from '../../types/video-type';
 import { ExternalConfigModel } from '../../models/external-config';
 import { OvSettingsModel } from '../../models/ovSettings';
 import { StorageService } from '../../services/storage/storage.service';
+import { UserService } from '../../services/user/user.service';
 
 @Component({
 	selector: 'app-room-config',
@@ -65,6 +66,7 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 		private oVDevicesService: DevicesService,
 		private loggerSrv: LoggerService,
 		private storageSrv: StorageService,
+		private userService: UserService
 
 	) {
 		this.log = this.loggerSrv.get('RoomConfigComponent');
@@ -191,7 +193,7 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 			this.nicknameFormControl.setValue(this.externalConfig.getNickname());
 			return;
 		}
-		const nickname = this.storageSrv.get(this.USER_NICKNAME) || this.utilsSrv.generateNickname();
+		const nickname = this.userService.user.name || this.utilsSrv.generateNickname();
 		this.nicknameFormControl.setValue(nickname);
 	}
 
