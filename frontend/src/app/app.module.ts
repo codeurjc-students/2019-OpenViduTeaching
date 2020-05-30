@@ -66,7 +66,6 @@ import { DevicesService } from './shared/services/devices/devices.service';
 import { RemoteUsersService } from './shared/services/remote-users/remote-users.service';
 import { ChatService } from './shared/services/chat/chat.service';
 import { LoggerService } from './shared/services/logger/logger.service';
-import { NotificationService } from './shared/services/notifications/notification.service';
 import { StorageService } from './shared/services/storage/storage.service';
 import { InviteComponent } from './invite/invite.component';
 import { SecurePipe } from './shared/pipes/secure.pipe';
@@ -139,7 +138,6 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		DevicesService,
 		LoggerService,
 		ChatService,
-		NotificationService,
 		StorageService,
 		UserService,
 		RoomService,
@@ -149,7 +147,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 	bootstrap: [AppComponent]
 })
 export class AppModule {
-	constructor(private injector: Injector) {
+	constructor() {
 	}
 
 	ngDoBootstrap() {}
