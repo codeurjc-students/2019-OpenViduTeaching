@@ -13,11 +13,7 @@ matrix:
         - '12'
     
       addons:
-      apt:
-        sources:
-          - google-chrome
-        packages:
-          - google-chrome-stable
+        chrome: stable
     
       before_install:
         - cd ./frontend/
