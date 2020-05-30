@@ -2,8 +2,8 @@ import { Component, OnInit, Input, EventEmitter, Output, HostListener, OnDestroy
 import { UtilsService } from '../../services/utils/utils.service';
 import { VideoFullscreenIcon } from '../../types/icon-type';
 import { OvSettingsModel } from '../../models/ovSettings';
-import { ChatService } from '../../services/chat/chat.service';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { MenuService } from '../../services/menu/menu.service';
 
 @Component({
 	selector: 'app-toolbar',
@@ -38,8 +38,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
 	participantsNames: string[] = [];
 
-	constructor(private utilsSrv: UtilsService, private chatService: ChatService) {
-		this.chatServiceSubscription = this.chatService.messagesUnreadObs.subscribe((num) => {
+	constructor(private utilsSrv: UtilsService, private menuService: MenuService) {
+		this.chatServiceSubscription = this.menuService.messagesUnreadObs.subscribe((num) => {
 			this.newMessagesNum = num;
 		});
 	}
@@ -86,8 +86,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 		this.leaveSessionButtonClicked.emit();
 	}
 
-	toggleChat() {
-		this.chatService.toggleChat();
+	toggleMenu() {
+		this.menuService.toggleMenu();
 	}
 
 	toggleFullscreen() {

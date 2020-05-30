@@ -32,6 +32,7 @@ import { RemoteUsersService } from '../shared/services/remote-users/remote-users
 import { UtilsService } from '../shared/services/utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ChatService } from '../shared/services/chat/chat.service';
+import { MenuService } from '../shared/services/menu/menu.service';
 
 @Component({
 	selector: 'app-video-room',
@@ -51,7 +52,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
   	@Output() _leaveSession = new EventEmitter<any>();
 
 	@ViewChild('chatComponent') chatComponent: ChatComponent;
-	@ViewChild('sidenav') chatSidenav: MatSidenav;
+	@ViewChild('sidenav') menuSidenav: MatSidenav;
 
 	ovSettings: OvSettingsModel;
 	compact = false;
@@ -73,7 +74,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private log: ILogger;
 	private oVUsersSubscription: Subscription;
 	private remoteUsersSubscription: Subscription;
-	private chatSubscription: Subscription;
+	private menuToggleSubscription: Subscription;
 
 	constructor(
 		private networkSrv: NetworkService,
@@ -84,6 +85,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		public oVSessionService: OpenViduSessionService,
 		private oVDevicesService: DevicesService,
 		private loggerSrv: LoggerService,
+		private menuService: MenuService,
 		private chatService: ChatService,
 		private userService: UserService
 	) {
@@ -131,8 +133,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		if (this.remoteUsersSubscription) {
 			this.remoteUsersSubscription.unsubscribe();
 		}
-		if (this.chatSubscription) {
-			this.chatSubscription.unsubscribe();
+		if (this.menuToggleSubscription) {
+			this.menuToggleSubscription.unsubscribe();
 		}
 	}
 
@@ -162,9 +164,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.subscribeToStreamDestroyed();
 		this.subscribeToStreamPropertyChange();
 		this.subscribeToNicknameChanged();
-		this.chatService.setChatComponent(this.chatSidenav);
+		this.menuService.setMenuComponent(this.menuSidenav);
 		this.chatService.subscribeToChat();
-		this.subscribeToChatComponent();
+		this.subscribeToMenuToggle();
 		this.subscribeToReconnection();
 		this.connectToSession();
 	}
@@ -433,8 +435,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.oVSessionService.unpublishScreen();
 	}
 
-	private subscribeToChatComponent() {
-		this.chatSubscription = this.chatService.toggleChatObs.subscribe((opened) => {
+	private subscribeToMenuToggle() {
+		this.menuToggleSubscription = this.menuService.toggleMenuObs.subscribe((opened) => {
 			const timeout = this.externalConfig ? 300 : 0;
 			this.updateOpenViduLayout(timeout);
 		});

@@ -1,3 +1,4 @@
+import { MenuService } from './../../services/menu/menu.service';
 import { Component, ElementRef, Input, OnInit, ViewChild, HostListener, OnDestroy } from '@angular/core';
 import { ChatService } from '../../services/chat/chat.service';
 import { ChatMessage } from '../../types/chat-type';
@@ -20,9 +21,12 @@ export class ChatComponent implements OnInit, OnDestroy {
 	chatOpened: boolean;
 
 	private chatMessageSubscription: Subscription;
-	private chatToggleSubscription: Subscription;
+	private menuToggleSubscription: Subscription;
 
-	constructor(private chatService: ChatService) {}
+	constructor(
+		private chatService: ChatService,
+		private menuService: MenuService
+	) {}
 
 	@HostListener('document:keydown.escape', ['$event'])
 	onKeydownHandler(event: KeyboardEvent) {
@@ -34,15 +38,15 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.subscribeToMessages();
-		this.subscribeToToggleChat();
+		this.subscribeToToggleMenu();
 	}
 
 	ngOnDestroy(): void {
 		if (this.chatMessageSubscription) {
 			this.chatMessageSubscription.unsubscribe();
 		}
-		if (this.chatToggleSubscription) {
-			this.chatToggleSubscription.unsubscribe();
+		if (this.menuToggleSubscription) {
+			this.menuToggleSubscription.unsubscribe();
 		}
 	}
 
@@ -67,7 +71,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 	}
 
 	close() {
-		this.chatService.toggleChat();
+		this.menuService.toggleMenu();
 	}
 
 	private subscribeToMessages() {
@@ -76,8 +80,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	private subscribeToToggleChat() {
-		this.chatToggleSubscription = this.chatService.toggleChatObs.subscribe((opened) => {
+	private subscribeToToggleMenu() {
+		this.menuToggleSubscription = this.menuService.toggleMenuObs.subscribe((opened) => {
 			this.chatOpened = opened;
 			if (this.chatOpened) {
 				this.scrollToBottom();
