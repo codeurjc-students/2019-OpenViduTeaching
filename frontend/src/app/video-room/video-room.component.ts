@@ -15,7 +15,6 @@ import {
 } from 'openvidu-browser';
 import { OpenViduLayout, OpenViduLayoutOptions } from '../shared/layout/openvidu-layout';
 import { UserModel } from '../shared/models/user-model';
-import { ChatComponent } from '../shared/components/chat/chat.component';
 import { OvSettingsModel } from '../shared/models/ovSettings';
 import { ScreenType } from '../shared/types/video-type';
 import { ILogger } from '../shared/types/logger-type';
@@ -51,7 +50,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	// !Deprecated
   	@Output() _leaveSession = new EventEmitter<any>();
 
-	@ViewChild('chatComponent') chatComponent: ChatComponent;
 	@ViewChild('sidenav') menuSidenav: MatSidenav;
 
 	ovSettings: OvSettingsModel;

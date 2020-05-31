@@ -1,10 +1,5 @@
-import { InviteLinkComponent } from './invite/invite-link/invite-link.component';
-import { UserService } from './shared/services/user/user.service';
-import { RoomService } from './shared/services/room/room.service';
-import { VideoComponent } from './video/video.component';
-import { LoginComponent } from './login/login.component';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Injector } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatBadgeModule } from '@angular/material/badge';
@@ -24,10 +19,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
+import { MatTabsModule } from '@angular/material/tabs';
 import { AppRoutingModule } from './/app-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { createCustomElement } from '@angular/elements';
-import { ElementZoneStrategyFactory } from 'elements-zone-strategy';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -44,10 +38,10 @@ import {
 	HasExitPipe
 } from './shared/pipes/ovSettings.pipe';
 import { TooltipListPipe } from './shared/pipes/tooltipList.pipe';
+import { SecurePipe } from './shared/pipes/secure.pipe';
 
 // Components
 import { StreamComponent } from './shared/components/stream/stream.component';
-import { ChatComponent } from './shared/components/chat/chat.component';
 import { OpenViduVideoComponent } from './shared/components/stream/ov-video.component';
 import { DialogErrorComponent } from './shared/components/dialog-error/dialog-error.component';
 import { ToolbarComponent } from './shared/components/toolbar/toolbar.component';
@@ -57,6 +51,12 @@ import { VideoRoomComponent } from './video-room/video-room.component';
 import { HomeComponent } from './home/home.component';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
+import { InviteComponent } from './invite/invite.component';
+import { MenuComponent } from './shared/components/menu/menu.component';
+import { ChatComponent } from './shared/components/menu/tabs/chat/chat.component';
+import { VideoComponent } from './video/video.component';
+import { LoginComponent } from './login/login.component';
+import { InviteLinkComponent } from './invite/invite-link/invite-link.component';
 
 // Services
 import { NetworkService } from './shared/services/network/network.service';
@@ -67,8 +67,11 @@ import { RemoteUsersService } from './shared/services/remote-users/remote-users.
 import { ChatService } from './shared/services/chat/chat.service';
 import { LoggerService } from './shared/services/logger/logger.service';
 import { StorageService } from './shared/services/storage/storage.service';
-import { InviteComponent } from './invite/invite.component';
-import { SecurePipe } from './shared/pipes/secure.pipe';
+import { UserService } from './shared/services/user/user.service';
+import { RoomService } from './shared/services/room/room.service';
+import { MenuService } from './shared/services/menu/menu.service';
+
+// Interceptors
 import { BasicAuthInterceptor } from 'src/interceptors/auth.interceptor';
 import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 
@@ -100,7 +103,8 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		LoginComponent,
 		VideoComponent,
 		InviteLinkComponent,
-		InviteComponent
+		InviteComponent,
+		MenuComponent
 	],
 	imports: [
 		FormsModule,
@@ -124,6 +128,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		MatSidenavModule,
 		MatSnackBarModule,
 		MatListModule,
+		MatTabsModule,
 		AppRoutingModule,
 		HttpClientModule,
 		FlexLayoutModule,
@@ -141,6 +146,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		StorageService,
 		UserService,
 		RoomService,
+		MenuService,
     	{ provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     	{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
 	],

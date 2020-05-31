@@ -34,17 +34,17 @@
         #sidenav
         mode="{{sidenavMode}}"
         position="end"
-        class="sidenav-chat"
+        class="sidenav-menu"
         [class.boundsLight]="lightTheme"
         fixedInViewport="true"
         fixedTopGap="40"
         fixedBottomGap="0"
-        *ngIf="ovSettings | hasChat"
       >
-        <chat-component
-          #chatComponent
-          [lightTheme]="lightTheme"
-        ></chat-component>
+      <app-menu
+        [ovSettings]="ovSettings"
+        [lightTheme]="lightTheme"
+      >
+      </app-menu>
       </mat-sidenav>
 
       <mat-sidenav-content class="sidenav-main">

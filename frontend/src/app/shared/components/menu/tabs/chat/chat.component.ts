@@ -1,8 +1,8 @@
-import { MenuService } from './../../services/menu/menu.service';
 import { Component, ElementRef, Input, OnInit, ViewChild, HostListener, OnDestroy } from '@angular/core';
-import { ChatService } from '../../services/chat/chat.service';
-import { ChatMessage } from '../../types/chat-type';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { ChatMessage } from 'src/app/shared/types/chat-type';
+import { ChatService } from 'src/app/shared/services/chat/chat.service';
+import { MenuService } from 'src/app/shared/services/menu/menu.service';
 
 @Component({
 	selector: 'chat-component',

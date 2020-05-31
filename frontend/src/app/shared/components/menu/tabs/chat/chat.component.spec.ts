@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChatComponent } from './chat.component';
-import { ChatService } from '../../services/chat/chat.service';
-import { ChatServiceMock } from '../../services/chat/chat.service.mock';
+import { ChatService } from 'src/app/shared/services/chat/chat.service';
+import { ChatServiceMock } from 'src/app/shared/services/chat/chat.service.mock';
 
 describe('ChatComponent', () => {
 	let component: ChatComponent;
