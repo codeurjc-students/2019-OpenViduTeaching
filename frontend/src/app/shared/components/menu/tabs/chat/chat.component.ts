@@ -14,24 +14,24 @@ export class ChatComponent implements OnInit, OnDestroy {
 	@ViewChild('chatInput') chatInput: ElementRef;
 
 	@Input() lightTheme: boolean;
+	@Input() chatService: ChatService;
 
 	message: string;
 
 	messageList: ChatMessage[] = [];
-	chatOpened: boolean;
+	menuOpened: boolean;
 
 	private chatMessageSubscription: Subscription;
 	private menuToggleSubscription: Subscription;
 
 	constructor(
-		private chatService: ChatService,
 		private menuService: MenuService
 	) {}
 
 	@HostListener('document:keydown.escape', ['$event'])
 	onKeydownHandler(event: KeyboardEvent) {
 		console.log(event);
-		if (this.chatOpened) {
+		if (this.menuOpened) {
 			this.close();
 		}
 	}
@@ -82,8 +82,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 	private subscribeToToggleMenu() {
 		this.menuToggleSubscription = this.menuService.toggleMenuObs.subscribe((opened) => {
-			this.chatOpened = opened;
-			if (this.chatOpened) {
+			this.menuOpened = opened;
+			if (this.menuOpened) {
 				this.scrollToBottom();
 				setTimeout(() => {
 					this.chatInput.nativeElement.focus();

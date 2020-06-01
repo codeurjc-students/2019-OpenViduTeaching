@@ -15,6 +15,8 @@ export class ChatService {
 
 	private messageList: ChatMessage[] = [];
 
+	private signal: string;
+
 	constructor(
 		private menuService: MenuService,
 		private oVSessionService: OpenViduSessionService,
@@ -23,9 +25,10 @@ export class ChatService {
 		this.messagesObs = this._messageList.asObservable();
 	}
 
-	subscribeToChat() {
+	subscribeToChat(signal: string) {
+		this.signal = signal;
 		const session = this.oVSessionService.getWebcamSession();
-		session.on('signal:chat', (event: any) => {
+		session.on(`signal:${this.signal}`, (event: any) => {
 			const connectionId = event.from.connectionId;
 			const data = JSON.parse(event.data);
 			const isMyOwnConnection = this.oVSessionService.isMyOwnConnection(connectionId);
@@ -52,7 +55,7 @@ export class ChatService {
 			const sessionAvailable = this.oVSessionService.getConnectedUserSession();
 			sessionAvailable.signal({
 				data: JSON.stringify(data),
-				type: 'chat'
+				type: this.signal
 			});
 		}
 	}

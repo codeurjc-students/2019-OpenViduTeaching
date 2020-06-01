@@ -1,5 +1,5 @@
 import { UserService } from './../shared/services/user/user.service';
-import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild, Inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -84,7 +84,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		private oVDevicesService: DevicesService,
 		private loggerSrv: LoggerService,
 		private menuService: MenuService,
-		private chatService: ChatService,
+		@Inject('assistantsChatService') private assistantsChatService: ChatService,
+		@Inject('moderatorsChatService') private moderatorsChatService: ChatService,
 		private userService: UserService
 	) {
 		this.log = this.loggerSrv.get('VideoRoomComponent');
@@ -163,7 +164,10 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.subscribeToStreamPropertyChange();
 		this.subscribeToNicknameChanged();
 		this.menuService.setMenuComponent(this.menuSidenav);
-		this.chatService.subscribeToChat();
+		this.assistantsChatService.subscribeToChat('chat');
+		if(this.userService.isModOfRoom(this.roomName)) {
+			this.moderatorsChatService.subscribeToChat('chatMod');
+		}
 		this.subscribeToMenuToggle();
 		this.subscribeToReconnection();
 		this.connectToSession();

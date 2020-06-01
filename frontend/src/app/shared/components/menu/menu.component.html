@@ -7,7 +7,20 @@
 		</ng-template>
 		<chat-component
 			#assistantsChatComponent
-			[lightTheme]="lightTheme"
+			[lightTheme]="true"
+			[chatService]="assistantsChatService"
+		></chat-component>
+	</mat-tab>
+
+	<mat-tab class="tab" *ngIf="(ovSettings | hasChat) && userService.canStream(mySessionId)">
+		<ng-template mat-tab-label>
+		  <mat-icon matBadge="{{newMessagesModerators}}" [matBadgeHidden]="newMessagesModerators === 0"  matBadgePosition="above before" matBadgeColor="accent">chat_bubble</mat-icon>
+		  Moderators chat
+		</ng-template>
+		<chat-component
+			#moderatorsChatComponent
+			[lightTheme]="false"
+			[chatService]="moderatorsChatService"
 		></chat-component>
 	</mat-tab>
 
