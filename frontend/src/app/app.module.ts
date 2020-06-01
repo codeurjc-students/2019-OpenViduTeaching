@@ -2,6 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './/app-routing.module';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
+// Angular Material
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -20,10 +26,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
 import { MatTabsModule } from '@angular/material/tabs';
-import { AppRoutingModule } from './/app-routing.module';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Pipes
 import { LinkifyPipe } from './shared/pipes/linkfy';
@@ -57,6 +59,8 @@ import { ChatComponent } from './shared/components/menu/tabs/chat/chat.component
 import { VideoComponent } from './video/video.component';
 import { LoginComponent } from './login/login.component';
 import { InviteLinkComponent } from './invite/invite-link/invite-link.component';
+import { SettingsComponent } from './shared/components/menu/tabs/settings/settings.component';
+import { AssistantsComponent } from './shared/components/menu/tabs/assistants/assistants.component';
 
 // Services
 import { NetworkService } from './shared/services/network/network.service';
@@ -104,7 +108,9 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		VideoComponent,
 		InviteLinkComponent,
 		InviteComponent,
-		MenuComponent
+		MenuComponent,
+		AssistantsComponent,
+		SettingsComponent
 	],
 	imports: [
 		FormsModule,

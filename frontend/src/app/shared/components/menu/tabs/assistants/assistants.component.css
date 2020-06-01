@@ -1,0 +1,13 @@
+.mat-card {
+    margin: 2%;
+}
+
+.mat-subheader {
+    padding-top: 15px;
+    font-size: 120%;
+    color: rgb(100, 100, 100);
+}
+
+#spinner {
+    margin:30% auto;
+}

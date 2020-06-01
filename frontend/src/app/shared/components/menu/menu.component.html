@@ -10,4 +10,24 @@
 			[lightTheme]="lightTheme"
 		></chat-component>
 	</mat-tab>
+
+	<mat-tab class="tab">
+		<ng-template mat-tab-label>
+			<mat-icon>people</mat-icon>
+			Assistants
+		</ng-template>
+		<ng-template matTabContent>
+			<app-assistants #assistants>
+			</app-assistants>
+		</ng-template>
+	</mat-tab>
+
+	<mat-tab class="tab" *ngIf="userService.isModOfRoom(mySessionId)">
+		<ng-template mat-tab-label>
+			<mat-icon>settings</mat-icon>
+			Settings
+		</ng-template>
+		<app-settings #settings>
+		</app-settings>
+	</mat-tab>
 </mat-tab-group>
