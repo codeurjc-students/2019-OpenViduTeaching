@@ -1,7 +1,6 @@
 import { OpenViduSessionService } from 'src/app/shared/services/openvidu-session/openvidu-session.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
 import { Component, OnInit, Input } from '@angular/core';
-import { Session } from 'openvidu-browser';
 import { RoomService } from 'src/app/shared/services/room/room.service';
 
 @Component({
@@ -11,7 +10,7 @@ import { RoomService } from 'src/app/shared/services/room/room.service';
 })
 export class AssistantsComponent implements OnInit {
 
-  session: Session;
+  sessionId: string;
   userName: string;
 
   loading: boolean;
@@ -33,14 +32,14 @@ export class AssistantsComponent implements OnInit {
   assistantsDisconnectedCount: Number;
 
   ngOnInit() {
-    this.session = this.openviduSessionService.getWebcamSession();
+    this.sessionId = this.openviduSessionService.getSessionId();
     this.userName = this.userService.user.name;
     this.getAssistants();
   }
 
   getAssistants() {
     this.loading = true;
-    this.roomSrv.getAssistants(this.session.sessionId).subscribe(
+    this.roomSrv.getAssistants(this.sessionId).subscribe(
       assistants => {
         this.moderatorsConnected = [];
         this.participantsConnected = [];

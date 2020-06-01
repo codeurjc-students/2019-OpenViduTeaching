@@ -1,8 +1,8 @@
-import { MatSnackBar } from '@angular/material';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SettingsComponent } from './settings.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
