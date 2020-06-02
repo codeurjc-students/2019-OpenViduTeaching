@@ -1,3 +1,5 @@
+import { MenuServiceMock } from './../../services/menu/menu.service.mock';
+import { MenuService } from 'src/app/shared/services/menu/menu.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MenuComponent } from './menu.component';
@@ -12,7 +14,10 @@ describe('MenuComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [MenuComponent, HasChatPipe],
-			providers: [{ provide: UserService, useClass: UserServiceMock }]
+			providers: [
+				{ provide: UserService, useClass: UserServiceMock },
+				{ provide: MenuService, useClass: MenuServiceMock }
+			]
 		}).compileComponents();
 	}));
 

@@ -10,13 +10,12 @@ import { UtilsService } from '../shared/services/utils/utils.service';
 import { RemoteUsersService } from '../shared/services/remote-users/remote-users.service';
 import { DevicesService } from '../shared/services/devices/devices.service';
 import { OpenViduSessionService } from '../shared/services/openvidu-session/openvidu-session.service';
-import { ChatService } from '../shared/services/chat/chat.service';
 import { OpenViduSessionServiceMock } from '../shared/services/openvidu-session/openvidu-session.service.mock';
-import { ChatServiceMock } from '../shared/services/chat/chat.service.mock';
 import { DevicesServiceMock } from '../shared/services/devices/devices.service.mock';
 import { UtilsServiceMock } from '../shared/services/utils/utils.service.mock';
 import { RemoteUsersServiceMock } from '../shared/services/remote-users/remote-users.service.mock';
 import { UserService } from '../shared/services/user/user.service';
+import { ChatServiceMock } from '../shared/services/chat/chat.service.mock';
 
 describe('VideoRoomComponent unit test', () => {
 	let component: VideoRoomComponent;
@@ -33,8 +32,8 @@ describe('VideoRoomComponent unit test', () => {
 				{ provide: RemoteUsersService, useClass: RemoteUsersServiceMock },
 				{ provide: OpenViduSessionService, useClass: OpenViduSessionServiceMock },
 				{ provide: DevicesService, useClass: DevicesServiceMock },
-				{ provide: 'assistantsChatService', useClass: UserServiceMock },
-				{ provide: 'moderatorsChatService', useClass: UserServiceMock }
+				{ provide: 'assistantsChatService', useClass: ChatServiceMock },
+				{ provide: 'moderatorsChatService', useClass: ChatServiceMock }
 			],
 			imports: [RouterTestingModule.withRoutes([])]
 		}).compileComponents();

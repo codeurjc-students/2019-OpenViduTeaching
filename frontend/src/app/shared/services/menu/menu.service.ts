@@ -42,8 +42,8 @@ export class MenuService {
 	}
 
 	setMenuTabGroup(menuTabGroup: MatTabGroup) {
-    this.menuTabGroup = menuTabGroup;
-    this.subscribeToTabChange();
+		this.menuTabGroup = menuTabGroup;
+		this.subscribeToTabChange();
 	}
 
 	toggleMenu() {
@@ -66,19 +66,18 @@ export class MenuService {
 	}
 
 	newMessage(signal: string) {
-    console.warn(signal);
 		if (signal == 'chat') {
-      if (!this.menuOpened || this.menuTabGroup.selectedIndex!=0) {
-        this.assistantMessagesUnread++;
-        this._assistantMessagesUnread.next(this.assistantMessagesUnread);
-      }
+			if (!this.menuOpened || this.menuTabGroup.selectedIndex != 0) {
+				this.assistantMessagesUnread++;
+				this._assistantMessagesUnread.next(this.assistantMessagesUnread);
+			}
 		} else if (signal == 'chatMod') {
-      if (!this.menuOpened|| this.menuTabGroup.selectedIndex!=1) {
-        this.moderatorMessagesUnread++;
-        this._moderatorMessagesUnread.next(this.moderatorMessagesUnread);
-      }
-    }
-    this._totalMessagesUnread.next(this.assistantMessagesUnread + this.moderatorMessagesUnread);
+			if (!this.menuOpened || this.menuTabGroup.selectedIndex != 1) {
+				this.moderatorMessagesUnread++;
+				this._moderatorMessagesUnread.next(this.moderatorMessagesUnread);
+			}
+		}
+		this._totalMessagesUnread.next(this.assistantMessagesUnread + this.moderatorMessagesUnread);
 	}
 
 	subscribeToTabChange() {
@@ -90,8 +89,8 @@ export class MenuService {
 			if (this.menuTabGroup.selectedIndex == 1) {
 				this.moderatorMessagesUnread = 0;
 				this._moderatorMessagesUnread.next(this.moderatorMessagesUnread);
-      }
-      this._totalMessagesUnread.next(this.assistantMessagesUnread + this.moderatorMessagesUnread);
+			}
+			this._totalMessagesUnread.next(this.assistantMessagesUnread + this.moderatorMessagesUnread);
 		});
 	}
 }
