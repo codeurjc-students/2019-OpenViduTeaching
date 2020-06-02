@@ -66,6 +66,10 @@ export class HomeComponent implements OnInit {
 		);
 	}
 
+	goToRoom(roomName: string) {
+		this.router.navigate(['/', roomName]);
+	}
+
 	private checkIsRecordingEnabled() {
 		this.recordingSrv.isRecordingEnabled().subscribe(
 			(isRecordingEnabled) => {

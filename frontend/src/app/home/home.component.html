@@ -43,7 +43,7 @@
 					<div *ngIf="this.moddedRooms!==undefined && this.moddedRooms.length>0">
 						<h3 mat-subheader>MODDED ROOMS</h3>
 						<mat-list-item *ngFor="let mod of this.moddedRooms">
-						<a mat-line mat-stroked-button routerLink="{{mod.name}}">
+						<a mat-line mat-stroked-button (click)="goToRoom(mod.name)">
 							{{mod.name}}
 						</a>
 						<button mat-icon-button (click)="getInviteURL(mod.name,'moderator')">
@@ -64,7 +64,7 @@
 					<div *ngIf="this.presentedRooms!==undefined && this.presentedRooms.length>0">
 						<h3 mat-subheader>PRESENTED ROOMS</h3>
 						<mat-list-item *ngFor="let pres of this.presentedRooms">
-						<a mat-line mat-stroked-button routerLink="{{pres.name}}">
+						<a mat-line mat-stroked-button (click)="goToRoom(pres.name)">
 							{{pres.name}}
 						</a>
 						<button mat-icon-button (click)="openVideos(pres.name)" *ngIf="isRecordingEnabled">
@@ -76,7 +76,7 @@
 					<div *ngIf="this.participatedRooms!==undefined && this.participatedRooms.length>0">
 						<h3 mat-subheader>PARTICIPATED ROOMS</h3>
 						<mat-list-item *ngFor="let part of this.participatedRooms">
-						<a mat-line mat-stroked-button routerLink="{{part.name}}">
+						<a mat-line mat-stroked-button (click)="goToRoom(part.name)">
 							{{part.name}}
 						</a>
 						<button mat-icon-button (click)="openVideos(part.name)" *ngIf="isRecordingEnabled">
