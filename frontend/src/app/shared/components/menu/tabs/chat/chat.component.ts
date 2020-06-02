@@ -1,8 +1,8 @@
-import { Component, ElementRef, Input, OnInit, ViewChild, HostListener, OnDestroy } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild, HostListener, OnDestroy, Injector } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { ChatMessage } from 'src/app/shared/types/chat-type';
-import { ChatService } from 'src/app/shared/services/chat/chat.service';
 import { MenuService } from 'src/app/shared/services/menu/menu.service';
+import { ChatService } from 'src/app/shared/services/chat/chat.service';
 
 @Component({
 	selector: 'chat-component',
@@ -14,10 +14,11 @@ export class ChatComponent implements OnInit, OnDestroy {
 	@ViewChild('chatInput') chatInput: ElementRef;
 
 	@Input() lightTheme: boolean;
-	@Input() chatService: ChatService;
+	@Input() type: string;
+
+	chatService: ChatService;
 
 	message: string;
-
 	messageList: ChatMessage[] = [];
 	menuOpened: boolean;
 
@@ -25,7 +26,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 	private menuToggleSubscription: Subscription;
 
 	constructor(
-		private menuService: MenuService
+		private menuService: MenuService,
+		private injector: Injector
 	) {}
 
 	@HostListener('document:keydown.escape', ['$event'])
@@ -37,6 +39,11 @@ export class ChatComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		if(this.type == 'moderators') {
+			this.chatService = this.injector.get('moderatorsChatService');
+		} else if(this.type == 'assistants') {
+			this.chatService = this.injector.get('assistantsChatService');
+		}
 		this.subscribeToMessages();
 		this.subscribeToToggleMenu();
 	}

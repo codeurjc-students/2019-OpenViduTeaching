@@ -6,29 +6,23 @@ import { UserServiceMock } from '../../services/user/user.service.mock';
 import { HasChatPipe } from '../../pipes/ovSettings.pipe';
 
 describe('MenuComponent', () => {
-  let component: MenuComponent;
-  let fixture: ComponentFixture<MenuComponent>;
+	let component: MenuComponent;
+	let fixture: ComponentFixture<MenuComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        MenuComponent,
-        HasChatPipe
-      ],
-      providers: [
-				{ provide: UserService, useClass: UserServiceMock },
-			],
-    })
-    .compileComponents();
-  }));
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			declarations: [MenuComponent, HasChatPipe],
+			providers: [{ provide: UserService, useClass: UserServiceMock }]
+		}).compileComponents();
+	}));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(MenuComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	beforeEach(() => {
+		fixture = TestBed.createComponent(MenuComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChatComponent } from './chat.component';
-import { ChatService } from 'src/app/shared/services/chat/chat.service';
 import { ChatServiceMock } from 'src/app/shared/services/chat/chat.service.mock';
 
 describe('ChatComponent', () => {
@@ -11,10 +10,14 @@ describe('ChatComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ChatComponent],
-			providers: [{ provide: ChatService, useClass: ChatServiceMock }]
+			providers: [
+				{ provide: 'assistantsChatService', useClass: ChatServiceMock },
+				{ provide: 'moderatorsChatService', useClass: ChatServiceMock },
+			]
 		}).compileComponents();
 		fixture = TestBed.createComponent(ChatComponent);
 		component = fixture.componentInstance;
+		component.type = 'assistants';
 		fixture.detectChanges();
 	}));
 

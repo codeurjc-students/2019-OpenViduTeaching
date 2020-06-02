@@ -1,9 +1,8 @@
 import { OpenViduSessionService } from './../../services/openvidu-session/openvidu-session.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
-import { Component, OnInit, Input, Inject } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { OvSettingsModel } from '../../models/ovSettings';
-import { ChatService } from '../../services/chat/chat.service';
 
 @Component({
   selector: 'app-menu',
@@ -18,8 +17,6 @@ export class MenuComponent implements OnInit {
   mySessionId: string;
 
   constructor(
-    @Inject('assistantsChatService') public assistantsChatService: ChatService,
-		@Inject('moderatorsChatService') public moderatorsChatService: ChatService,
     private openviduSessionService: OpenViduSessionService,
     public userService: UserService
   ) { }

@@ -33,7 +33,8 @@ describe('VideoRoomComponent unit test', () => {
 				{ provide: RemoteUsersService, useClass: RemoteUsersServiceMock },
 				{ provide: OpenViduSessionService, useClass: OpenViduSessionServiceMock },
 				{ provide: DevicesService, useClass: DevicesServiceMock },
-				{ provide: ChatService, useClass: ChatServiceMock }
+				{ provide: 'assistantsChatService', useClass: UserServiceMock },
+				{ provide: 'moderatorsChatService', useClass: UserServiceMock }
 			],
 			imports: [RouterTestingModule.withRoutes([])]
 		}).compileComponents();

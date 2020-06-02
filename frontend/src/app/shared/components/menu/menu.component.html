@@ -8,7 +8,7 @@
 		<chat-component
 			#assistantsChatComponent
 			[lightTheme]="true"
-			[chatService]="assistantsChatService"
+			[type]="'moderators'"
 		></chat-component>
 	</mat-tab>
 
@@ -20,7 +20,7 @@
 		<chat-component
 			#moderatorsChatComponent
 			[lightTheme]="false"
-			[chatService]="moderatorsChatService"
+			[type]="'assistants'"
 		></chat-component>
 	</mat-tab>
 
