@@ -67,7 +67,9 @@ export class HomeComponent implements OnInit {
 	}
 
 	goToRoom(roomName: string) {
-		this.router.navigate(['/', roomName]);
+		this.router.navigate(['/', roomName]).then(() => {
+			window.location.reload();
+		});
 	}
 
 	private checkIsRecordingEnabled() {
