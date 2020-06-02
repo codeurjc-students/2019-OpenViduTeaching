@@ -163,7 +163,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.subscribeToStreamDestroyed();
 		this.subscribeToStreamPropertyChange();
 		this.subscribeToNicknameChanged();
-		this.menuService.setMenuComponent(this.menuSidenav);
+		this.menuService.setMenuSidenav(this.menuSidenav);
 		this.assistantsChatService.subscribeToChat('chat');
 		if(this.userService.isModOfRoom(this.roomName)) {
 			this.moderatorsChatService.subscribeToChat('chatMod');

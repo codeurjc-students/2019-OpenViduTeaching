@@ -31,7 +31,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 	@Output() leaveSessionButtonClicked = new EventEmitter<any>();
 
 	newMessagesNum: number;
-	private chatServiceSubscription: Subscription;
+	private menuServiceSubscription: Subscription;
 
 	fullscreenIcon = VideoFullscreenIcon.BIG;
 	logoUrl = 'https://raw.githubusercontent.com/OpenVidu/openvidu-call/master/openvidu-call-front/src/assets/images/';
@@ -39,12 +39,12 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 	participantsNames: string[] = [];
 
 	constructor(private utilsSrv: UtilsService, private menuService: MenuService) {
-		this.chatServiceSubscription = this.menuService.messagesUnreadObs.subscribe((num) => {
+		this.menuServiceSubscription = this.menuService.totalMessagesUnreadObs.subscribe((num) => {
 			this.newMessagesNum = num;
 		});
 	}
 	ngOnDestroy(): void {
-		this.chatServiceSubscription.unsubscribe();
+		this.menuServiceSubscription.unsubscribe();
 	}
 
 	@HostListener('window:resize', ['$event'])

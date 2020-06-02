@@ -40,7 +40,7 @@ export class ChatService {
 					? this.oVSessionService.getWebCamAvatar()
 					: this.remoteUsersService.getUserAvatar(connectionId)
 			});
-			this.menuService.newMessage();
+			this.menuService.newMessage(this.signal);
 			this._messageList.next(this.messageList);
 		});
 	}

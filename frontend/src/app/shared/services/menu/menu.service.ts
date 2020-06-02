@@ -3,58 +3,95 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { ILogger } from '../../types/logger-type';
 import { LoggerService } from '../logger/logger.service';
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class MenuService {
+	private menuSidenav: MatSidenav;
+	private menuTabGroup: MatTabGroup;
 
-  private menuComponent: MatSidenav;
-  
+	private log: ILogger;
+
 	private menuOpened: boolean;
-  private _toggleMenu = <BehaviorSubject<boolean>>new BehaviorSubject(false);
-  private log: ILogger;
+	private _toggleMenu = <BehaviorSubject<boolean>>new BehaviorSubject(false);
+	toggleMenuObs: Observable<boolean>;
 
-  private messagesUnread = 0;
-  private _messagesUnread = <BehaviorSubject<number>>new BehaviorSubject(0);
-  
-  toggleMenuObs: Observable<boolean>;
-  messagesUnreadObs: Observable<number>;
+	private assistantMessagesUnread = 0;
+	private _assistantMessagesUnread = <BehaviorSubject<number>>new BehaviorSubject(0);
+	assistantMessagesUnreadObs: Observable<number>;
 
-  constructor(private loggerSrv: LoggerService) {
-    this.toggleMenuObs = this._toggleMenu.asObservable();
-    this.log = this.loggerSrv.get('MenuService');
-		this.messagesUnreadObs = this._messagesUnread.asObservable();
-  }
+	private moderatorMessagesUnread = 0;
+	private _moderatorMessagesUnread = <BehaviorSubject<number>>new BehaviorSubject(0);
+	moderatorMessagesUnreadObs: Observable<number>;
 
-  setMenuComponent(menuSidenav: MatSidenav) {
-		this.menuComponent = menuSidenav;
-  }
-  
-  toggleMenu() {
-		this.log.d('Toggling menu');
-		this.menuComponent.toggle().then(() => {
-			this.menuOpened = this.menuComponent.opened;
-			this._toggleMenu.next(this.menuOpened);
-			if (this.menuOpened) {
-				this.messagesUnread = 0;
-				this._messagesUnread.next(this.messagesUnread);
-			}
-		});
-  }
-  
-  private isMenuOpened(): boolean {
-		return this.menuOpened;
+	private _totalMessagesUnread = <BehaviorSubject<number>>new BehaviorSubject(0);
+	totalMessagesUnreadObs: Observable<number>;
+
+	constructor(private loggerSrv: LoggerService) {
+		this.log = this.loggerSrv.get('MenuService');
+		this.toggleMenuObs = this._toggleMenu.asObservable();
+		this.totalMessagesUnreadObs = this._totalMessagesUnread.asObservable();
+		this.assistantMessagesUnreadObs = this._assistantMessagesUnread.asObservable();
+		this.moderatorMessagesUnreadObs = this._moderatorMessagesUnread.asObservable();
 	}
 
-	private addMessageUnread() {
-		this.messagesUnread++;
-		this._messagesUnread.next(this.messagesUnread);
-  }
-  
-  newMessage() {
-    if (!this.isMenuOpened()) {
-      this.addMessageUnread();
+	setMenuSidenav(menuSidenav: MatSidenav) {
+		this.menuSidenav = menuSidenav;
+	}
+
+	setMenuTabGroup(menuTabGroup: MatTabGroup) {
+    this.menuTabGroup = menuTabGroup;
+    this.subscribeToTabChange();
+	}
+
+	toggleMenu() {
+		this.log.d('Toggling menu');
+		this.menuSidenav.toggle().then(() => {
+			this.menuOpened = this.menuSidenav.opened;
+			this._toggleMenu.next(this.menuOpened);
+			if (this.menuOpened) {
+				if (this.menuTabGroup.selectedIndex == 0) {
+					this.assistantMessagesUnread = 0;
+					this._assistantMessagesUnread.next(this.assistantMessagesUnread);
+				}
+				if (this.menuTabGroup.selectedIndex == 1) {
+					this.moderatorMessagesUnread = 0;
+					this._moderatorMessagesUnread.next(this.moderatorMessagesUnread);
+				}
+				this._totalMessagesUnread.next(this.assistantMessagesUnread + this.moderatorMessagesUnread);
+			}
+		});
+	}
+
+	newMessage(signal: string) {
+    console.warn(signal);
+		if (signal == 'chat') {
+      if (!this.menuOpened || this.menuTabGroup.selectedIndex!=0) {
+        this.assistantMessagesUnread++;
+        this._assistantMessagesUnread.next(this.assistantMessagesUnread);
+      }
+		} else if (signal == 'chatMod') {
+      if (!this.menuOpened|| this.menuTabGroup.selectedIndex!=1) {
+        this.moderatorMessagesUnread++;
+        this._moderatorMessagesUnread.next(this.moderatorMessagesUnread);
+      }
     }
-  }
+    this._totalMessagesUnread.next(this.assistantMessagesUnread + this.moderatorMessagesUnread);
+	}
+
+	subscribeToTabChange() {
+		this.menuTabGroup.selectedIndexChange.subscribe(() => {
+			if (this.menuTabGroup.selectedIndex == 0) {
+				this.assistantMessagesUnread = 0;
+				this._assistantMessagesUnread.next(this.assistantMessagesUnread);
+			}
+			if (this.menuTabGroup.selectedIndex == 1) {
+				this.moderatorMessagesUnread = 0;
+				this._moderatorMessagesUnread.next(this.moderatorMessagesUnread);
+      }
+      this._totalMessagesUnread.next(this.assistantMessagesUnread + this.moderatorMessagesUnread);
+		});
+	}
 }

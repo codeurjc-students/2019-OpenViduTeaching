@@ -1,4 +1,4 @@
-<mat-tab-group #tabGroup class="tab-group" backgroundColor="primary" animationDuration="0ms" (selectedTabChange)="tabChanged($event)" dynamicHeight>
+<mat-tab-group #tabGroup class="tab-group" backgroundColor="primary" animationDuration="0ms" dynamicHeight>
 	<mat-tab class="tab" *ngIf="ovSettings | hasChat">
 		<ng-template mat-tab-label>
 			<mat-icon matBadge="{{newMessagesAssistants}}" [matBadgeHidden]="newMessagesAssistants === 0"  matBadgePosition="above before" matBadgeColor="accent">chat</mat-icon>
@@ -8,7 +8,7 @@
 		<chat-component
 			#assistantsChatComponent
 			[lightTheme]="true"
-			[type]="'moderators'"
+			[type]="'assistants'"
 		></chat-component>
 	</mat-tab>
 
@@ -20,7 +20,7 @@
 		<chat-component
 			#moderatorsChatComponent
 			[lightTheme]="false"
-			[type]="'assistants'"
+			[type]="'moderators'"
 		></chat-component>
 	</mat-tab>
 
