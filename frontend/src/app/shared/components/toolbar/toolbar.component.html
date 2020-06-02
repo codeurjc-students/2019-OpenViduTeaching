@@ -70,12 +70,12 @@
 		</div>
 	</div>
 	<div fxFlex="10%" fxFlexOrder="3" align="end">
-		<button mat-icon-button (click)="toggleMenu()" [disabled]="isConnectionLost" *ngIf="ovSettings | hasChat">
+		<button mat-icon-button (click)="toggleMenu()" [disabled]="isConnectionLost">
 			<mat-icon
 				matBadge="{{ newMessagesNum }}"
 				[matBadgeHidden]="newMessagesNum === 0"
 				matBadgePosition="above before"
-				matTooltip="Chat"
+				matTooltip="Menu"
 				matBadgeColor="accent"
 				>menu</mat-icon
 			>
