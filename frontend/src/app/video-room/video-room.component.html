@@ -67,9 +67,9 @@
             </div>
           </ng-container>
           <div
-            *ngFor="let user of remoteUsers"
+            *ngFor="let user of remoteStreamers"
             class="OT_root OT_publisher custom-class"
-            id="remoteUsers"
+            id="remoteStreamers"
             [style.display]="!user.streamManager?.stream?.videoActive ? 'none' : 'block'"
           >
             <stream-component

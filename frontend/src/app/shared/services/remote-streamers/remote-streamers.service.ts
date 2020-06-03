@@ -17,7 +17,7 @@ export class RemoteStreamersService {
 	remoteStreamersObs: Observable<UserModel[]>;	
 
 	constructor(private loggerSrv: LoggerService) {
-		this.log = this.loggerSrv.get('RemoteService');
+		this.log = this.loggerSrv.get('RemoteStreamersService');
 		this.remoteStreamersObs = this._remoteStreamers.asObservable();
 	}
 
@@ -43,7 +43,7 @@ export class RemoteStreamersService {
 	}
 
 	removeStreamerByConnectionId(connectionId: string) {
-		this.log.w('Deleting user: ', connectionId);
+		this.log.w('Deleting streamer: ', connectionId);
 		const user = this.getRemoteStreamerByConnectionId(connectionId);
 		const index = this.streamers.indexOf(user, 0);
 		if (index > -1) {
@@ -79,14 +79,9 @@ export class RemoteStreamersService {
 		this._remoteStreamers.next(this.streamers);
 	}
 
-
 	clean() {
 		this._remoteStreamers = <BehaviorSubject<UserModel[]>>new BehaviorSubject([]);
 		this.remoteStreamersObs = this._remoteStreamers.asObservable();
 		this.streamers = [];
-	}
-
-	getUserAvatar(connectionId: string): string {
-		return this.getRemoteStreamerByConnectionId(connectionId).getAvatar();
 	}
 }
