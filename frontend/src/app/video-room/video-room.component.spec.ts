@@ -7,13 +7,13 @@ import { LoggerServiceMock } from '../shared/services/logger/logger.service.mock
 import { NetworkServiceMock } from '../shared/services/network/network.service.mock';
 import { NetworkService } from '../shared/services/network/network.service';
 import { UtilsService } from '../shared/services/utils/utils.service';
-import { RemoteUsersService } from '../shared/services/remote-users/remote-users.service';
+import { RemoteStreamersService } from '../shared/services/remote-streamers/remote-streamers.service';
 import { DevicesService } from '../shared/services/devices/devices.service';
 import { OpenViduSessionService } from '../shared/services/openvidu-session/openvidu-session.service';
 import { OpenViduSessionServiceMock } from '../shared/services/openvidu-session/openvidu-session.service.mock';
 import { DevicesServiceMock } from '../shared/services/devices/devices.service.mock';
 import { UtilsServiceMock } from '../shared/services/utils/utils.service.mock';
-import { RemoteUsersServiceMock } from '../shared/services/remote-users/remote-users.service.mock';
+import { RemoteStreamersServiceMock } from '../shared/services/remote-streamers/remote-streamers.service.mock';
 import { UserService } from '../shared/services/user/user.service';
 import { ChatServiceMock } from '../shared/services/chat/chat.service.mock';
 
@@ -29,7 +29,7 @@ describe('VideoRoomComponent unit test', () => {
 				{ provide: LoggerService, useClass: LoggerServiceMock },
 				{ provide: NetworkService, useClass: NetworkServiceMock },
 				{ provide: UtilsService, useClass: UtilsServiceMock },
-				{ provide: RemoteUsersService, useClass: RemoteUsersServiceMock },
+				{ provide: RemoteStreamersService, useClass: RemoteStreamersServiceMock },
 				{ provide: OpenViduSessionService, useClass: OpenViduSessionServiceMock },
 				{ provide: DevicesService, useClass: DevicesServiceMock },
 				{ provide: 'assistantsChatService', useClass: ChatServiceMock },

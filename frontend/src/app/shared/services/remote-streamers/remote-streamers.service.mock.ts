@@ -5,26 +5,26 @@ import { StreamEvent, Subscriber } from 'openvidu-browser';
 @Injectable({
 	providedIn: 'root'
 })
-export class RemoteUsersServiceMock {
+export class RemoteStreamersServiceMock {
 	constructor() {}
 
-	updateUsers() {}
+	updateStreamers() {}
 
 	add(event: StreamEvent, subscriber: Subscriber) {}
 
-	removeUserByConnectionId(connectionId: string) {}
+	removeStreamerByConnectionId(connectionId: string) {}
 
 	someoneIsSharingScreen(): boolean {
 		return false;
 	}
 
-	toggleUserZoom(connectionId: string) {}
+	toggleStreamerZoom(connectionId: string) {}
 
 	resetUsersZoom() {}
 
 	setUserZoom(connectionId: string, zoom: boolean) {}
 
-	getRemoteUserByConnectionId(connectionId: string): UserModel {
+	getRemoteStreamerByConnectionId(connectionId: string): UserModel {
 		return null;
 	}
 

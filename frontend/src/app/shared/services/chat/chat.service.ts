@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { ChatMessage } from '../../types/chat-type';
 import { OpenViduSessionService } from '../openvidu-session/openvidu-session.service';
-import { RemoteUsersService } from '../remote-users/remote-users.service';
+import { RemoteStreamersService } from '../remote-streamers/remote-streamers.service';
 import { MenuService } from '../menu/menu.service';
 
 @Injectable({
@@ -20,7 +20,7 @@ export class ChatService {
 	constructor(
 		private menuService: MenuService,
 		private oVSessionService: OpenViduSessionService,
-		private remoteUsersService: RemoteUsersService
+		private remoteStreamersService: RemoteStreamersService
 	) {
 		this.messagesObs = this._messageList.asObservable();
 	}
@@ -38,7 +38,7 @@ export class ChatService {
 				message: data.message,
 				userAvatar: isMyOwnConnection
 					? this.oVSessionService.getWebCamAvatar()
-					: this.remoteUsersService.getUserAvatar(connectionId)
+					: this.remoteStreamersService.getUserAvatar(connectionId)
 			});
 			this.menuService.newMessage(this.signal);
 			this._messageList.next(this.messageList);

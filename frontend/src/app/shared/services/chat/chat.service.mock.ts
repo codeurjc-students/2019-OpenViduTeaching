@@ -3,7 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { ChatMessage } from '../../types/chat-type';
 import { MenuService } from '../menu/menu.service';
 import { OpenViduSessionService } from '../openvidu-session/openvidu-session.service';
-import { RemoteUsersService } from '../remote-users/remote-users.service';
+import { RemoteStreamersService } from '../remote-streamers/remote-streamers.service';
 
 @Injectable()
 export class ChatServiceMock {
@@ -15,7 +15,7 @@ export class ChatServiceMock {
 	constructor(
 		private menuService: MenuService,
 		private oVSessionService: OpenViduSessionService,
-		private remoteUsersService: RemoteUsersService
+		private remoteStreamersService: RemoteStreamersService
 	) {
 		this.messagesObs = this._messageList.asObservable();
 	}

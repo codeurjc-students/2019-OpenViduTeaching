@@ -1,17 +1,17 @@
 import { TestBed } from '@angular/core/testing';
 
-import { RemoteUsersService } from './remote-users.service';
+import { RemoteStreamersService } from './remote-streamers.service';
 import { LoggerService } from '../logger/logger.service';
 import { LoggerServiceMock } from '../logger/logger.service.mock';
 
-describe('RemoteUsersService', () => {
-	let service: RemoteUsersService;
+describe('RemoteStreamersService', () => {
+	let service: RemoteStreamersService;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
 			providers: [{ provide: LoggerService, useClass: LoggerServiceMock }]
 		});
-		service = TestBed.inject(RemoteUsersService);
+		service = TestBed.inject(RemoteStreamersService);
 	});
 
 	it('should be created', () => {

@@ -67,7 +67,7 @@ import { NetworkService } from './shared/services/network/network.service';
 import { OpenViduSessionService } from './shared/services/openvidu-session/openvidu-session.service';
 import { UtilsService } from './shared/services/utils/utils.service';
 import { DevicesService } from './shared/services/devices/devices.service';
-import { RemoteUsersService } from './shared/services/remote-users/remote-users.service';
+import { RemoteStreamersService } from './shared/services/remote-streamers/remote-streamers.service';
 import { ChatService } from './shared/services/chat/chat.service';
 import { LoggerService } from './shared/services/logger/logger.service';
 import { StorageService } from './shared/services/storage/storage.service';
@@ -145,7 +145,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		NetworkService,
 		OpenViduSessionService,
 		UtilsService,
-		RemoteUsersService,
+		RemoteStreamersService,
 		DevicesService,
 		LoggerService,
 		{ provide: 'assistantsChatService', useClass: ChatService },

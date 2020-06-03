@@ -27,7 +27,7 @@ import { DevicesService } from '../shared/services/devices/devices.service';
 import { OpenViduSessionService } from '../shared/services/openvidu-session/openvidu-session.service';
 import { NetworkService } from '../shared/services/network/network.service';
 import { LoggerService } from '../shared/services/logger/logger.service';
-import { RemoteUsersService } from '../shared/services/remote-users/remote-users.service';
+import { RemoteStreamersService } from '../shared/services/remote-streamers/remote-streamers.service';
 import { UtilsService } from '../shared/services/utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ChatService } from '../shared/services/chat/chat.service';
@@ -79,7 +79,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		private router: Router,
 		private route: ActivatedRoute,
 		private utilsSrv: UtilsService,
-		private remoteUsersService: RemoteUsersService,
+		private remoteStreamersService: RemoteStreamersService,
 		public oVSessionService: OpenViduSessionService,
 		private oVDevicesService: DevicesService,
 		private loggerSrv: LoggerService,
@@ -120,7 +120,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		// Reconnecting session is received in Firefox
 		// To avoid 'Connection lost' message uses session.off()
 		this.session?.off('reconnecting');
-		this.remoteUsersService.clean();
+		this.remoteStreamersService.clean();
 		this.session = null;
 		this.sessionScreen = null;
 		this.localUsers = [];
@@ -301,7 +301,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			if (this.oVSessionService.isMyOwnConnection(event.connectionId)) {
 				this.oVSessionService.toggleZoom(event.connectionId);
 			} else {
-				this.remoteUsersService.toggleUserZoom(event.connectionId);
+				this.remoteStreamersService.toggleUserZoom(event.connectionId);
 			}
 		}
 		this.updateOpenViduLayout();
@@ -375,7 +375,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			}
 
 			const subscriber: Subscriber = this.session.subscribe(event.stream, undefined);
-			this.remoteUsersService.add(event, subscriber);
+			this.remoteStreamersService.add(event, subscriber);
 			this.sendNicknameSignal(this.oVSessionService.getWebcamUserName(), event.stream.connection);
 		});
 	}
@@ -383,7 +383,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private subscribeToStreamDestroyed() {
 		this.session.on('streamDestroyed', (event: StreamEvent) => {
 			const connectionId = event.stream.connection.connectionId;
-			this.remoteUsersService.removeUserByConnectionId(connectionId);
+			this.remoteStreamersService.removeStreamerByConnectionId(connectionId);
 			// event.preventDefault();
 		});
 	}
@@ -400,7 +400,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 				return;
 			}
 			if (event.changedProperty === 'videoActive') {
-				this.remoteUsersService.updateUsers();
+				this.remoteStreamersService.updateStreamers();
 			}
 		});
 	}
@@ -412,7 +412,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 				return;
 			}
 			const nickname = JSON.parse(event.data).nickname;
-			this.remoteUsersService.updateNickname(connectionId, nickname);
+			this.remoteStreamersService.updateNickname(connectionId, nickname);
 		});
 	}
 
@@ -421,12 +421,12 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		// Has been mandatory change the user zoom property here because of
 		// zoom icons and cannot handle publisherStartSpeaking event in other component
 		this.session.on('publisherStartSpeaking', (event: PublisherSpeakingEvent) => {
-			const someoneIsSharingScreen = this.remoteUsersService.someoneIsSharingScreen();
+			const someoneIsSharingScreen = this.remoteStreamersService.someoneIsSharingScreen();
 			if (!this.oVSessionService.isScreenShareEnabled() && !someoneIsSharingScreen) {
 				const elem = event.connection.stream.streamManager.videos[0].video;
 				const element = this.utilsSrv.getHTMLElementByClassName(elem, LayoutType.ROOT_CLASS);
 				this.resetAllBigElements();
-				this.remoteUsersService.setUserZoom(event.connection.connectionId, true);
+				this.remoteStreamersService.setUserZoom(event.connection.connectionId, true);
 				this.onToggleVideoSize({ element });
 			}
 		});
@@ -515,7 +515,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 	private resetAllBigElements() {
 		this.utilsSrv.removeAllBigElementClass();
-		this.remoteUsersService.resetUsersZoom();
+		this.remoteStreamersService.resetUsersZoom();
 		this.oVSessionService.resetUsersZoom();
 	}
 
@@ -527,7 +527,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	}
 
 	private subscribeToRemoteUsers() {
-		this.remoteUsersSubscription = this.remoteUsersService.remoteUsers.subscribe((users) => {
+		this.remoteUsersSubscription = this.remoteStreamersService.remoteStreamersObs.subscribe((users) => {
 			this.remoteUsers = [...users];
 			this.updateOpenViduLayout();
 		});
