@@ -39,16 +39,6 @@ import { MenuService } from '../shared/services/menu/menu.service';
 	styleUrls: ['./video-room.component.css']
 })
 export class VideoRoomComponent implements OnInit, OnDestroy {
-	// Config from webcomponent or angular-library
-	@Input() externalConfig: ExternalConfigModel;
-	@Output() _session = new EventEmitter<any>();
-	@Output() _publisher = new EventEmitter<any>();
-	@Output() _error = new EventEmitter<any>();
-
-	// !Deprecated
-	@Output() _joinSession = new EventEmitter<any>();
-	// !Deprecated
-  	@Output() _leaveSession = new EventEmitter<any>();
 
 	@ViewChild('sidenav') menuSidenav: MatSidenav;
 
@@ -110,8 +100,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		}
 		this.route.paramMap.subscribe(params => {
 			this.roomName = params.get("roomName");
-			this.lightTheme = this.externalConfig?.getTheme() === Theme.LIGHT;
-			this.ovSettings = !!this.externalConfig ? this.externalConfig.getOvSettings() : new OvSettingsModel().setDefaultTeachingSettings(this.userService, this.roomName);
+			this.lightTheme = false;
+			this.ovSettings = new OvSettingsModel().setDefaultTeachingSettings(this.userService, this.roomName);
 			this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());
 		});
 	}
@@ -157,7 +147,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	joinToSession() {
 		this.oVSessionService.initSessions();
 		this.session = this.oVSessionService.getWebcamSession();
-		this._session.emit(this.session);
 		this.sessionScreen = this.oVSessionService.getScreenSession();
 		this.subscribeToStreamCreated();
 		this.subscribeToStreamDestroyed();
@@ -177,7 +166,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.log.d('Leaving session...');
 		this.oVSessionService.disconnect();
 		this.router.navigate(['']);
-		this._leaveSession.emit();
 	}
 
 	onNicknameUpdate(nickname: string) {
@@ -317,19 +305,10 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private async connectToSession(): Promise<void> {
 		let webcamToken: string;
 		let screenToken: string;
-		// Webcomponent or Angular Library
-		if (!!this.externalConfig) {
-			if (this.externalConfig.hasTokens()) {
-				this.log.d('Received external tokens from ' + this.externalConfig.getComponentName());
-				webcamToken = this.externalConfig.getWebcamToken();
-				// Only connect screen if screen sharing feature is available
-				screenToken = this.ovSettings?.hasScreenSharing() ? this.externalConfig.getScreenToken() : undefined;
-			}
-		}
 
-		webcamToken = webcamToken ? webcamToken : await this.getToken();
+		webcamToken = await this.getToken();
 		// Only get screentoken if screen sharing feature is available
-		if (!screenToken && this.ovSettings?.hasScreenSharing()) {
+		if (this.ovSettings?.hasScreenSharing()) {
 			screenToken = await this.getToken();
 		}
 
@@ -344,8 +323,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			} else {
 				this.oVSessionService.publishWebcam();
 			}
-			// !Deprecated
-			this._joinSession.emit();
 
 			this.updateOpenViduLayout();
 		}
@@ -360,7 +337,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 				(<HTMLElement>this.localUsers[0].getStreamManager().videos[0].video).parentElement.classList.remove('custom-class');
 			});
 		} catch (error) {
-			this._error.emit({ error: error.error, messgae: error.message, code: error.code, status: error.status });
 			this.log.e('There was an error connecting to the session:', error.code, error.message);
 			this.utilsSrv.showErrorMessage('There was an error connecting to the session:', error?.error || error?.message);
 		}
@@ -386,11 +362,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.remoteStreamersService.removeStreamerByConnectionId(connectionId);
 			// event.preventDefault();
 		});
-	}
-
-	// Emit publisher to webcomponent
-	emitPublisher(publisher: Publisher) {
-		this._publisher.emit(publisher);
 	}
 
 	private subscribeToStreamPropertyChange() {
@@ -439,7 +410,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 	private subscribeToMenuToggle() {
 		this.menuToggleSubscription = this.menuService.toggleMenuObs.subscribe((opened) => {
-			const timeout = this.externalConfig ? 300 : 0;
+			const timeout = 0;
 			this.updateOpenViduLayout(timeout);
 		});
 	}
@@ -480,13 +451,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private async getToken(): Promise<string> {
 		this.log.d('Generating tokens...');
 		try {
-			return await this.networkSrv.getToken(
-				this.mySessionId,
-				this.externalConfig?.getOvServerUrl(),
-				this.externalConfig?.getOvSecret()
-			);
+			return await this.networkSrv.getToken(this.mySessionId);
 		} catch (error) {
-			this._error.emit({ error: error.error, messgae: error.message, code: error.code, status: error.status });
 			this.log.e('There was an error getting the token:', error.status, error.message);
 			this.utilsSrv.showErrorMessage('There was an error getting the token:', error.error || error.message);
 		}
