@@ -22,7 +22,8 @@ export class FooterComponent implements OnInit {
 	set participants(participants: UserModel[]) {
 		this.participantsNames = [];
 		participants.forEach((user) => {
-			if (user.isCamera()) {
+			const nickname = user.getNickname();
+			if (user.isCamera() && !this.participantsNames.includes(nickname.substr(0, nickname.lastIndexOf("_SCREEN")))) {
 				this.participantsNames.push(user.getNickname());
 			}
 		});

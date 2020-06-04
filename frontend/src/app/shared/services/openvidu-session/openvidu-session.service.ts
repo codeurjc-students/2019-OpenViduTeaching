@@ -161,7 +161,6 @@ export class OpenViduSessionService {
 
 	replaceTrack(videoSource: string, audioSource: string, mirror: boolean = true): Promise<any> {
 		return new Promise((resolve, reject) => {
-
 			if (!!videoSource) {
 				this.log.d('Replacing video track ' + videoSource);
 				this.videoSource = videoSource;
@@ -191,7 +190,6 @@ export class OpenViduSessionService {
 			publisher.once('accessDenied', () => {
 				reject();
 			});
-
 
 			// Reeplace track method
 			// this.webcamMediaStream = await this.OV.getUserMedia(properties);
@@ -286,7 +284,16 @@ export class OpenViduSessionService {
 	}
 
 	isMyOwnConnection(connectionId: string): boolean {
-		return this.webcamUser?.getConnectionId() === connectionId || this.screenUser?.getConnectionId() === connectionId;
+		return (
+			this.webcamUser?.getConnectionId() === connectionId ||
+			this.webcamSession.connection?.connectionId === connectionId ||
+			this.screenUser?.getConnectionId() === connectionId ||
+			this.screenSession.connection?.connectionId === connectionId
+		);
+	}
+
+	isMyOwnNickname(nickname: string): boolean {
+		return (this.getWebcamUserName() === nickname || this.getScreenUserName() === nickname);
 	}
 
 	createProperties(

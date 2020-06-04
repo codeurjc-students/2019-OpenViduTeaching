@@ -1,5 +1,5 @@
 import { UserService } from './../shared/services/user/user.service';
-import { Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild, Inject } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild, Inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -20,8 +20,6 @@ import { OvSettingsModel } from '../shared/models/ovSettings';
 import { ScreenType } from '../shared/types/video-type';
 import { ILogger } from '../shared/types/logger-type';
 import { LayoutType } from '../shared/types/layout-type';
-import { Theme } from '../shared/types/webcomponent-config';
-import { ExternalConfigModel } from '../shared/models/external-config';
 
 // Services
 import { DevicesService } from '../shared/services/devices/devices.service';
@@ -358,8 +356,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private subscribeToConnectionCreated() {
 		this.session.on('connectionCreated', (event: ConnectionEvent) => {
 			const connectionId = event.connection.connectionId;
+			const nickname = JSON.parse(event.connection.data.split('%/%')[0])?.clientData;
 
-			if (this.oVSessionService.isMyOwnConnection(connectionId)) {
+			if (this.oVSessionService.isMyOwnConnection(connectionId) || this.oVSessionService.isMyOwnNickname(nickname)) {
 				return;
 			}
 
