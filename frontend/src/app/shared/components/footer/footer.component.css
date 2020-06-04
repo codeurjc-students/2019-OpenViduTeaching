@@ -15,12 +15,12 @@
 	background-color: #eeeeee !important;
 }
 
-.participantNames {
+.assistantNames {
 	font-size: small;
 	height: inherit;
 }
 
-.participantsButton {
+.assistantsButton {
 	position: absolute;
 	left: 5px;
 	top: none;
@@ -28,12 +28,12 @@
 	height: -moz-available;
 }
 
-.participantsButtonContainer {
+.assistantsButtonContainer {
 	height: -webkit-fill-available;
 	height: -moz-available;
 }
 
-.participantsButtonContainer .mat-icon-button i, .mat-icon-button .mat-icon {
+.assistantsButtonContainer .mat-icon-button i, .mat-icon-button .mat-icon {
 	line-height: 18px;
 }
 

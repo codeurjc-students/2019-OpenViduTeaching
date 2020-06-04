@@ -9,7 +9,7 @@ import { UserModel } from '../../models/user-model';
 export class FooterComponent implements OnInit {
 	@Input() lightTheme: boolean;
 
-	participantsNames: string[] = [];
+	assistantsNames: string[] = [];
 
 	constructor() {}
 
@@ -19,15 +19,15 @@ export class FooterComponent implements OnInit {
 	ngOnInit() {}
 
 	@Input()
-	set participants(participants: UserModel[]) {
-		this.participantsNames = [];
-		participants.forEach((user) => {
+	set assistants(assistants: UserModel[]) {
+		this.assistantsNames = [];
+		assistants.forEach((user) => {
 			const nickname = user.getNickname();
-			if (user.isCamera() && !this.participantsNames.includes(nickname.substr(0, nickname.lastIndexOf("_SCREEN")))) {
-				this.participantsNames.splice(this.participantsNames.indexOf(`${nickname}_SCREEN`), 1);
-				this.participantsNames.push(user.getNickname());
+			if (user.isCamera() && !this.assistantsNames.includes(nickname.substr(0, nickname.lastIndexOf("_SCREEN")))) {
+				this.assistantsNames.splice(this.assistantsNames.indexOf(`${nickname}_SCREEN`), 1);
+				this.assistantsNames.push(user.getNickname());
 			}
 		});
-		this.participantsNames = [...this.participantsNames];
+		this.assistantsNames = [...this.assistantsNames];
 	}
 }
