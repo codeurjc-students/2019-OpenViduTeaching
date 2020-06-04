@@ -6,6 +6,7 @@ import { ChatService } from './chat.service';
 import { OpenViduSessionService } from '../openvidu-session/openvidu-session.service';
 import { OpenViduSessionServiceMock } from '../openvidu-session/openvidu-session.service.mock';
 import { MenuServiceMock } from '../menu/menu.service.mock';
+import { RemoteUsersServiceMock } from '../remote-users/remote-users.service.mock';
 
 describe('ChatService', () => {
 	let service: ChatService;

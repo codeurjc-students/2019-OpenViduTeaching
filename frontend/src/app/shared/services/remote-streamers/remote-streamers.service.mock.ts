@@ -31,8 +31,4 @@ export class RemoteStreamersServiceMock {
 	updateNickname(connectionId: any, nickname: any) {}
 
 	clean() {}
-
-	getUserAvatar(connectionId: string): string {
-		return 'avatar';
-	}
 }
