@@ -38,4 +38,6 @@ export class MenuServiceMock {
 	}
 
 	private addMessageUnread() {}
+
+	updateAssistants() {}
 }

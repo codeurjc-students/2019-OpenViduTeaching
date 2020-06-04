@@ -38,7 +38,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
 	participantsNames: string[] = [];
 
-	constructor(private utilsSrv: UtilsService, private menuService: MenuService) {
+	constructor(
+		private utilsSrv: UtilsService,
+		private menuService: MenuService
+	) {
 		this.menuServiceSubscription = this.menuService.totalMessagesUnreadObs.subscribe((num) => {
 			this.newMessagesNum = num;
 		});

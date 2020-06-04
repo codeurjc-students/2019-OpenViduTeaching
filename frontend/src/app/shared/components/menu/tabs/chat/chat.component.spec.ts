@@ -1,3 +1,5 @@
+import { MenuServiceMock } from './../../../../services/menu/menu.service.mock';
+import { MenuService } from 'src/app/shared/services/menu/menu.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChatComponent } from './chat.component';
@@ -13,6 +15,7 @@ describe('ChatComponent', () => {
 			providers: [
 				{ provide: 'assistantsChatService', useClass: ChatServiceMock },
 				{ provide: 'moderatorsChatService', useClass: ChatServiceMock },
+				{ provide: MenuService, useClass: MenuServiceMock}
 			]
 		}).compileComponents();
 		fixture = TestBed.createComponent(ChatComponent);

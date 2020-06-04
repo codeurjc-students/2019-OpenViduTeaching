@@ -1,3 +1,5 @@
+import { MenuServiceMock } from './../shared/services/menu/menu.service.mock';
+import { MenuService } from 'src/app/shared/services/menu/menu.service';
 import { UserServiceMock } from './../shared/services/user/user.service.mock';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -32,6 +34,7 @@ describe('VideoRoomComponent unit test', () => {
 				{ provide: RemoteStreamersService, useClass: RemoteStreamersServiceMock },
 				{ provide: OpenViduSessionService, useClass: OpenViduSessionServiceMock },
 				{ provide: DevicesService, useClass: DevicesServiceMock },
+				{ provide: MenuService, useClass: MenuServiceMock },
 				{ provide: 'assistantsChatService', useClass: ChatServiceMock },
 				{ provide: 'moderatorsChatService', useClass: ChatServiceMock }
 			],

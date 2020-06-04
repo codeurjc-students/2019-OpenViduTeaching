@@ -1,3 +1,5 @@
+import { RoomServiceMock } from 'src/app/shared/services/room/room.service.mock';
+import { RoomService } from 'src/app/shared/services/room/room.service';
 import { TestBed } from '@angular/core/testing';
 
 import { MenuService } from './menu.service';
@@ -10,7 +12,8 @@ describe('MenuService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
 			providers: [
-				{ provide: LoggerService, useClass: LoggerServiceMock },
+        { provide: LoggerService, useClass: LoggerServiceMock },
+        { provide: RoomService, useClass: RoomServiceMock }
 			]
 		});
     service = TestBed.inject(MenuService);
