@@ -1,3 +1,4 @@
+import { RoomService } from 'src/app/shared/services/room/room.service';
 import { UserService } from './../shared/services/user/user.service';
 import { Component, HostListener, OnDestroy, OnInit, ViewChild, Inject } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -49,6 +50,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	showConfigRoomCard = true;
 	session: Session;
 	sessionScreen: Session;
+	connection: Connection;
 	openviduLayout: OpenViduLayout;
 	openviduLayoutOptions: OpenViduLayoutOptions;
 	mySessionId: string;
@@ -56,6 +58,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	localUsers: UserModel[] = [];
 	remoteStreamers: UserModel[] = [];
 	remoteUsers: UserModel[] = [];
+	modConnections: Connection[] = [];
 	isConnectionLost: boolean;
 	isAutoLayout = false;
 	hasVideoDevices: boolean;
@@ -65,6 +68,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private remoteUsersSubscription: Subscription;
 	private remoteStreamersSubscription: Subscription;
 	private menuToggleSubscription: Subscription;
+	private modConnectionsSubscription: Subscription;
 
 	constructor(
 		private networkSrv: NetworkService,
@@ -133,6 +137,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		if (this.menuToggleSubscription) {
 			this.menuToggleSubscription.unsubscribe();
 		}
+		if (this.modConnectionsSubscription) {
+			this.modConnectionsSubscription.unsubscribe();
+		}
 	}
 
 	onConfigRoomJoin() {
@@ -169,6 +176,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.moderatorsChatService.subscribeToChat('chatMod');
 		}
 		this.subscribeToMenuToggle();
+		this.subscribeToModConnections();
 		this.subscribeToReconnection();
 		this.connectToSession();
 	}
@@ -358,6 +366,12 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			const connectionId = event.connection.connectionId;
 			const nickname = JSON.parse(event.connection.data.split('%/%')[0])?.clientData;
 
+			if(this.oVSessionService.getWebcamSession().connection.connectionId == connectionId) {
+				this.connection = event.connection;
+				this.modConnections.push(this.connection);
+				this.moderatorsChatService.setToConnections(this.modConnections);
+				return;
+			}
 			if (this.oVSessionService.isMyOwnConnection(connectionId) || this.oVSessionService.isMyOwnNickname(nickname)) {
 				return;
 			}
@@ -540,6 +554,16 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private subscribeToRemoteUsers() {
 		this.remoteUsersSubscription = this.remoteUsersService.remoteUsersObs.subscribe((users) => {
 			this.remoteUsers = [...users];
+		});
+	}
+
+	private subscribeToModConnections() {
+		this.modConnectionsSubscription = this.remoteStreamersService.moderatorConnectionsObs.subscribe((connections) => {
+			this.modConnections = [...connections];
+			if(this.connection) {
+				this.modConnections.push(this.connection);
+			}
+			this.moderatorsChatService.setToConnections(this.modConnections);
 		});
 	}
 }

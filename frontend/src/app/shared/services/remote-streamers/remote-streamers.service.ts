@@ -1,7 +1,9 @@
+import { OpenViduSessionService } from 'src/app/shared/services/openvidu-session/openvidu-session.service';
+import { RoomService } from 'src/app/shared/services/room/room.service';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { UserModel } from '../../models/user-model';
-import { StreamEvent, Subscriber } from 'openvidu-browser';
+import { StreamEvent, Subscriber, Connection } from 'openvidu-browser';
 import { LoggerService } from '../logger/logger.service';
 import { ILogger } from '../../types/logger-type';
 
@@ -14,11 +16,20 @@ export class RemoteStreamersService {
 
 	private streamers: UserModel[] = [];
 	private _remoteStreamers = <BehaviorSubject<UserModel[]>>new BehaviorSubject([]);
-	remoteStreamersObs: Observable<UserModel[]>;	
+	remoteStreamersObs: Observable<UserModel[]>;
 
-	constructor(private loggerSrv: LoggerService) {
+	private moderatorConnections: Connection[] = [];
+	private _moderatorConnections = <BehaviorSubject<Connection[]>>new BehaviorSubject([]);
+	moderatorConnectionsObs: Observable<Connection[]>;
+
+	constructor(
+		private loggerSrv: LoggerService,
+		private roomService: RoomService,
+		private openviduSessionService: OpenViduSessionService
+	) {
 		this.log = this.loggerSrv.get('RemoteStreamersService');
 		this.remoteStreamersObs = this._remoteStreamers.asObservable();
+		this.moderatorConnectionsObs = this._moderatorConnections.asObservable();
 	}
 
 	updateStreamers() {
@@ -40,6 +51,7 @@ export class RemoteStreamersService {
 		newUser.setUserAvatar(avatar);
 		this.streamers.push(newUser);
 		this.updateStreamers();
+		this.addModConnection(event.stream.connection, event.stream.connection.data.split("%/%SERVER=")[1]);
 	}
 
 	removeStreamerByConnectionId(connectionId: string) {
@@ -49,6 +61,8 @@ export class RemoteStreamersService {
 		if (index > -1) {
 			this.streamers.splice(index, 1);
 			this.updateStreamers();
+			this.removeModConnectionByConnectionId(connectionId);
+			this._moderatorConnections.next(this.moderatorConnections);
 		}
 	}
 
@@ -83,5 +97,25 @@ export class RemoteStreamersService {
 		this._remoteStreamers = <BehaviorSubject<UserModel[]>>new BehaviorSubject([]);
 		this.remoteStreamersObs = this._remoteStreamers.asObservable();
 		this.streamers = [];
+	}
+
+	addModConnection(connection: Connection, name: string) {
+		this.roomService.getAssistants(this.openviduSessionService.getSessionId()).subscribe(
+			assistants => {
+				for(let moderator of assistants.moderators) {
+					if(moderator.connected && moderator.name === name) {
+						this.moderatorConnections.push(connection);
+						this._moderatorConnections.next(this.moderatorConnections);
+						return;
+					}
+				}
+			},
+			error => console.error(error)
+		);
+	}
+
+	removeModConnectionByConnectionId(connectionId: string) {
+		this.moderatorConnections = this.moderatorConnections.filter((con) => con.connectionId !== connectionId);
+		this._moderatorConnections.next(this.moderatorConnections);
 	}
 }

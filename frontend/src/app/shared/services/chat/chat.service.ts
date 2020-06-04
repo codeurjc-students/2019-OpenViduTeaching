@@ -4,18 +4,19 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { ChatMessage } from '../../types/chat-type';
 import { OpenViduSessionService } from '../openvidu-session/openvidu-session.service';
 import { MenuService } from '../menu/menu.service';
+import { Connection } from 'openvidu-browser';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class ChatService {
-	messagesObs: Observable<ChatMessage[]>;
-
-	private _messageList = <BehaviorSubject<ChatMessage[]>>new BehaviorSubject([]);
-
+	
 	private messageList: ChatMessage[] = [];
-
+	private _messageList = <BehaviorSubject<ChatMessage[]>>new BehaviorSubject([]);
+	messagesObs: Observable<ChatMessage[]>;
+	
 	private signal: string;
+	private to: Connection[] = [];
 
 	constructor(
 		private menuService: MenuService,
@@ -55,8 +56,13 @@ export class ChatService {
 			const sessionAvailable = this.oVSessionService.getConnectedUserSession();
 			sessionAvailable.signal({
 				data: JSON.stringify(data),
+				to: this.to,
 				type: this.signal
 			});
 		}
+	}
+
+	setToConnections(to: Connection[]) {
+		this.to = to;
 	}
 }
