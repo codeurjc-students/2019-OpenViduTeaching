@@ -68,7 +68,7 @@ export class UserModel {
 	 * Return the connection ID
 	 */
 	public getConnectionId(): string {
-		return this.streamManager?.stream?.connection?.connectionId;
+		return this.streamManager?.stream?.connection?.connectionId || this.connectionId;
 	}
 
 	/**
