@@ -1,9 +1,22 @@
+import { RoomService } from 'src/app/shared/services/room/room.service';
+import { OpenViduSessionService } from 'src/app/shared/services/openvidu-session/openvidu-session.service';
 import { Injectable } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { ILogger } from '../../types/logger-type';
 import { LoggerService } from '../logger/logger.service';
 import { MatTabGroup } from '@angular/material/tabs';
+
+export interface ConnectedAssistant {
+	name: string;
+	connected: boolean;
+}
+
+export interface AssistantGroup {
+	moderators: ConnectedAssistant[];
+	participants: ConnectedAssistant[];
+	presenters: ConnectedAssistant[];
+}
 
 @Injectable({
 	providedIn: 'root'
@@ -29,12 +42,21 @@ export class MenuService {
 	private _totalMessagesUnread = <BehaviorSubject<number>>new BehaviorSubject(0);
 	totalMessagesUnreadObs: Observable<number>;
 
-	constructor(private loggerSrv: LoggerService) {
+	private assistants: AssistantGroup = { moderators: [], participants: [], presenters: [] };
+	private _assistants = <BehaviorSubject<AssistantGroup>>new BehaviorSubject({ moderators: [], participants: [], presenters: [] });
+	assistantsObs: Observable<AssistantGroup>;
+
+	constructor(
+		private loggerSrv: LoggerService,
+		private openviduSessionService: OpenViduSessionService,
+		private roomService: RoomService
+	) {
 		this.log = this.loggerSrv.get('MenuService');
 		this.toggleMenuObs = this._toggleMenu.asObservable();
 		this.totalMessagesUnreadObs = this._totalMessagesUnread.asObservable();
 		this.assistantMessagesUnreadObs = this._assistantMessagesUnread.asObservable();
 		this.moderatorMessagesUnreadObs = this._moderatorMessagesUnread.asObservable();
+		this.assistantsObs = this._assistants.asObservable();
 	}
 
 	setMenuSidenav(menuSidenav: MatSidenav) {
@@ -91,6 +113,13 @@ export class MenuService {
 				this._moderatorMessagesUnread.next(this.moderatorMessagesUnread);
 			}
 			this._totalMessagesUnread.next(this.assistantMessagesUnread + this.moderatorMessagesUnread);
+		});
+	}
+
+	updateAssistants() {
+		this.roomService.getAssistants(this.openviduSessionService.getSessionId()).subscribe((assistants) => {
+			this.assistants = assistants;
+			this._assistants.next(this.assistants);
 		});
 	}
 }

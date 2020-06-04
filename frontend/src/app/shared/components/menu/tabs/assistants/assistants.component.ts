@@ -1,3 +1,4 @@
+import { MenuService } from 'src/app/shared/services/menu/menu.service';
 import { OpenViduSessionService } from 'src/app/shared/services/openvidu-session/openvidu-session.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
 import { Component, OnInit, Input } from '@angular/core';
@@ -10,15 +11,13 @@ import { RoomService } from 'src/app/shared/services/room/room.service';
 })
 export class AssistantsComponent implements OnInit {
 
-  sessionId: string;
   userName: string;
 
   loading: boolean;
 
   constructor(
     private userService: UserService,
-    private openviduSessionService: OpenViduSessionService,
-    private roomSrv: RoomService
+    private menuService: MenuService
   ) { }
 
   moderatorsConnected: string[] = [];
@@ -32,14 +31,14 @@ export class AssistantsComponent implements OnInit {
   assistantsDisconnectedCount: Number;
 
   ngOnInit() {
-    this.sessionId = this.openviduSessionService.getSessionId();
     this.userName = this.userService.user.name;
-    this.getAssistants();
+    this.subscribeToAssistants();
   }
 
-  getAssistants() {
+  subscribeToAssistants() {
+    this.menuService.updateAssistants();
     this.loading = true;
-    this.roomSrv.getAssistants(this.sessionId).subscribe(
+    this.menuService.assistantsObs.subscribe(
       assistants => {
         this.moderatorsConnected = [];
         this.participantsConnected = [];

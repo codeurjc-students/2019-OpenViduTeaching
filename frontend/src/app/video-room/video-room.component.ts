@@ -364,6 +364,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 			this.remoteUsersService.add(event);
 			this.sendNicknameSignal(this.oVSessionService.getWebcamUserName(), event.connection);
+
+			this.menuService.updateAssistants();
 		});
 	}
 
@@ -372,6 +374,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			const connectionId = event.connection.connectionId;
 			this.remoteUsersService.removeUserByConnectionId(connectionId);
 			// event.preventDefault();
+
+			this.menuService.updateAssistants();
 		});
 	}
 

@@ -29,10 +29,8 @@
 			<mat-icon>people</mat-icon>
 			Assistants
 		</ng-template>
-		<ng-template matTabContent>
-			<app-assistants #assistants>
-			</app-assistants>
-		</ng-template>
+		<app-assistants #assistants>
+		</app-assistants>
 	</mat-tab>
 
 	<mat-tab class="tab" *ngIf="userService.isModOfRoom(mySessionId)">
