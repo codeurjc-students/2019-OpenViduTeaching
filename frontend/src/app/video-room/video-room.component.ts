@@ -121,9 +121,11 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.remoteUsersService.clean();
 		this.session = null;
 		this.sessionScreen = null;
+		this.connection = null;
 		this.localUsers = [];
 		this.remoteUsers = [];
 		this.remoteStreamers = [];
+		this.modConnections = [];
 		this.openviduLayout = null;
 		if (this.oVUsersSubscription) {
 			this.oVUsersSubscription.unsubscribe();
@@ -140,6 +142,10 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		if (this.modConnectionsSubscription) {
 			this.modConnectionsSubscription.unsubscribe();
 		}
+		this.networkSrv.removeUser(this.roomName).subscribe(
+			(_) => { },
+			error => console.error(error)
+		);
 	}
 
 	onConfigRoomJoin() {
@@ -183,6 +189,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 	leaveSession() {
 		this.log.d('Leaving session...');
+		this.networkSrv.keepaliveRemoveUser(this.roomName);
 		this.oVSessionService.disconnect();
 		this.router.navigate(['']);
 	}
@@ -389,7 +396,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.remoteUsersService.removeUserByConnectionId(connectionId);
 			// event.preventDefault();
 
-			this.menuService.updateAssistants();
+			setTimeout(() => {
+				this.menuService.updateAssistants();
+			}, 500);
 		});
 	}
 

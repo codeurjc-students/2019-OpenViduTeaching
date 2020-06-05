@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError as observableThrowError } from 'rxjs';
+import { throwError as observableThrowError, Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { LoggerService } from '../logger/logger.service';
 import { ILogger } from '../../types/logger-type';
@@ -9,7 +9,6 @@ import { ILogger } from '../../types/logger-type';
 	providedIn: 'root'
 })
 export class NetworkService {
-
 	private log: ILogger;
 	private baseHref: string;
 
@@ -24,9 +23,27 @@ export class NetworkService {
 			return await this.http.get<any>(this.baseHref + `/room/${sessionId}/token`).toPromise();
 		} catch (error) {
 			if (error.status === 404) {
-				throw {status: error.status, message: 'Cannot connect with backend. ' + error.url + ' not found'};
+				throw { status: error.status, message: 'Cannot connect with backend. ' + error.url + ' not found' };
 			}
 			throw error;
 		}
+	}
+
+	removeUser(roomName: string) {
+		return this.http.delete(this.baseHref + '/room/' + roomName + '/user', {}).pipe(
+			catchError((error) => this.handleError(error))
+		);
+	}
+
+	keepaliveRemoveUser(roomName: string) {
+		fetch(this.baseHref + '/room/' + roomName + '/user', {
+			method: 'DELETE',
+			keepalive: true
+		});
+	}
+
+	private handleError(error: any) {
+		console.error(error);
+		return Observable.throw('Server error (' + error.status + '): ' + error.message);
 	}
 }
