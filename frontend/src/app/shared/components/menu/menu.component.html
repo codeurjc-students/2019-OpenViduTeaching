@@ -2,8 +2,8 @@
 	<mat-tab class="tab" *ngIf="ovSettings | hasChat">
 		<ng-template mat-tab-label>
 			<mat-icon matBadge="{{newMessagesAssistants}}" [matBadgeHidden]="newMessagesAssistants === 0"  matBadgePosition="above before" matBadgeColor="accent">chat</mat-icon>
-			<span *ngIf="userService.canStream(mySessionId)">Assistants chat</span>
-			<span *ngIf="!userService.canStream(mySessionId)">Chat</span>
+			<span *ngIf="userService.isModOfRoom(mySessionId)">Assistants chat</span>
+			<span *ngIf="!userService.isModOfRoom(mySessionId)">Chat</span>
 		</ng-template>
 		<chat-component
 			#assistantsChatComponent
@@ -12,7 +12,7 @@
 		></chat-component>
 	</mat-tab>
 
-	<mat-tab class="tab" *ngIf="(ovSettings | hasChat) && userService.canStream(mySessionId)">
+	<mat-tab class="tab" *ngIf="(ovSettings | hasChat) && userService.isModOfRoom(mySessionId)">
 		<ng-template mat-tab-label>
 		  <mat-icon matBadge="{{newMessagesModerators}}" [matBadgeHidden]="newMessagesModerators === 0"  matBadgePosition="above before" matBadgeColor="accent">chat_bubble</mat-icon>
 		  Moderators chat
