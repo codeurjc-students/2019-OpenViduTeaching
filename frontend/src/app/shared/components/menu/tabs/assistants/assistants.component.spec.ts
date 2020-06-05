@@ -5,10 +5,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AssistantsComponent } from './assistants.component';
 import { UserServiceMock } from 'src/app/shared/services/user/user.service.mock';
-import { RoomService } from 'src/app/shared/services/room/room.service';
-import { RoomServiceMock } from 'src/app/shared/services/room/room.service.mock';
-import { OpenViduSessionService } from 'src/app/shared/services/openvidu-session/openvidu-session.service';
-import { OpenViduSessionServiceMock } from 'src/app/shared/services/openvidu-session/openvidu-session.service.mock';
+import { MenuServiceMock } from 'src/app/shared/services/menu/menu.service.mock';
+import { MenuService } from 'src/app/shared/services/menu/menu.service';
 
 describe('AssistantsComponent', () => {
   let component: AssistantsComponent;
@@ -19,7 +17,7 @@ describe('AssistantsComponent', () => {
       imports: [],
       providers: [
         { provide: UserService, useClass: UserServiceMock },
-        { provide: RoomService, useClass: RoomServiceMock },
+        { provide: MenuService, useClass: MenuServiceMock },
         { provide: RemoteUsersService, useClass: RemoteUsersServiceMock }
       ],
       declarations: [ AssistantsComponent ]
