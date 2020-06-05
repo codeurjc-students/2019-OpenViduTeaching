@@ -1,3 +1,5 @@
+import { RemoteUsersServiceMock } from './../../../../services/remote-users/remote-users.service.mock';
+import { RemoteUsersService } from './../../../../services/remote-users/remote-users.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
@@ -18,7 +20,7 @@ describe('AssistantsComponent', () => {
       providers: [
         { provide: UserService, useClass: UserServiceMock },
         { provide: RoomService, useClass: RoomServiceMock },
-        { provide: OpenViduSessionService, useClass: OpenViduSessionServiceMock },
+        { provide: RemoteUsersService, useClass: RemoteUsersServiceMock }
       ],
       declarations: [ AssistantsComponent ]
     })
