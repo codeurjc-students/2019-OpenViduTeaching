@@ -27,15 +27,17 @@ export class RemoteUsersService {
 	add(event: ConnectionEvent) {
 		let nickname = '';
 		let avatar = '';
+		let name = '';
 		const connectionId = event.connection.connectionId;
 		try {
 			const data = JSON.parse(event.connection.data.split('%/%')[0]);
 			nickname = data?.clientData;
 			avatar = data?.avatar;
+			name = event.connection.data.split("%/%SERVER=")[1];
 		} catch (error) {
 			nickname = 'Unknown';
 		}
-		const newUser = new UserModel(connectionId, undefined, nickname);
+		const newUser = new UserModel(connectionId, undefined, nickname, name);
 		newUser.setUserAvatar(avatar);
 		this.users.push(newUser);
 		this.updateUsers();

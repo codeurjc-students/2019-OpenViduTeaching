@@ -16,6 +16,11 @@ export class UserModel {
 	nickname: string;
 
 	/**
+	 * The user name in the server
+	 */
+	name: string;
+
+	/**
 	 * StreamManager object ([[Publisher]] or [[Subscriber]])
 	 */
 	streamManager: StreamManager;
@@ -42,10 +47,12 @@ export class UserModel {
 		connectionId?: string,
 		streamManager?: StreamManager,
 		nickname?: string,
+		name?: string
 	) {
 		this.connectionId = connectionId || '';
 		this.nickname = nickname || 'OpenVidu';
 		this.streamManager = streamManager || null;
+		this.name = name || this.nickname;
 	}
 
 	/**
@@ -76,6 +83,13 @@ export class UserModel {
 	 */
 	public getNickname(): string {
 		return this.nickname;
+	}
+
+	/**
+	 * Return the server user name
+	 */
+	public getName(): string {
+		return this.name;
 	}
 
 	/**
@@ -136,6 +150,14 @@ export class UserModel {
 	 */
 	public setNickname(nickname: string) {
 		this.nickname = nickname;
+	}
+
+	/**
+	 * Set the user name value
+	 * @param name value of user name
+	 */
+	public setName(name: string) {
+		this.name = name;
 	}
 
 	public isVideoSizeBig(): boolean {

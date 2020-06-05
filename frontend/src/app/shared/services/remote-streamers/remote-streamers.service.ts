@@ -39,19 +39,21 @@ export class RemoteStreamersService {
 	add(event: StreamEvent, subscriber: Subscriber) {
 		let nickname = '';
 		let avatar = '';
+		let name = '';
 		const connectionId = event.stream.connection.connectionId;
 		try {
 			const data = JSON.parse(event.stream.connection.data.split("%/%")[0]);
 			nickname = data?.clientData;
 			avatar = data?.avatar;
+			name = event.stream.connection.data.split("%/%SERVER=")[1];
 		} catch (error) {
 			nickname = 'Unknown';
 		}
-		const newUser = new UserModel(connectionId, subscriber, nickname);
+		const newUser = new UserModel(connectionId, subscriber, nickname, name);
 		newUser.setUserAvatar(avatar);
 		this.streamers.push(newUser);
 		this.updateStreamers();
-		this.addModConnection(event.stream.connection, event.stream.connection.data.split("%/%SERVER=")[1]);
+		this.addModConnection(event.stream.connection, name);
 	}
 
 	removeStreamerByConnectionId(connectionId: string) {
