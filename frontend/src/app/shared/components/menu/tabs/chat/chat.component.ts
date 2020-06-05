@@ -1,3 +1,5 @@
+import { OpenViduSessionService } from './../../../../services/openvidu-session/openvidu-session.service';
+import { UserService } from './../../../../services/user/user.service';
 import { Component, ElementRef, Input, OnInit, ViewChild, HostListener, OnDestroy, Injector } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { ChatMessage } from 'src/app/shared/types/chat-type';
@@ -21,12 +23,15 @@ export class ChatComponent implements OnInit, OnDestroy {
 	message: string;
 	messageList: ChatMessage[] = [];
 	menuOpened: boolean;
+	roomName: string;
 
 	private chatMessageSubscription: Subscription;
 	private menuToggleSubscription: Subscription;
 
 	constructor(
 		private menuService: MenuService,
+		public userService: UserService,
+		private openviduSessionService: OpenViduSessionService,
 		private injector: Injector
 	) {}
 
@@ -44,6 +49,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 		} else if(this.type == 'assistants') {
 			this.chatService = this.injector.get('assistantsChatService');
 		}
+		this.roomName = this.openviduSessionService.getSessionId();
 		this.subscribeToMessages();
 		this.subscribeToToggleMenu();
 	}

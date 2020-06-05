@@ -1,7 +1,9 @@
 <div id="chatContainer">
-	<div id="chatComponent" [class.chatComponentLight]="lightTheme">
-		<div id="chatToolbar">
-			<span> CHAT</span>
+	<div id="chatComponent" [class.chatComponentLight]="lightTheme" [class.darkBackground]="type != 'assistants'" [class.grayBackground]="type == 'assistants'">
+		<div id="chatToolbar" [class.darkBackground]="type == 'assistants'" [class.grayBackground]="type != 'assistants'">
+			<span *ngIf="!userService.isModOfRoom(roomName) && type == 'assistants'"> CHAT</span>
+			<span *ngIf="userService.isModOfRoom(roomName) && type == 'assistants'"> ASSITANTS CHAT</span>
+			<span *ngIf="type != 'assistants'"> MODERATORS CHAT</span>
 			<button mat-icon-button (click)="close()" id="closeButton">
 				<mat-icon matTooltip="Close" color="warn">highlight_off</mat-icon>
 			</button>
@@ -10,7 +12,7 @@
 			<div *ngFor="let data of messageList" class="message" [ngClass]="data.isLocal ? 'right' : 'left'">
 				<img class="user-img" [src]="data.userAvatar" />
 				<div class="msg-detail">
-					<div class="msg-info">
+					<div class="msg-info" [class.darkLetters]="type == 'assistants'" [class.lightLetters]="type != 'assistants'">
 						<p>{{ data.nickname }}</p>
 					</div>
 					<div class="msg-content">
