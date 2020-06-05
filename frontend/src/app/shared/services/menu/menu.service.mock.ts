@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatTabGroup } from '@angular/material/tabs';
+import { AssistantGroup } from './menu.service';
 
 @Injectable()
 export class MenuServiceMock {
@@ -20,11 +21,16 @@ export class MenuServiceMock {
 	private _totalMessagesUnread = <BehaviorSubject<number>>new BehaviorSubject(0);
 	totalMessagesUnreadObs: Observable<number>;
 
+	private assistants: AssistantGroup = { moderators: [], participants: [], presenters: [] };
+	private _assistants = <BehaviorSubject<AssistantGroup>>new BehaviorSubject({ moderators: [], participants: [], presenters: [] });
+	assistantsObs: Observable<AssistantGroup>;
+
 	constructor() {
 		this.toggleMenuObs = this._toggleMenu.asObservable();
 		this.totalMessagesUnreadObs = this._totalMessagesUnread.asObservable();
 		this.assistantMessagesUnreadObs = this._assistantMessagesUnread.asObservable();
 		this.moderatorMessagesUnreadObs = this._moderatorMessagesUnread.asObservable();
+		this.assistantsObs = this._assistants.asObservable();
 	}
 
 	setMenuComponent(menuSidenav: MatSidenav) {}

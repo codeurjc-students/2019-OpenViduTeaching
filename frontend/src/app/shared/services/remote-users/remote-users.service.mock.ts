@@ -2,12 +2,19 @@
 import { Injectable } from '@angular/core';
 import { UserModel } from '../../models/user-model';
 import { ConnectionEvent } from 'openvidu-browser';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class RemoteUsersServiceMock {
-	constructor() {}
+
+	private _remoteUsers = <BehaviorSubject<UserModel[]>>new BehaviorSubject([]);
+	remoteUsersObs: Observable<UserModel[]>;
+
+	constructor() {
+		this.remoteUsersObs = this._remoteUsers.asObservable();
+	}
 
 	updateUsers() {}
 
