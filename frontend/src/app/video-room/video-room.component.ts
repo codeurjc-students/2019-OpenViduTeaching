@@ -90,6 +90,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 	@HostListener('window:beforeunload')
 	beforeunloadHandler() {
+		this.networkSrv.keepaliveRemoveUser(this.roomName);
 		this.leaveSession();
 	}
 
@@ -189,7 +190,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 	leaveSession() {
 		this.log.d('Leaving session...');
-		this.networkSrv.keepaliveRemoveUser(this.roomName);
 		this.oVSessionService.disconnect();
 		this.router.navigate(['']);
 	}

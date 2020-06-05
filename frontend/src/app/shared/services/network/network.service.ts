@@ -1,3 +1,4 @@
+import { UserService } from './../user/user.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { throwError as observableThrowError, Observable } from 'rxjs';
@@ -12,7 +13,11 @@ export class NetworkService {
 	private log: ILogger;
 	private baseHref: string;
 
-	constructor(private http: HttpClient, private loggerSrv: LoggerService) {
+	constructor(
+		private http: HttpClient,
+		private loggerSrv: LoggerService,
+		private userService: UserService,
+	) {
 		this.log = this.loggerSrv.get('NetworkService');
 		this.baseHref = '/' + (!!window.location.pathname.split('/')[1] ? window.location.pathname.split('/')[1] + '/' : '') + 'ovTeachingApi';
 	}
@@ -29,17 +34,21 @@ export class NetworkService {
 		}
 	}
 
-	removeUser(roomName: string) {
-		return this.http.delete(this.baseHref + '/room/' + roomName + '/user', {}).pipe(
-			catchError((error) => this.handleError(error))
-		);
+	removeUser(roomName?: string) {
+		if(!!roomName) {
+			return this.http.delete(this.baseHref + '/room/' + roomName + '/user', {}).pipe(
+				catchError((error) => this.handleError(error))
+			);
+		}
 	}
 
-	keepaliveRemoveUser(roomName: string) {
-		fetch(this.baseHref + '/room/' + roomName + '/user', {
-			method: 'DELETE',
-			keepalive: true
-		});
+	keepaliveRemoveUser(roomName?: string) {
+		if(this.userService.isLogged && !!roomName) {
+			fetch(this.baseHref + '/room/' + roomName + '/user', {
+				method: 'DELETE',
+				keepalive: true
+			});
+		}
 	}
 
 	private handleError(error: any) {
