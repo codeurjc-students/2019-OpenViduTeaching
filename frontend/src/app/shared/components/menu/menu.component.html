@@ -1,4 +1,4 @@
-<mat-tab-group #tabGroup class="tab-group" backgroundColor="primary" animationDuration="0ms" dynamicHeight>
+<mat-tab-group #tabGroup class="tab-group" backgroundColor="primary" animationDuration="0ms">
 	<mat-tab class="tab" *ngIf="ovSettings | hasChat">
 		<ng-template mat-tab-label>
 			<mat-icon matBadge="{{newMessagesAssistants}}" [matBadgeHidden]="newMessagesAssistants === 0"  matBadgePosition="above before" matBadgeColor="accent">chat</mat-icon>
