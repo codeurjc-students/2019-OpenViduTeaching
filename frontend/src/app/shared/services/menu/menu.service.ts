@@ -116,6 +116,10 @@ export class MenuService {
 		});
 	}
 
+	getTabSelected(): number {
+		return this.menuTabGroup.selectedIndex;
+	}
+
 	updateAssistants() {
 		this.roomService.getAssistants(this.openviduSessionService.getSessionId()).subscribe((assistants) => {
 			this.assistants = assistants;

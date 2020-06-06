@@ -1,3 +1,4 @@
+import { NotificationsService } from './../notifications/notifications.service';
 import { RemoteUsersService } from './../remote-users/remote-users.service';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -20,6 +21,7 @@ export class ChatService {
 
 	constructor(
 		private menuService: MenuService,
+		private notificationService: NotificationsService,
 		private oVSessionService: OpenViduSessionService,
 		private remoteUsersService: RemoteUsersService
 	) {
@@ -33,14 +35,16 @@ export class ChatService {
 			const connectionId = event.from.connectionId;
 			const data = JSON.parse(event.data);
 			const isMyOwnConnection = this.oVSessionService.isMyOwnConnection(connectionId);
+			const avatar = isMyOwnConnection
+			? this.oVSessionService.getWebCamAvatar()
+			: this.remoteUsersService.getUserAvatar(connectionId);
 			this.messageList.push({
 				isLocal: isMyOwnConnection,
 				nickname: data.nickname,
 				message: data.message,
-				userAvatar: isMyOwnConnection
-					? this.oVSessionService.getWebCamAvatar()
-					: this.remoteUsersService.getUserAvatar(connectionId)
+				userAvatar: avatar
 			});
+			this.notificationService.showChatPopup(data.nickname, data.message, avatar, this.signal);
 			this.menuService.newMessage(this.signal);
 			this._messageList.next(this.messageList);
 		});

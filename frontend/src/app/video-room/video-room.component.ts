@@ -1,6 +1,7 @@
-import { RoomService } from 'src/app/shared/services/room/room.service';
+import { NotificationsService } from './../shared/services/notifications/notifications.service';
+import { Notification, HandRaisedUser } from './../shared/types/notification-type';
 import { UserService } from './../shared/services/user/user.service';
-import { Component, HostListener, OnDestroy, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ViewChild, Inject, ViewChildren, ElementRef, QueryList } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
@@ -33,15 +34,35 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { ChatService } from '../shared/services/chat/chat.service';
 import { MenuService } from '../shared/services/menu/menu.service';
 import { RemoteUsersService } from '../shared/services/remote-users/remote-users.service';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
 	selector: 'app-video-room',
 	templateUrl: './video-room.component.html',
-	styleUrls: ['./video-room.component.css']
+	styleUrls: ['./video-room.component.css'],
+	animations: [
+		trigger('popup', [
+			transition(':enter', [
+			style({ transform: 'scale(0.1)', opacity: 0 }),
+			animate('0.75s cubic-bezier(.8, -0.6, 0.26, 1.6)',
+				style({ transform: 'scale(1)', opacity: 1 }))
+			]),
+			transition(':leave', [
+			style({ transform: 'scale(1)', opacity: 1, height: '*' }),
+			animate('0.5s cubic-bezier(.8, -0.6, 0.2, 1.5)',
+				style({
+				transform: 'scale(0.1)', opacity: 0,
+				height: '0px', margin: '0px'
+				}))
+			])
+		])
+	]
 })
 export class VideoRoomComponent implements OnInit, OnDestroy {
 
 	@ViewChild('sidenav') menuSidenav: MatSidenav;
+	@ViewChildren('popup', { read: ElementRef }) currentPopups: QueryList<ElementRef>;
+  	@ViewChild('raisedHands', { read: ElementRef }) raisedHandsPopup: ElementRef;
 
 	ovSettings: OvSettingsModel;
 	compact = false;
@@ -59,6 +80,11 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	remoteStreamers: UserModel[] = [];
 	remoteUsers: UserModel[] = [];
 	modConnections: Connection[] = [];
+	/*
+	currentNotifications: Notification[] = [];
+	handRaisedUsers: HandRaisedUser[] = [];
+	handRaisedUsersMessage: string;
+	*/
 	isConnectionLost: boolean;
 	isAutoLayout = false;
 	hasVideoDevices: boolean;
@@ -69,6 +95,11 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private remoteStreamersSubscription: Subscription;
 	private menuToggleSubscription: Subscription;
 	private modConnectionsSubscription: Subscription;
+	/*
+	private notificationsSubscription: Subscription;
+	private handRaisedUsersSubscription: Subscription;
+	private handRaisedUserMessageSubscription: Subscription;
+	*/
 
 	constructor(
 		private networkSrv: NetworkService,
@@ -81,6 +112,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		private oVDevicesService: DevicesService,
 		private loggerSrv: LoggerService,
 		private menuService: MenuService,
+		public notificationsService: NotificationsService,
 		@Inject('assistantsChatService') private assistantsChatService: ChatService,
 		@Inject('moderatorsChatService') private moderatorsChatService: ChatService,
 		private userService: UserService
@@ -143,6 +175,17 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		if (this.modConnectionsSubscription) {
 			this.modConnectionsSubscription.unsubscribe();
 		}
+		/*
+		if (this.notificationsSubscription) {
+			this.notificationsSubscription.unsubscribe();
+		}
+		if (this.handRaisedUsersSubscription) {
+			this.handRaisedUsersSubscription.unsubscribe();
+		}
+		if (this.handRaisedUserMessageSubscription) {
+			this.handRaisedUserMessageSubscription.unsubscribe();
+		}
+		*/
 		this.networkSrv.removeUser(this.roomName).subscribe(
 			(_) => { },
 			error => console.error(error)
@@ -184,6 +227,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		}
 		this.subscribeToMenuToggle();
 		this.subscribeToModConnections();
+		this.notificationsService.setPopupsRef(this.currentPopups);
+		this.notificationsService.setRaiseHandsPopupRef(this.raisedHandsPopup);
+		//this.subscribeToNotifications();
 		this.subscribeToReconnection();
 		this.connectToSession();
 	}
@@ -575,4 +621,27 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.moderatorsChatService.setToConnections(this.modConnections);
 		});
 	}
+
+	/*
+	private subscribeToNotifications() {
+		this.notificationsSubscription = this.notificationsService.currentNotificationsObs.subscribe((notifications) => {
+			this.currentNotifications = [...notifications];
+			this.currentNotifications.push({
+				top: "5%",
+				subtitle: "SUBTITLE",
+				nickname: "NAME",
+				content: "CONTENT",
+				userAvatar: "AAA",
+				color: "dark"
+			});
+			console.error(this.currentNotifications);
+		});
+		this.handRaisedUsersSubscription = this.notificationsService.handRaisedUsersObs.subscribe((handRaisedUsers) => {
+			this.handRaisedUsers = [...handRaisedUsers];
+		});
+		this.handRaisedUserMessageSubscription = this.notificationsService.handsRaisedMessageObs.subscribe((message) => {
+			this.handRaisedUsersMessage = message;
+		});
+	}
+	*/
 }
