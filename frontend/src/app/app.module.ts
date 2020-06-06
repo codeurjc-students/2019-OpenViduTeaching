@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Injector } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './/app-routing.module';
@@ -61,6 +61,7 @@ import { LoginComponent } from './login/login.component';
 import { InviteLinkComponent } from './invite/invite-link/invite-link.component';
 import { SettingsComponent } from './shared/components/menu/tabs/settings/settings.component';
 import { AssistantsComponent } from './shared/components/menu/tabs/assistants/assistants.component';
+import { PopupComponent } from './shared/components/popup/popup.component';
 
 // Services
 import { NetworkService } from './shared/services/network/network.service';
@@ -110,7 +111,8 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		InviteComponent,
 		MenuComponent,
 		AssistantsComponent,
-		SettingsComponent
+		SettingsComponent,
+		PopupComponent
 	],
 	imports: [
 		FormsModule,
