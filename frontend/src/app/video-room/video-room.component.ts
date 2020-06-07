@@ -439,9 +439,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private subscribeToConnectionDestroyed() {
 		this.session.on('connectionDestroyed', (event: ConnectionEvent) => {
 			const connectionId = event.connection.connectionId;
-			this.remoteUsersService.removeUserByConnectionId(connectionId);
+			const user: UserModel = this.remoteUsersService.removeUserByConnectionId(connectionId);
 			// event.preventDefault();
-
+			this.notificationsService.showConnectionPopup(user.getNickname(), false, user.getAvatar());
 			setTimeout(() => {
 				this.menuService.updateAssistants();
 			}, 500);

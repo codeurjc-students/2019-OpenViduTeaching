@@ -46,7 +46,7 @@ export class RemoteUsersService {
 		}
 	}
 
-	removeUserByConnectionId(connectionId: string) {
+	removeUserByConnectionId(connectionId: string): UserModel {
 		this.log.w('Deleting user: ', connectionId);
 		const user = this.getRemoteUserByConnectionId(connectionId);
 		const index = this.users.indexOf(user, 0);
@@ -54,6 +54,7 @@ export class RemoteUsersService {
 			this.users.splice(index, 1);
 			this.updateUsers();
 		}
+		return user;
 	}
 
 	getRemoteUserByConnectionId(connectionId: string): UserModel {
