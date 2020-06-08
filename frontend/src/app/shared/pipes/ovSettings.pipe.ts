@@ -64,3 +64,11 @@ export class HasExitPipe implements PipeTransform {
 		return !ovSettings || ovSettings.hasExit();
 	}
 }
+
+@Pipe({ name: 'hasRaiseHand', pure: true })
+export class HasRaiseHandPipe implements PipeTransform {
+	constructor() {}
+	transform(ovSettings: OvSettingsModel): boolean {
+		return !ovSettings || ovSettings.hasRaiseHand();
+	}
+}

@@ -51,8 +51,13 @@ export class OvSettingsModel {
 	public hasChat(): boolean {
 		return this.ovSettings.chat;
 	}
+
 	public hasExit(): boolean {
 		return this.ovSettings.toolbarButtons.exit;
+	}
+
+	public hasRaiseHand(): boolean {
+		return this.ovSettings.toolbarButtons.raiseHand;
 	}
 
 	public setScreenSharing(screenShare: boolean) {

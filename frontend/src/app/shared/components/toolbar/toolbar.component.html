@@ -67,6 +67,29 @@
 			<button mat-icon-button (click)="leaveSession()" id="navLeaveButton" *ngIf="ovSettings | hasExit">
 				<mat-icon color="warn" matTooltip="Leave the session">power_settings_new</mat-icon>
 			</button>
+
+			<!-- Raise hand button -->
+			<button
+				id="navRaiseHand"
+				mat-icon-button (click)="raiseHand()"
+				id="raise_hand_button"
+				*ngIf="ovSettings | hasScreenSharing"
+			>
+			<!--
+			matBadge="{{localUser.getPositionInHandRaiseQueue()}}"
+			[matBadgeHidden]="!localUser.isHandRaised()"
+			matBadgePosition="below after"
+			matBadgeSize="medium"
+			matBadgeColor="warn"
+			-->
+				<img src="../../../../assets/images/raise_hand.png" matTooltip="Raise your hand" id="raise_hand">
+				<!--*ngIf="localUser && !localUser.isHandRaised()"-->
+				<!--img *ngIf="localUser && localUser.isHandRaised()" src="../../../../assets/images/lower_hand.png" matTooltip="Lower your hand" id="raise_hand"-->
+			</button>
+
+			<button mat-icon-button (click)="raiseHand()" *ngIf="localUser" id="raise_hand_button" matBadge="{{localUser.getPositionInHandRaiseQueue()}}" [matBadgeHidden]="!localUser.isHandRaised()" matBadgePosition="below after" matBadgeSize="medium" matBadgeColor="warn">
+				
+			  </button>
 		</div>
 	</div>
 	<div fxFlex="10%" fxFlexOrder="3" align="end">

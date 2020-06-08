@@ -97,4 +97,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 		this.utilsSrv.toggleFullscreen('videoRoomNavBar');
 		this.fullscreenIcon = this.fullscreenIcon === VideoFullscreenIcon.BIG ? VideoFullscreenIcon.NORMAL : VideoFullscreenIcon.BIG;
 	}
+
+	raiseHand() {
+		
+	}
 }

@@ -26,6 +26,15 @@
   display: inline-flex;
 }
 
+#raise_hand {
+  max-width: 50%;
+  max-height: 50%;
+}
+
+::ng-deep #raise_hand_button > .mat-badge-content {
+  right: -8px;
+  top: 1px;
+}
 
 #navChatButton .mat-badge-medium.mat-badge-overlap.mat-badge-before .mat-badge-content {
   left: -17px;
