@@ -80,11 +80,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	remoteStreamers: UserModel[] = [];
 	remoteUsers: UserModel[] = [];
 	modConnections: Connection[] = [];
-	/*
-	currentNotifications: Notification[] = [];
-	handRaisedUsers: HandRaisedUser[] = [];
-	handRaisedUsersMessage: string;
-	*/
 	isConnectionLost: boolean;
 	isAutoLayout = false;
 	hasVideoDevices: boolean;
@@ -95,11 +90,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private remoteStreamersSubscription: Subscription;
 	private menuToggleSubscription: Subscription;
 	private modConnectionsSubscription: Subscription;
-	/*
-	private notificationsSubscription: Subscription;
-	private handRaisedUsersSubscription: Subscription;
-	private handRaisedUserMessageSubscription: Subscription;
-	*/
 
 	constructor(
 		private networkSrv: NetworkService,
@@ -175,17 +165,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		if (this.modConnectionsSubscription) {
 			this.modConnectionsSubscription.unsubscribe();
 		}
-		/*
-		if (this.notificationsSubscription) {
-			this.notificationsSubscription.unsubscribe();
-		}
-		if (this.handRaisedUsersSubscription) {
-			this.handRaisedUsersSubscription.unsubscribe();
-		}
-		if (this.handRaisedUserMessageSubscription) {
-			this.handRaisedUserMessageSubscription.unsubscribe();
-		}
-		*/
 		this.networkSrv.removeUser(this.roomName).subscribe(
 			(_) => { },
 			error => console.error(error)
@@ -229,7 +208,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.subscribeToModConnections();
 		this.notificationsService.setPopupsRef(this.currentPopups);
 		this.notificationsService.setRaiseHandsPopupRef(this.raisedHandsPopup);
-		//this.subscribeToNotifications();
 		this.subscribeToReconnection();
 		this.connectToSession();
 	}
@@ -621,27 +599,4 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.moderatorsChatService.setToConnections(this.modConnections);
 		});
 	}
-
-	/*
-	private subscribeToNotifications() {
-		this.notificationsSubscription = this.notificationsService.currentNotificationsObs.subscribe((notifications) => {
-			this.currentNotifications = [...notifications];
-			this.currentNotifications.push({
-				top: "5%",
-				subtitle: "SUBTITLE",
-				nickname: "NAME",
-				content: "CONTENT",
-				userAvatar: "AAA",
-				color: "dark"
-			});
-			console.error(this.currentNotifications);
-		});
-		this.handRaisedUsersSubscription = this.notificationsService.handRaisedUsersObs.subscribe((handRaisedUsers) => {
-			this.handRaisedUsers = [...handRaisedUsers];
-		});
-		this.handRaisedUserMessageSubscription = this.notificationsService.handsRaisedMessageObs.subscribe((message) => {
-			this.handRaisedUsersMessage = message;
-		});
-	}
-	*/
 }
