@@ -1,6 +1,7 @@
+import { RoomServiceMock } from 'src/app/shared/services/room/room.service.mock';
+import { RoomService } from 'src/app/shared/services/room/room.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { InviteLinkComponent } from './invite-link.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
 describe('InviteLinkComponent', () => {
@@ -9,9 +10,10 @@ describe('InviteLinkComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [],
       providers: [
-        { provide: MAT_SNACK_BAR_DATA, useValue: {} }
+        { provide: MAT_SNACK_BAR_DATA, useValue: {} },
+        { provide: RoomService, useClass: RoomServiceMock }
       ],
       declarations: [ InviteLinkComponent ]
     })

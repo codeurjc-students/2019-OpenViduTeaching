@@ -1,7 +1,8 @@
+import { UserServiceMock } from 'src/app/shared/services/user/user.service.mock';
+import { UserService } from 'src/app/shared/services/user/user.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SettingsComponent } from './settings.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RecordingService } from 'src/app/shared/services/recording/recording.service';
 import { RecordingServiceMock } from 'src/app/shared/services/recording/recording.service.mock';
@@ -12,10 +13,11 @@ describe('SettingsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [],
       providers: [
         { provide: MatSnackBar, useValue: {} },
-        { provide: RecordingService, useClass: RecordingServiceMock }
+        { provide: RecordingService, useClass: RecordingServiceMock },
+        { provide: UserService, useClass: UserServiceMock }
       ],
       declarations: [ SettingsComponent ]
     })
