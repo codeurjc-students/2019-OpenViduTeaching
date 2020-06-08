@@ -199,6 +199,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.subscribeToStreamDestroyed();
 		this.subscribeToStreamPropertyChange();
 		this.subscribeToNicknameChanged();
+		this.subscribeToFirstConnection();
 		this.menuService.setMenuSidenav(this.menuSidenav);
 		this.assistantsChatService.subscribeToChat('chat');
 		if(this.userService.isModOfRoom(this.roomName)) {
@@ -375,6 +376,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			}
 
 			this.updateOpenViduLayout();
+			this.sendFirstConnectionSignal();
 		}
 	}
 
@@ -409,8 +411,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 			this.remoteUsersService.add(event);
 			this.sendNicknameSignal(this.oVSessionService.getWebcamUserName(), event.connection);
-
-			this.menuService.updateAssistants();
 		});
 	}
 
@@ -469,6 +469,18 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			const nickname = JSON.parse(event.data).nickname;
 			this.remoteStreamersService.updateNickname(connectionId, nickname);
 			this.remoteUsersService.updateNickname(connectionId, nickname);
+		});
+	}
+
+	private subscribeToFirstConnection() {
+		this.session.on('signal:firstConnection', (event: any) => {
+			const connectionId = event.from.connectionId;
+			if (this.oVSessionService.isMyOwnConnection(connectionId)) {
+				return;
+			}
+			const data = JSON.parse(event.from.data.split('%/%')[0]);
+			this.notificationsService.showConnectionPopup(data?.clientData, true, data?.avatar);
+			this.menuService.updateAssistants();
 		});
 	}
 
@@ -548,6 +560,15 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			data: JSON.stringify({ nickname }),
 			type: 'nicknameChanged',
 			to: connection ? [connection] : undefined
+		};
+		this.session.signal(signalOptions);
+	}
+
+	private sendFirstConnectionSignal() {
+		const signalOptions: SignalOptions = {
+			data: '',
+			type: 'firstConnection',
+			to: undefined
 		};
 		this.session.signal(signalOptions);
 	}
