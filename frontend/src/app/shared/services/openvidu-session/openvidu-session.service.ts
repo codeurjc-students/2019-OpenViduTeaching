@@ -59,13 +59,13 @@ export class OpenViduSessionService {
 
 	async connectWebcamSession(token: string): Promise<any> {
 		if (!!token) {
-			await this.webcamSession.connect(token, { clientData: this.getWebcamUserName(), avatar: this.getWebCamAvatar() });
+			await this.webcamSession.connect(token, { clientData: this.getWebcamUserName(), avatar: this.getWebCamAvatar(), cameraOrScreen: true });
 		}
 	}
 
 	async connectScreenSession(token: string): Promise<any> {
 		if (!!token) {
-			await this.screenSession.connect(token, { clientData: this.getScreenUserName(), avatar: this.getWebCamAvatar() });
+			await this.screenSession.connect(token, { clientData: this.getScreenUserName(), avatar: this.getWebCamAvatar(), cameraOrScreen: false });
 		}
 	}
 

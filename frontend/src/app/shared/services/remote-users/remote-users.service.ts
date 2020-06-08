@@ -31,6 +31,9 @@ export class RemoteUsersService {
 		const connectionId = event.connection.connectionId;
 		try {
 			const data = JSON.parse(event.connection.data.split('%/%')[0]);
+			if(!data?.cameraOrScreen) {
+				return;
+			}
 			nickname = data?.clientData;
 			avatar = data?.avatar;
 			name = event.connection.data.split('%/%SERVER=')[1];
@@ -38,12 +41,9 @@ export class RemoteUsersService {
 			nickname = 'Unknown';
 		}
 		const newUser = new UserModel(connectionId, undefined, nickname, name);
-		if (!this.users.some((user) => user.nickname == nickname.substr(0, nickname.lastIndexOf('_SCREEN')))) {
-			this.users.filter((user) => user.nickname !== `${nickname}_SCREEN`);
-			newUser.setUserAvatar(avatar);
-			this.users.push(newUser);
-			this.updateUsers();
-		}
+		newUser.setUserAvatar(avatar);
+		this.users.push(newUser);
+		this.updateUsers();
 	}
 
 	removeUserByConnectionId(connectionId: string): UserModel {
