@@ -26,6 +26,11 @@ export class UserModel {
 	streamManager: StreamManager;
 
 	/**
+	 * The position in the queue of people who are raising their hand (0 if not raising their hand)
+	 */
+	positionInHandRaiseQueue: number;
+
+	/**
 	 * @hidden
 	 */
 	videoAvatar: HTMLCanvasElement;
@@ -53,6 +58,7 @@ export class UserModel {
 		this.nickname = nickname || 'OpenVidu';
 		this.streamManager = streamManager || null;
 		this.name = name || this.nickname;
+		this.positionInHandRaiseQueue = 0;
 	}
 
 	/**
@@ -107,6 +113,13 @@ export class UserModel {
 	}
 
 	/**
+	 * Return the position in the queue of people who are raising their hand (0 if not raising their hand)
+	 */
+	public getPositionInHandRaiseQueue(): number {
+		return this.positionInHandRaiseQueue;
+	}
+
+	/**
 	 * Return `true` if user has a local role and `false` if not
 	 */
 	public isLocal(): boolean {
@@ -158,6 +171,14 @@ export class UserModel {
 	 */
 	public setName(name: string) {
 		this.name = name;
+	}
+
+	/**
+	 * Set the position in the queue of people who are raising their hand
+	 * @param positionInHandRaiseQueue value of the position
+	 */
+	public setPositionInHandRaiseQueue(positionInHandRaiseQueue: number) {
+		this.positionInHandRaiseQueue = positionInHandRaiseQueue;
 	}
 
 	public isVideoSizeBig(): boolean {

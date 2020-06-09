@@ -18,6 +18,18 @@ export class RaiseHandService {
     private userService: UserService
   ) { }
 
+  raiseHand(roomName: string, user: UserModel) {
+    this.raiseHandRequest(roomName, user).subscribe((position) => {
+      user.setPositionInHandRaiseQueue(position);
+    });
+  }
+
+  lowerHand(roomName: string, user: UserModel) {
+    this.lowerHandRequest(roomName, user.getConnectionId()).subscribe(() => {
+      user.setPositionInHandRaiseQueue(0);
+    });
+  }
+
   getHandRaisedUsers(roomName: string): Observable<HandRaisedUser[]> {
     return this.http.get<any>(this.baseURL + '/room/' + roomName + '/raiseHand').pipe(
       map(users => { return users }),

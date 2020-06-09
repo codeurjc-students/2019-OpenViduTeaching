@@ -71,25 +71,19 @@
 			<!-- Raise hand button -->
 			<button
 				id="navRaiseHand"
-				mat-icon-button (click)="raiseHand()"
+				mat-icon-button
+				(click)="raiseOrLowerHand()"
 				id="raise_hand_button"
 				*ngIf="ovSettings | hasScreenSharing"
+				matBadge="{{localUser.getPositionInHandRaiseQueue()}}"
+				[matBadgeHidden]="localUser.getPositionInHandRaiseQueue()<=0"
+				matBadgePosition="below after"
+				matBadgeSize="medium"
+				matBadgeColor="warn"
 			>
-			<!--
-			matBadge="{{localUser.getPositionInHandRaiseQueue()}}"
-			[matBadgeHidden]="!localUser.isHandRaised()"
-			matBadgePosition="below after"
-			matBadgeSize="medium"
-			matBadgeColor="warn"
-			-->
-				<img src="../../../../assets/images/raise_hand.png" matTooltip="Raise your hand" id="raise_hand">
-				<!--*ngIf="localUser && !localUser.isHandRaised()"-->
-				<!--img *ngIf="localUser && localUser.isHandRaised()" src="../../../../assets/images/lower_hand.png" matTooltip="Lower your hand" id="raise_hand"-->
+				<img *ngIf="localUser && localUser.getPositionInHandRaiseQueue()<=0" src="../../../../assets/images/raise_hand.png" matTooltip="Raise your hand" id="raise_hand">
+				<img *ngIf="localUser && !localUser.getPositionInHandRaiseQueue()<=0" src="../../../../assets/images/lower_hand.png" matTooltip="Lower your hand" id="raise_hand">
 			</button>
-
-			<button mat-icon-button (click)="raiseHand()" *ngIf="localUser" id="raise_hand_button" matBadge="{{localUser.getPositionInHandRaiseQueue()}}" [matBadgeHidden]="!localUser.isHandRaised()" matBadgePosition="below after" matBadgeSize="medium" matBadgeColor="warn">
-				
-			  </button>
 		</div>
 	</div>
 	<div fxFlex="10%" fxFlexOrder="3" align="end">

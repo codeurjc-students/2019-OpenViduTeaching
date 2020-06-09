@@ -1,9 +1,11 @@
+import { RaiseHandService } from './../../services/raiseHand/raise-hand.service';
 import { Component, OnInit, Input, EventEmitter, Output, HostListener, OnDestroy } from '@angular/core';
 import { UtilsService } from '../../services/utils/utils.service';
 import { VideoFullscreenIcon } from '../../types/icon-type';
 import { OvSettingsModel } from '../../models/ovSettings';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { MenuService } from '../../services/menu/menu.service';
+import { UserModel } from '../../models/user-model';
 
 @Component({
 	selector: 'app-toolbar',
@@ -12,10 +14,10 @@ import { MenuService } from '../../services/menu/menu.service';
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
 	@Input() lightTheme: boolean;
-	@Input() mySessionId: boolean;
+	@Input() mySessionId: string;
 	@Input() compact: boolean;
-	@Input() showNotification: boolean;
 	@Input() ovSettings: OvSettingsModel;
+	@Input() localUser: UserModel;
 
 	@Input() isWebcamVideoEnabled: boolean;
 	@Input() isWebcamAudioEnabled: boolean;
@@ -40,7 +42,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private utilsSrv: UtilsService,
-		private menuService: MenuService
+		private menuService: MenuService,
+		private raiseHandService: RaiseHandService,
 	) {
 		this.menuServiceSubscription = this.menuService.totalMessagesUnreadObs.subscribe((num) => {
 			this.newMessagesNum = num;
@@ -98,7 +101,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 		this.fullscreenIcon = this.fullscreenIcon === VideoFullscreenIcon.BIG ? VideoFullscreenIcon.NORMAL : VideoFullscreenIcon.BIG;
 	}
 
-	raiseHand() {
-		
+	raiseOrLowerHand() {
+		if (this.localUser.getPositionInHandRaiseQueue() > 0) {
+			this.raiseHandService.lowerHand(this.mySessionId, this.localUser);
+		} else {
+			this.raiseHandService.raiseHand(this.mySessionId, this.localUser);
+		}
 	}
 }

@@ -75,6 +75,7 @@ import { StorageService } from './shared/services/storage/storage.service';
 import { UserService } from './shared/services/user/user.service';
 import { RoomService } from './shared/services/room/room.service';
 import { MenuService } from './shared/services/menu/menu.service';
+import { RaiseHandService } from './shared/services/raiseHand/raise-hand.service';
 
 // Interceptors
 import { BasicAuthInterceptor } from 'src/interceptors/auth.interceptor';
@@ -156,6 +157,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		UserService,
 		RoomService,
 		MenuService,
+		RaiseHandService,
     	{ provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
     	{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
 	],

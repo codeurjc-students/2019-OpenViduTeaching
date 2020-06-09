@@ -11,4 +11,5 @@ export interface HandRaisedUser {
 	nickname: string;
 	avatar: string;
 	connectionId: string;
+	username: string;
 }
