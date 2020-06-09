@@ -1,5 +1,4 @@
 import { NotificationsService } from './../shared/services/notifications/notifications.service';
-import { Notification, HandRaisedUser } from './../shared/types/notification-type';
 import { UserService } from './../shared/services/user/user.service';
 import { Component, HostListener, OnDestroy, OnInit, ViewChild, Inject, ViewChildren, ElementRef, QueryList } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -112,7 +111,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 	@HostListener('window:beforeunload')
 	beforeunloadHandler() {
-		this.networkSrv.keepaliveRemoveUser(this.roomName);
 		this.leaveSession();
 	}
 
@@ -165,10 +163,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		if (this.modConnectionsSubscription) {
 			this.modConnectionsSubscription.unsubscribe();
 		}
-		this.networkSrv.removeUser(this.roomName).subscribe(
-			(_) => { },
-			error => console.error(error)
-		);
 	}
 
 	onConfigRoomJoin() {
@@ -215,6 +209,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 	leaveSession() {
 		this.log.d('Leaving session...');
+		this.networkSrv.keepaliveRemoveUser(this.roomName);
 		this.oVSessionService.disconnect();
 		this.router.navigate(['']);
 	}

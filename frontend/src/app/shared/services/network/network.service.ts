@@ -44,8 +44,11 @@ export class NetworkService {
 
 	keepaliveRemoveUser(roomName?: string) {
 		if(this.userService.isLogged && !!roomName) {
+			let headers = new Headers();
+			headers.set('Authorization', `Basic ${this.userService.user.authdata}`);
 			fetch(this.baseHref + '/room/' + roomName + '/user', {
 				method: 'DELETE',
+				headers: headers,
 				keepalive: true
 			});
 		}
