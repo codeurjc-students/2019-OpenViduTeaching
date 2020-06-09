@@ -1,3 +1,6 @@
+import { UserModel } from 'src/app/shared/models/user-model';
+import { RaiseHandServiceMock } from './../../services/raiseHand/raise-hand.service.mock';
+import { RaiseHandService } from './../../services/raiseHand/raise-hand.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToolbarComponent } from './toolbar.component';
@@ -25,11 +28,13 @@ describe('ToolbarComponent', () => {
 			],
 			providers: [
 				{ provide: UtilsService, useClass: UtilsServiceMock },
-				{ provide: MenuService, useClass: MenuServiceMock }
+				{ provide: MenuService, useClass: MenuServiceMock },
+				{ provide: RaiseHandService, useClass: RaiseHandServiceMock }
 			]
 		}).compileComponents();
 		fixture = TestBed.createComponent(ToolbarComponent);
 		component = fixture.componentInstance;
+		component.localUser = new UserModel();
 		fixture.detectChanges();
 	}));
 
