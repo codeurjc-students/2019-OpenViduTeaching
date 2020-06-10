@@ -1,3 +1,4 @@
+import { RaiseHandService } from './../shared/services/raiseHand/raise-hand.service';
 import { NotificationsService } from './../shared/services/notifications/notifications.service';
 import { UserService } from './../shared/services/user/user.service';
 import { Component, HostListener, OnDestroy, OnInit, ViewChild, Inject, ViewChildren, ElementRef, QueryList } from '@angular/core';
@@ -102,6 +103,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		private loggerSrv: LoggerService,
 		private menuService: MenuService,
 		public notificationsService: NotificationsService,
+		private raiseHandService: RaiseHandService,
 		@Inject('assistantsChatService') private assistantsChatService: ChatService,
 		@Inject('moderatorsChatService') private moderatorsChatService: ChatService,
 		private userService: UserService
@@ -199,6 +201,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		if(this.userService.isModOfRoom(this.roomName)) {
 			this.moderatorsChatService.subscribeToChat('chatMod');
 		}
+		this.raiseHandService.subscribeToHandRaiseSignal();
 		this.subscribeToMenuToggle();
 		this.subscribeToModConnections();
 		this.notificationsService.setPopupsRef(this.currentPopups);

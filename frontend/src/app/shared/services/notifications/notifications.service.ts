@@ -1,8 +1,8 @@
-import { Notification } from './../../types/notification-type';
+import { UserModel } from './../../models/user-model';
+import { Notification, HandRaisedUser } from './../../types/notification-type';
 import { OpenViduSessionService } from './../openvidu-session/openvidu-session.service';
 import { Injectable, QueryList, ElementRef } from '@angular/core';
 import { MenuService } from '../menu/menu.service';
-import { HandRaisedUser } from '../../types/notification-type';
 
 @Injectable({
 	providedIn: 'root'
@@ -101,6 +101,20 @@ export class NotificationsService {
 			this.playAudio(audioName);
 			this.removePopupOnTimeout();
 		}
+	}
+
+	addRaisedHandUser(user: UserModel) {
+		const handRaisedUser: HandRaisedUser = {
+			nickname: user.getNickname(),
+			avatar: user.getAvatar(),
+			connectionId: user.getConnectionId(),
+			username: user.getName()
+		};
+		this.handRaisedUsers.push(handRaisedUser);
+	}
+
+	removeHandRaisedUserByConnectionId(connectionId: string) {
+		this.handRaisedUsers = this.handRaisedUsers.filter(handRaisedUser => handRaisedUser.connectionId !== connectionId);
 	}
 
 	setPopupsRef(currentPopups: QueryList<ElementRef>) {
