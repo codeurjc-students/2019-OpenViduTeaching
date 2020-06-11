@@ -62,7 +62,13 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 	@ViewChild('sidenav') menuSidenav: MatSidenav;
 	@ViewChildren('popup', { read: ElementRef }) currentPopups: QueryList<ElementRef>;
-  	@ViewChild('raisedHands', { read: ElementRef }) raisedHandsPopup: ElementRef;
+  	@ViewChild('raisedHands', { read: ElementRef }) set content(content: ElementRef) {
+		if(content) {
+			this.raisedHandsPopup = content;
+			this.notificationsService.setRaiseHandsPopupRef(this.raisedHandsPopup);
+		}
+	};
+	private raisedHandsPopup: ElementRef;
 
 	ovSettings: OvSettingsModel;
 	compact = false;
@@ -205,7 +211,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.subscribeToMenuToggle();
 		this.subscribeToModConnections();
 		this.notificationsService.setPopupsRef(this.currentPopups);
-		this.notificationsService.setRaiseHandsPopupRef(this.raisedHandsPopup);
 		this.subscribeToReconnection();
 		this.connectToSession();
 	}
