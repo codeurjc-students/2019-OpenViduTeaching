@@ -43,14 +43,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 	constructor(
 		private utilsSrv: UtilsService,
 		private menuService: MenuService,
-		private raiseHandService: RaiseHandService,
+		private raiseHandService: RaiseHandService
 	) {
 		this.menuServiceSubscription = this.menuService.totalMessagesUnreadObs.subscribe((num) => {
 			this.newMessagesNum = num;
 		});
-	}
-	ngOnDestroy(): void {
-		this.menuServiceSubscription.unsubscribe();
 	}
 
 	@HostListener('window:resize', ['$event'])
@@ -70,6 +67,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 			return;
 		}
 		this.logoUrl += 'openvidu_logo.png';
+	}
+
+	ngOnDestroy() {
+		this.menuServiceSubscription.unsubscribe();
 	}
 
 	toggleMicrophone() {

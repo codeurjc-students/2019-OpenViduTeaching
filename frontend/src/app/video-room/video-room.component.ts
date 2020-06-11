@@ -375,6 +375,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 			this.updateOpenViduLayout();
 			this.sendFirstConnectionSignal();
+			this.raiseHandService.updateHandRaisedUsers();
 		}
 	}
 
