@@ -16,24 +16,24 @@ export class RaiseHandService {
 	private baseURL: string = '/ovTeachingApi';
 
 	constructor(
-    private http: HttpClient,
-    private userService: UserService,
-    private oVSessionService: OpenViduSessionService,
-    private notificationsService: NotificationsService,
-    private remoteUsersService: RemoteUsersService
-  ) { }
+		private http: HttpClient,
+		private userService: UserService,
+		private oVSessionService: OpenViduSessionService,
+		private notificationsService: NotificationsService,
+		private remoteUsersService: RemoteUsersService
+	) {}
 
 	raiseHand(roomName: string, user: UserModel) {
 		this.raiseHandRequest(roomName, user).subscribe((position) => {
-      user.setPositionInHandRaiseQueue(position);
-      this.sendRaiseHandSignal(true);
+			user.setPositionInHandRaiseQueue(position);
+			this.sendRaiseHandSignal(true);
 		});
 	}
 
 	lowerHand(roomName: string, user: UserModel) {
 		this.lowerHandRequest(roomName, user.getConnectionId()).subscribe(() => {
-      user.setPositionInHandRaiseQueue(0);
-      this.sendRaiseHandSignal(false);
+			user.setPositionInHandRaiseQueue(0);
+			this.sendRaiseHandSignal(false);
 		});
 	}
 
@@ -41,25 +41,26 @@ export class RaiseHandService {
 		const session = this.oVSessionService.getWebcamSession();
 		session.on('signal:raiseHand', (event: any) => {
 			const connectionId = event.from.connectionId;
-      const raiseOrLower = JSON.parse(event.data);
-      const isMyOwnConnection = this.oVSessionService.isMyOwnConnection(connectionId);
-      if(isMyOwnConnection) {
-        return;
-      }
-      const user: UserModel = this.remoteUsersService.getRemoteUserByConnectionId(connectionId);
-      if(raiseOrLower) {
-        this.notificationsService.addRaisedHandUser(user);
-      } else {
-        this.notificationsService.removeHandRaisedUserByConnectionId(connectionId);
-      }
+			const raiseOrLower = JSON.parse(event.data);
+			const isMyOwnConnection = this.oVSessionService.isMyOwnConnection(connectionId);
+			if (isMyOwnConnection) {
+				return;
+			}
+			const user: UserModel = this.remoteUsersService.getRemoteUserByConnectionId(connectionId);
+			if (raiseOrLower) {
+				this.notificationsService.addRaisedHandUser(user);
+			} else {
+				this.notificationsService.removeHandRaisedUserByConnectionId(connectionId);
+			}
 		});
-  }
-  
-  updateHandRaisedUsers() {
-    this.getHandRaisedUsersRequest(this.oVSessionService.getSessionId()).subscribe((users) => {
-      this.notificationsService.handRaisedUsers = users;
-    });
-  }
+	}
+
+	updateHandRaisedUsers() {
+		this.getHandRaisedUsersRequest(this.oVSessionService.getSessionId()).subscribe((users) => {
+			this.notificationsService.handRaisedUsers = users;
+			this.notificationsService.updateHandRaisedMessage();
+		});
+	}
 
 	private sendRaiseHandSignal(raiseOrLower: boolean) {
 		const sessionAvailable = this.oVSessionService.getConnectedUserSession();
@@ -99,22 +100,22 @@ export class RaiseHandService {
 	}
 
 	private syncLowerHand(roomName: string, connectionId: string) {
-    if(this.userService.isLogged && !!roomName) {
-      let body = {
-        connectionId: connectionId
-      };
+		if (this.userService.isLogged && !!roomName) {
+			let body = {
+				connectionId: connectionId
+			};
 			let headers = new Headers();
-      headers.set('Authorization', `Basic ${this.userService.user.authdata}`);
-      fetch(this.baseURL + '/room/' + roomName + '/raiseHand', {
-        method: 'DELETE',
-        body: JSON.stringify(body),
-        headers: headers,
-        keepalive: true
-      });
-    }
-  }
-  
-  private getHandRaisedUsersRequest(roomName: string): Observable<HandRaisedUser[]> {
+			headers.set('Authorization', `Basic ${this.userService.user.authdata}`);
+			fetch(this.baseURL + '/room/' + roomName + '/raiseHand', {
+				method: 'DELETE',
+				body: JSON.stringify(body),
+				headers: headers,
+				keepalive: true
+			});
+		}
+	}
+
+	private getHandRaisedUsersRequest(roomName: string): Observable<HandRaisedUser[]> {
 		return this.http.get<any>(this.baseURL + '/room/' + roomName + '/raiseHand').pipe(
 			map((users) => {
 				return users;

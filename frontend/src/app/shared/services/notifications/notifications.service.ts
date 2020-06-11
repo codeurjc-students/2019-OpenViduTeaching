@@ -111,10 +111,12 @@ export class NotificationsService {
 			username: user.getName()
 		};
 		this.handRaisedUsers.push(handRaisedUser);
+		this.updateHandRaisedMessage();
 	}
 
 	removeHandRaisedUserByConnectionId(connectionId: string) {
 		this.handRaisedUsers = this.handRaisedUsers.filter(handRaisedUser => handRaisedUser.connectionId !== connectionId);
+		this.updateHandRaisedMessage();
 	}
 
 	setPopupsRef(currentPopups: QueryList<ElementRef>) {
@@ -123,5 +125,11 @@ export class NotificationsService {
 
 	setRaiseHandsPopupRef(raisedHandsPopup: ElementRef) {
 		this.raisedHandsPopup = raisedHandsPopup;
+	}
+
+	updateHandRaisedMessage() {
+		if(this.handRaisedUsers.length>0) {
+			this.handsRaisedMessage = (this.handRaisedUsers.length>1 ? 'And ' + (this.handRaisedUsers.length-1) + ' other ' + (this.handRaisedUsers.length===2 ? 'person' : 'people') + ' are' : 'Is') + ' raising their hand';
+		}
 	}
 }
