@@ -22,6 +22,7 @@ import { OvSettingsModel } from '../shared/models/ovSettings';
 import { ScreenType } from '../shared/types/video-type';
 import { ILogger } from '../shared/types/logger-type';
 import { LayoutType } from '../shared/types/layout-type';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 // Services
 import { DevicesService } from '../shared/services/devices/devices.service';
@@ -34,7 +35,6 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { ChatService } from '../shared/services/chat/chat.service';
 import { MenuService } from '../shared/services/menu/menu.service';
 import { RemoteUsersService } from '../shared/services/remote-users/remote-users.service';
-import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
 	selector: 'app-video-room',

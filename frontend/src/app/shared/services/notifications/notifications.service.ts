@@ -111,16 +111,30 @@ export class NotificationsService {
 			username: user.getName()
 		};
 		this.handRaisedUsers.push(handRaisedUser);
-		this.recalculatePopupOffsets();
+		if (this.handRaisedUsers.length == 1) {
+			this.playAudio('handRaise');
+			this.recalculatePopupOffsets();
+		}
 		this.updateHandRaisedMessage();
 	}
 
 	removeHandRaisedUserByConnectionId(connectionId: string) {
-		this.handRaisedUsers = this.handRaisedUsers.filter(handRaisedUser => handRaisedUser.connectionId !== connectionId);
-		setTimeout(() => {
-			this.recalculatePopupOffsets();
-		}, 500);
+		this.handRaisedUsers = this.handRaisedUsers.filter((handRaisedUser) => handRaisedUser.connectionId !== connectionId);
+		if (this.handRaisedUsers.length == 0) {
+			setTimeout(() => {
+				this.recalculatePopupOffsets();
+			}, 500);
+		}
 		this.updateHandRaisedMessage();
+	}
+
+	updateHandRaisedUsers(users: HandRaisedUser[]) {
+		this.handRaisedUsers = users;
+		this.updateHandRaisedMessage();
+		if (this.handRaisedUsers.length > 0) {
+			this.playAudio('handRaise');
+			this.recalculatePopupOffsets();
+		}
 	}
 
 	setPopupsRef(currentPopups: QueryList<ElementRef>) {
@@ -131,7 +145,7 @@ export class NotificationsService {
 		this.raisedHandsPopup = raisedHandsPopup;
 	}
 
-	updateHandRaisedMessage() {
+	private updateHandRaisedMessage() {
 		if(this.handRaisedUsers.length>0) {
 			this.handsRaisedMessage = (this.handRaisedUsers.length>1 ? 'And ' + (this.handRaisedUsers.length-1) + ' other ' + (this.handRaisedUsers.length===2 ? 'person' : 'people') + ' are' : 'Is') + ' raising their hand';
 		}

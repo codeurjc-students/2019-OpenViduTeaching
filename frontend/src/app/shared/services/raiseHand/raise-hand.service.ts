@@ -57,8 +57,7 @@ export class RaiseHandService {
 
 	updateHandRaisedUsers() {
 		this.getHandRaisedUsersRequest(this.oVSessionService.getSessionId()).subscribe((users) => {
-			this.notificationsService.handRaisedUsers = users;
-			this.notificationsService.updateHandRaisedMessage();
+			this.notificationsService.updateHandRaisedUsers(users);
 		});
 	}
 
