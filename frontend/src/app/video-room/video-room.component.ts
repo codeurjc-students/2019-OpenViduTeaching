@@ -401,7 +401,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private subscribeToConnectionCreated() {
 		this.session.on('connectionCreated', (event: ConnectionEvent) => {
 			const connectionId = event.connection.connectionId;
-			const nickname = JSON.parse(event.connection.data.split('%/%')[0])?.clientData;
+			const name = JSON.parse(event.connection.data.split('%/%')[0])?.name;
 
 			if(this.oVSessionService.getWebcamSession().connection.connectionId == connectionId) {
 				this.connection = event.connection;
@@ -409,7 +409,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 				this.moderatorsChatService.setToConnections(this.modConnections);
 				return;
 			}
-			if (this.oVSessionService.isMyOwnConnection(connectionId) || this.oVSessionService.isMyOwnNickname(nickname)) {
+			if (this.oVSessionService.isMyOwnConnection(connectionId) || this.userService.user.name === name) {
 				return;
 			}
 

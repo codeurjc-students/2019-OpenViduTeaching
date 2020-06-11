@@ -6,6 +6,7 @@ import { ScreenType } from '../../types/video-type';
 import { AvatarType } from '../../types/chat-type';
 import { LoggerService } from '../logger/logger.service';
 import { ILogger } from '../../types/logger-type';
+import { UserService } from '../user/user.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -30,7 +31,10 @@ export class OpenViduSessionService {
 	private screenMediaStream: MediaStream = null;
 	private webcamMediaStream: MediaStream = null;
 
-	constructor(private loggerSrv: LoggerService) {
+	constructor(
+		private loggerSrv: LoggerService,
+		private userService: UserService
+	) {
 		this.log = this.loggerSrv.get('OpenViduSessionService');
 		this.OV = new OpenVidu();
 		this.OVScreen = new OpenVidu();
@@ -59,13 +63,13 @@ export class OpenViduSessionService {
 
 	async connectWebcamSession(token: string): Promise<any> {
 		if (!!token) {
-			await this.webcamSession.connect(token, { clientData: this.getWebcamUserName(), avatar: this.getWebCamAvatar(), cameraOrScreen: true });
+			await this.webcamSession.connect(token, { clientData: this.getWebcamUserName(), avatar: this.getWebCamAvatar(), cameraOrScreen: true, name: this.userService.user.name });
 		}
 	}
 
 	async connectScreenSession(token: string): Promise<any> {
 		if (!!token) {
-			await this.screenSession.connect(token, { clientData: this.getScreenUserName(), avatar: this.getWebCamAvatar(), cameraOrScreen: false });
+			await this.screenSession.connect(token, { clientData: this.getScreenUserName(), avatar: this.getWebCamAvatar(), cameraOrScreen: false, name: this.userService.user.name });
 		}
 	}
 
@@ -290,10 +294,6 @@ export class OpenViduSessionService {
 			this.screenUser?.getConnectionId() === connectionId ||
 			this.screenSession.connection?.connectionId === connectionId
 		);
-	}
-
-	isMyOwnNickname(nickname: string): boolean {
-		return (this.getWebcamUserName() === nickname || this.getScreenUserName() === nickname);
 	}
 
 	createProperties(
