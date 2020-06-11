@@ -111,11 +111,15 @@ export class NotificationsService {
 			username: user.getName()
 		};
 		this.handRaisedUsers.push(handRaisedUser);
+		this.recalculatePopupOffsets();
 		this.updateHandRaisedMessage();
 	}
 
 	removeHandRaisedUserByConnectionId(connectionId: string) {
 		this.handRaisedUsers = this.handRaisedUsers.filter(handRaisedUser => handRaisedUser.connectionId !== connectionId);
+		setTimeout(() => {
+			this.recalculatePopupOffsets();
+		}, 500);
 		this.updateHandRaisedMessage();
 	}
 
