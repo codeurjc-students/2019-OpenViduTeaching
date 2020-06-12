@@ -219,6 +219,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.log.d('Leaving session...');
 		if (!this.showConfigRoomCard) {
 			this.networkSrv.keepaliveRemoveUser(this.roomName);
+			if(this.localUsers[0].getPositionInHandRaiseQueue() > 0) {
+				this.raiseHandService.keepaliveLowerHand(this.roomName, this.localUsers[0].getConnectionId());
+			}
 		}
 		this.oVSessionService.disconnect();
 		this.router.navigate(['']);

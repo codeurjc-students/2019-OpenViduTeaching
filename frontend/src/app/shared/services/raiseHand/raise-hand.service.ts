@@ -112,13 +112,17 @@ export class RaiseHandService {
 			);
 	}
 
-	private syncLowerHand(roomName: string, connectionId: string) {
+	keepaliveLowerHand(roomName: string, connectionId: string) {
 		if (this.userService.isLogged && !!roomName) {
+			this.localUsers[0].setPositionInHandRaiseQueue(0);
+			this.sendRaiseHandSignal(false, this.localUsers[0].getPositionInHandRaiseQueue());
 			let body = {
 				connectionId: connectionId
 			};
 			let headers = new Headers();
 			headers.set('Authorization', `Basic ${this.userService.user.authdata}`);
+			headers.set('Accept', 'application/json');
+			headers.set('Content-Type', 'application/json');
 			fetch(this.baseURL + '/room/' + roomName + '/raiseHand', {
 				method: 'DELETE',
 				body: JSON.stringify(body),
