@@ -1,3 +1,5 @@
+import { OpenViduSessionServiceMock } from './../openvidu-session/openvidu-session.service.mock';
+import { OpenViduSessionService } from 'src/app/shared/services/openvidu-session/openvidu-session.service';
 import { RoomServiceMock } from 'src/app/shared/services/room/room.service.mock';
 import { RoomService } from 'src/app/shared/services/room/room.service';
 import { TestBed } from '@angular/core/testing';
@@ -13,7 +15,8 @@ describe('MenuService', () => {
     TestBed.configureTestingModule({
 			providers: [
         { provide: LoggerService, useClass: LoggerServiceMock },
-        { provide: RoomService, useClass: RoomServiceMock }
+        { provide: RoomService, useClass: RoomServiceMock },
+        { provide: OpenViduSessionService, useClass: OpenViduSessionServiceMock }
 			]
 		});
     service = TestBed.inject(MenuService);

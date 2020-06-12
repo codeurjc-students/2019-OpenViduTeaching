@@ -6,7 +6,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ToolbarComponent } from './toolbar.component';
 import { UtilsService } from '../../services/utils/utils.service';
 import { UtilsServiceMock } from '../../services/utils/utils.service.mock';
-import { HasChatPipe, HasVideoPipe, HasAudioPipe, HasScreenSharingPipe, HasFullscreenPipe, HasLayoutSpeakingPipe, HasExitPipe } from '../../pipes/ovSettings.pipe';
+import { HasChatPipe, HasVideoPipe, HasAudioPipe, HasScreenSharingPipe, HasFullscreenPipe, HasLayoutSpeakingPipe, HasExitPipe, HasRaiseHandPipe } from '../../pipes/ovSettings.pipe';
 import { MenuService } from '../../services/menu/menu.service';
 import { MenuServiceMock } from '../../services/menu/menu.service.mock';
 
@@ -24,7 +24,8 @@ describe('ToolbarComponent', () => {
 				HasChatPipe,
 				HasVideoPipe,
 				HasAudioPipe,
-				HasExitPipe
+				HasExitPipe,
+				HasRaiseHandPipe
 			],
 			providers: [
 				{ provide: UtilsService, useClass: UtilsServiceMock },
