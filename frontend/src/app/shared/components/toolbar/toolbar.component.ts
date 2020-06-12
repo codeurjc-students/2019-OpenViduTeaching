@@ -104,9 +104,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
 	raiseOrLowerHand() {
 		if (this.localUser.getPositionInHandRaiseQueue() > 0) {
-			this.raiseHandService.lowerHand(this.mySessionId, this.localUser);
+			this.raiseHandService.lowerHand(this.mySessionId);
 		} else {
-			this.raiseHandService.raiseHand(this.mySessionId, this.localUser);
+			this.raiseHandService.raiseHand(this.mySessionId);
 		}
 	}
 }

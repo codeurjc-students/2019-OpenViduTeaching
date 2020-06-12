@@ -27,17 +27,17 @@ export class RaiseHandService {
 		this.subscribeToLocalUsers();
 	}
 
-	raiseHand(roomName: string, user: UserModel) {
-		this.raiseHandRequest(roomName, user).subscribe((position) => {
-			user.setPositionInHandRaiseQueue(position);
-			this.sendRaiseHandSignal(true, user.getPositionInHandRaiseQueue());
+	raiseHand(roomName: string) {
+		this.raiseHandRequest(roomName, this.localUsers[0]).subscribe((position) => {
+			this.localUsers[0].setPositionInHandRaiseQueue(position);
+			this.sendRaiseHandSignal(true, this.localUsers[0].getPositionInHandRaiseQueue());
 		});
 	}
 
-	lowerHand(roomName: string, user: UserModel) {
-		this.lowerHandRequest(roomName, user.getConnectionId()).subscribe(() => {
-			user.setPositionInHandRaiseQueue(0);
-			this.sendRaiseHandSignal(false, user.getPositionInHandRaiseQueue());
+	lowerHand(roomName: string) {
+		this.lowerHandRequest(roomName, this.localUsers[0].getConnectionId()).subscribe(() => {
+			this.localUsers[0].setPositionInHandRaiseQueue(0);
+			this.sendRaiseHandSignal(false, this.localUsers[0].getPositionInHandRaiseQueue());
 		});
 	}
 
