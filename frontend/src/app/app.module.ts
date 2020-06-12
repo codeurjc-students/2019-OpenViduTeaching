@@ -37,7 +37,8 @@ import {
 	HasScreenSharingPipe,
 	HasFullscreenPipe,
 	HasLayoutSpeakingPipe,
-	HasExitPipe
+	HasExitPipe,
+	HasRaiseHandPipe
 } from './shared/pipes/ovSettings.pipe';
 import { TooltipListPipe } from './shared/pipes/tooltipList.pipe';
 import { SecurePipe } from './shared/pipes/secure.pipe';
@@ -102,6 +103,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		HasFullscreenPipe,
 		HasLayoutSpeakingPipe,
 		HasExitPipe,
+		HasRaiseHandPipe,
 		TooltipListPipe,
 		FooterComponent,
 		InviteComponent,
