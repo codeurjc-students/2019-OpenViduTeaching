@@ -46,11 +46,13 @@ export class RaiseHandService {
 			if (isMyOwnConnection) {
 				return;
 			}
-			const user: UserModel = this.remoteUsersService.getRemoteUserByConnectionId(connectionId);
-			if (raiseOrLower) {
-				this.notificationsService.addRaisedHandUser(user);
-			} else {
-				this.notificationsService.removeHandRaisedUserByConnectionId(connectionId);
+			let user: UserModel = this.remoteUsersService.getRemoteUserByConnectionId(connectionId);
+			if(!!user) {
+				if (raiseOrLower) {
+					this.notificationsService.addRaisedHandUser(user);
+				} else {
+					this.notificationsService.removeHandRaisedUserByConnectionId(connectionId);
+				}
 			}
 		});
 	}

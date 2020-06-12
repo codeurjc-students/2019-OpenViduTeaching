@@ -401,7 +401,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private subscribeToConnectionCreated() {
 		this.session.on('connectionCreated', (event: ConnectionEvent) => {
 			const connectionId = event.connection.connectionId;
-			const name = JSON.parse(event.connection.data.split('%/%')[0])?.name;
+			const cameraOrScreen: boolean = JSON.parse(event.connection.data.split('%/%')[0])?.cameraOrScreen;
 
 			if(this.oVSessionService.getWebcamSession().connection.connectionId == connectionId) {
 				this.connection = event.connection;
@@ -409,24 +409,29 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 				this.moderatorsChatService.setToConnections(this.modConnections);
 				return;
 			}
-			if (this.oVSessionService.isMyOwnConnection(connectionId) || this.userService.user.name === name) {
+			if (this.oVSessionService.isMyOwnConnection(connectionId)) {
+				return;
+			}
+			this.sendNicknameSignal(this.oVSessionService.getWebcamUserName(), event.connection);
+			if (!cameraOrScreen) {
 				return;
 			}
 
 			this.remoteUsersService.add(event);
-			this.sendNicknameSignal(this.oVSessionService.getWebcamUserName(), event.connection);
 		});
 	}
 
 	private subscribeToConnectionDestroyed() {
 		this.session.on('connectionDestroyed', (event: ConnectionEvent) => {
 			const connectionId = event.connection.connectionId;
-			const user: UserModel = this.remoteUsersService.removeUserByConnectionId(connectionId);
+			let user: UserModel = this.remoteUsersService.removeUserByConnectionId(connectionId);
 			// event.preventDefault();
-			this.notificationsService.showConnectionPopup(user.getNickname(), false, user.getAvatar());
-			setTimeout(() => {
-				this.menuService.updateAssistants();
-			}, 500);
+			if (!!user) {
+				this.notificationsService.showConnectionPopup(user.getNickname(), false, user.getAvatar());
+				setTimeout(() => {
+					this.menuService.updateAssistants();
+				}, 500);
+			}
 		});
 	}
 
