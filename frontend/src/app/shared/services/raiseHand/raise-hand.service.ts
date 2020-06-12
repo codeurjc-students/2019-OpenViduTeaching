@@ -15,25 +15,29 @@ import { UserModel } from '../../models/user-model';
 export class RaiseHandService {
 	private baseURL: string = '/ovTeachingApi';
 
+	private localUsers: UserModel[];
+
 	constructor(
 		private http: HttpClient,
 		private userService: UserService,
 		private oVSessionService: OpenViduSessionService,
 		private notificationsService: NotificationsService,
 		private remoteUsersService: RemoteUsersService
-	) {}
+	) {
+		this.subscribeToLocalUsers();
+	}
 
 	raiseHand(roomName: string, user: UserModel) {
 		this.raiseHandRequest(roomName, user).subscribe((position) => {
 			user.setPositionInHandRaiseQueue(position);
-			this.sendRaiseHandSignal(true);
+			this.sendRaiseHandSignal(true, user.getPositionInHandRaiseQueue());
 		});
 	}
 
 	lowerHand(roomName: string, user: UserModel) {
 		this.lowerHandRequest(roomName, user.getConnectionId()).subscribe(() => {
 			user.setPositionInHandRaiseQueue(0);
-			this.sendRaiseHandSignal(false);
+			this.sendRaiseHandSignal(false, user.getPositionInHandRaiseQueue());
 		});
 	}
 
@@ -41,17 +45,22 @@ export class RaiseHandService {
 		const session = this.oVSessionService.getWebcamSession();
 		session.on('signal:raiseHand', (event: any) => {
 			const connectionId = event.from.connectionId;
-			const raiseOrLower = JSON.parse(event.data);
+			const data = JSON.parse(event.data);
 			const isMyOwnConnection = this.oVSessionService.isMyOwnConnection(connectionId);
 			if (isMyOwnConnection) {
 				return;
 			}
 			let user: UserModel = this.remoteUsersService.getRemoteUserByConnectionId(connectionId);
+			user.setPositionInHandRaiseQueue(data?.position);
 			if(!!user) {
-				if (raiseOrLower) {
+				if (data?.raiseOrLower) {
 					this.notificationsService.addRaisedHandUser(user);
 				} else {
 					this.notificationsService.removeHandRaisedUserByConnectionId(connectionId);
+					let myPosition = this.localUsers[0].getPositionInHandRaiseQueue();
+					if(user.getPositionInHandRaiseQueue()+1 < myPosition) {
+						this.localUsers[0].setPositionInHandRaiseQueue(myPosition-1);
+					}
 				}
 			}
 		});
@@ -63,10 +72,13 @@ export class RaiseHandService {
 		});
 	}
 
-	private sendRaiseHandSignal(raiseOrLower: boolean) {
+	private sendRaiseHandSignal(raiseOrLower: boolean, positionInHandRaiseQueue: number) {
 		const sessionAvailable = this.oVSessionService.getConnectedUserSession();
 		sessionAvailable.signal({
-			data: JSON.stringify(raiseOrLower),
+			data: JSON.stringify({
+				raiseOrLower: raiseOrLower,
+				position: positionInHandRaiseQueue
+			}),
 			type: 'raiseHand'
 		});
 	}
@@ -128,5 +140,11 @@ export class RaiseHandService {
 	private handleError(error: any) {
 		console.error(error);
 		return throwError('Server error (' + error.status + '): ' + error.message);
+	}
+
+	private subscribeToLocalUsers() {
+		this.oVSessionService.OVUsers.subscribe((users) => {
+			this.localUsers = users;
+		});
 	}
 }
