@@ -77,6 +77,7 @@ import { UserService } from './shared/services/user/user.service';
 import { RoomService } from './shared/services/room/room.service';
 import { MenuService } from './shared/services/menu/menu.service';
 import { RaiseHandService } from './shared/services/raiseHand/raise-hand.service';
+import { SignalService } from './shared/services/signal/signal.service';
 
 // Interceptors
 import { BasicAuthInterceptor } from 'src/interceptors/auth.interceptor';
@@ -161,7 +162,8 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		MenuService,
 		RaiseHandService,
     	{ provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
-    	{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+		{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+		SignalService
 	],
 	bootstrap: [AppComponent]
 })
