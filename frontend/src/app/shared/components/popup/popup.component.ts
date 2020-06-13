@@ -1,3 +1,4 @@
+import { RaiseHandService } from './../../services/raiseHand/raise-hand.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
 
@@ -21,7 +22,8 @@ export class PopupComponent implements OnInit {
   letterColor: string;
 
   constructor(
-    public userService: UserService
+    public userService: UserService,
+    private raiseHandService: RaiseHandService
   ) { }
 
   ngOnInit() {
@@ -38,11 +40,6 @@ export class PopupComponent implements OnInit {
   }
 
   sendSignalLowerHand() {
-    /*
-    this.openviduSrv.sendSignal(this.roomName, 'lowerYourHand', [this.connectionId],{}).subscribe(
-      (_) => {},
-      error => console.error(error) 
-    );
-    */
+    this.raiseHandService.sendSignalLowerYourHand(this.connectionId);
   }
 }

@@ -208,6 +208,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.moderatorsChatService.subscribeToChat('chatMod');
 		}
 		this.raiseHandService.subscribeToHandRaiseSignal();
+		this.raiseHandService.subscribedToLowerYourHand();
 		this.subscribeToMenuToggle();
 		this.subscribeToModConnections();
 		this.notificationsService.setPopupsRef(this.currentPopups);

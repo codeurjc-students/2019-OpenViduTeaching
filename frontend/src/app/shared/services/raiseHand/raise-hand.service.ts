@@ -8,6 +8,7 @@ import { UserService } from '../user/user.service';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { UserModel } from '../../models/user-model';
+import { SignalService } from '../signal/signal.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -22,22 +23,29 @@ export class RaiseHandService {
 		private userService: UserService,
 		private oVSessionService: OpenViduSessionService,
 		private notificationsService: NotificationsService,
-		private remoteUsersService: RemoteUsersService
+		private remoteUsersService: RemoteUsersService,
+		private signalService: SignalService
 	) {
 		this.subscribeToLocalUsers();
 	}
 
-	raiseHand(roomName: string) {
-		this.raiseHandRequest(roomName, this.localUsers[0]).subscribe((position) => {
+	raiseHand() {
+		this.raiseHandRequest(this.oVSessionService.getSessionId(), this.localUsers[0]).subscribe((position) => {
 			this.localUsers[0].setPositionInHandRaiseQueue(position);
 			this.sendRaiseHandSignal(true, this.localUsers[0].getPositionInHandRaiseQueue());
 		});
 	}
 
-	lowerHand(roomName: string) {
-		this.lowerHandRequest(roomName, this.localUsers[0].getConnectionId()).subscribe(() => {
+	lowerHand() {
+		this.lowerHandRequest(this.oVSessionService.getSessionId(), this.localUsers[0].getConnectionId()).subscribe(() => {
 			this.localUsers[0].setPositionInHandRaiseQueue(0);
 			this.sendRaiseHandSignal(false, this.localUsers[0].getPositionInHandRaiseQueue());
+		});
+	}
+
+	updateHandRaisedUsers() {
+		this.getHandRaisedUsersRequest(this.oVSessionService.getSessionId()).subscribe((users) => {
+			this.notificationsService.updateHandRaisedUsers(users);
 		});
 	}
 
@@ -52,24 +60,35 @@ export class RaiseHandService {
 			}
 			let user: UserModel = this.remoteUsersService.getRemoteUserByConnectionId(connectionId);
 			user.setPositionInHandRaiseQueue(data?.position);
-			if(!!user) {
+			if (!!user) {
 				if (data?.raiseOrLower) {
 					this.notificationsService.addRaisedHandUser(user);
 				} else {
 					this.notificationsService.removeHandRaisedUserByConnectionId(connectionId);
 					let myPosition = this.localUsers[0].getPositionInHandRaiseQueue();
-					if(user.getPositionInHandRaiseQueue()+1 < myPosition) {
-						this.localUsers[0].setPositionInHandRaiseQueue(myPosition-1);
+					if (user.getPositionInHandRaiseQueue() + 1 < myPosition) {
+						this.localUsers[0].setPositionInHandRaiseQueue(myPosition - 1);
 					}
 				}
 			}
 		});
 	}
 
-	updateHandRaisedUsers() {
-		this.getHandRaisedUsersRequest(this.oVSessionService.getSessionId()).subscribe((users) => {
-			this.notificationsService.updateHandRaisedUsers(users);
+	subscribedToLowerYourHand() {
+		const session = this.oVSessionService.getWebcamSession();
+		session.on('signal:lowerYourHand', (event: any) => {
+			if (event.from === undefined) {
+				//Only do something if "from" is undefined, which means the signal was called by the backend
+				this.lowerHand();
+			}
 		});
+	}
+
+	sendSignalLowerYourHand(connectionId: string) {
+		this.signalService.sendSignal(this.oVSessionService.getSessionId(), 'lowerYourHand', [connectionId], {}).subscribe(
+			(_) => {},
+			(error) => console.error(error)
+		);
 	}
 
 	private sendRaiseHandSignal(raiseOrLower: boolean, positionInHandRaiseQueue: number) {

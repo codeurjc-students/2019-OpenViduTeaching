@@ -1,3 +1,5 @@
+import { SignalServiceMock } from './../signal/signal.service.mock';
+import { SignalService } from './../signal/signal.service';
 import { TestBed } from '@angular/core/testing';
 
 import { RaiseHandService } from './raise-hand.service';
@@ -9,6 +11,9 @@ describe('RaiseHandService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
+      providers: [
+        { provide: SignalService, useClass: SignalServiceMock },
+			]
     });
     service = TestBed.inject(RaiseHandService);
   });
