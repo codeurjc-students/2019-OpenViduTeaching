@@ -137,6 +137,11 @@ export class NotificationsService {
 		}
 	}
 
+	updateNickname(connectionId: string, nickname: string) {
+		const user = this.handRaisedUsers.find((handRaisedUser) => handRaisedUser.connectionId == connectionId);
+		user.nickname = nickname;
+	}
+
 	setPopupsRef(currentPopups: QueryList<ElementRef>) {
 		this.currentPopups = currentPopups;
 	}

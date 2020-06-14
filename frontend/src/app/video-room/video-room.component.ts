@@ -486,6 +486,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			const nickname = JSON.parse(event.data).nickname;
 			this.remoteStreamersService.updateNickname(connectionId, nickname);
 			this.remoteUsersService.updateNickname(connectionId, nickname);
+			this.notificationsService.updateNickname(connectionId, nickname);
 		});
 	}
 
