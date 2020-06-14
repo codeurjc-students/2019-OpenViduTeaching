@@ -410,6 +410,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			const cameraOrScreen: boolean = JSON.parse(event.connection.data.split('%/%')[0])?.cameraOrScreen;
 
 			if(this.oVSessionService.getWebcamSession().connection.connectionId == connectionId) {
+				this.localUsers[0].setConnectionId(connectionId);
+				this.localUsers[0].setName(event.connection.data.split('%/%SERVER=')[1]);
 				this.connection = event.connection;
 				this.modConnections.push(this.connection);
 				this.moderatorsChatService.setToConnections(this.modConnections);

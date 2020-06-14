@@ -150,6 +150,14 @@ export class UserModel {
 	}
 
 	/**
+	 * Set the connectionId
+	 * @param connectionId value of connectionId
+	 */
+	public setConnectionId(connectionId: string) {
+		this.connectionId = connectionId;
+	}
+
+	/**
 	 * Set the streamManager value object
 	 * @param streamManager value of streamManager
 	 */
