@@ -29,6 +29,7 @@ export class SettingsComponent implements OnInit {
   ngOnInit(): void {
     this.roomName = this.openviduSessionService.getSessionId();
     this.checkIsRecordingEnabled();
+    this.subscribedToChangeRecordingStatus();
   }
 
   private checkIsRecordingEnabled() {
@@ -76,7 +77,7 @@ export class SettingsComponent implements OnInit {
     );
   }
 
-  public setRecordingStatus(recordingStatus: boolean) {
+  setRecordingStatus(recordingStatus: boolean) {
     this.isBeingRecorded = recordingStatus;
   }
 
@@ -87,6 +88,15 @@ export class SettingsComponent implements OnInit {
         role: role,
         dismiss: () => {this.urlSnackBar.dismiss()} 
       }
+    });
+  }
+
+  private subscribedToChangeRecordingStatus() {
+    this.openviduSessionService.getConnectedUserSession().on('recordingStarted', (event:any) => {
+      this.setRecordingStatus(true);
+    });
+    this.openviduSessionService.getConnectedUserSession().on('recordingStopped', (event:any) => {
+      this.setRecordingStatus(false);
     });
   }
 }
