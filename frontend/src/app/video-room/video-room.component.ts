@@ -568,6 +568,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		try {
 			return await this.networkSrv.getToken(this.mySessionId);
 		} catch (error) {
+			if (error.status === 200) {
+				return error.error.text;
+			}
 			this.log.e('There was an error getting the token:', error.status, error.message);
 			this.utilsSrv.showErrorMessage('There was an error getting the token:', error.error || error.message);
 		}
