@@ -121,9 +121,11 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
   @HostListener('window:beforeunload')
   beforeunloadHandler() {
-    this.openViduSrv.syncRemoveUser(this.mySessionId);
-    if(this.localUsers[0].isHandRaised()) {
-      this.roomService.syncLowerHand(this.mySessionId, this.localUsers[0].getConnectionId());
+    if(!this.showDialogChooseRoom) {
+      this.openViduSrv.syncRemoveUser(this.mySessionId);
+      if(this.localUsers[0].isHandRaised()) {
+        this.roomService.syncLowerHand(this.mySessionId, this.localUsers[0].getConnectionId());
+      }
     }
     this.exitSession();
   }
