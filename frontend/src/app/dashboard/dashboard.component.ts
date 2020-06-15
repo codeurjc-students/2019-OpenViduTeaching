@@ -129,4 +129,10 @@ export class DashboardComponent implements OnInit {
     );
     this.newRoom;
   }
+
+  goToRoom(roomName: string) {
+		this.router.navigate(['/', roomName]).then(() => {
+			window.location.reload();
+		});
+	}
 }
