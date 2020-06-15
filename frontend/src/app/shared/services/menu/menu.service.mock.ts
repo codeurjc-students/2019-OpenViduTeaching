@@ -39,11 +39,7 @@ export class MenuServiceMock {
 
 	toggleMenu() {}
 
-	private isMenuOpened(): boolean {
-		return false;
-	}
-
-	private addMessageUnread() {}
-
 	updateAssistants() {}
+
+	subscribedToChangeRecordingStatus() {}
 }

@@ -5,6 +5,7 @@ import { InviteLinkComponent } from 'src/app/invite/invite-link/invite-link.comp
 import { UserService } from 'src/app/shared/services/user/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OpenViduSessionService } from 'src/app/shared/services/openvidu-session/openvidu-session.service';
+import { MenuService } from 'src/app/shared/services/menu/menu.service';
 
 @Component({
   selector: 'app-settings',
@@ -23,13 +24,14 @@ export class SettingsComponent implements OnInit {
     private openviduSessionService: OpenViduSessionService,
     private recordingService: RecordingService,
     public userService: UserService,
+    private menuService: MenuService,
     private urlSnackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
     this.roomName = this.openviduSessionService.getSessionId();
     this.checkIsRecordingEnabled();
-    this.subscribedToChangeRecordingStatus();
+    this.menuService.subscribedToChangeRecordingStatus(this.setRecordingStatus);
   }
 
   private checkIsRecordingEnabled() {
@@ -88,15 +90,6 @@ export class SettingsComponent implements OnInit {
         role: role,
         dismiss: () => {this.urlSnackBar.dismiss()} 
       }
-    });
-  }
-
-  private subscribedToChangeRecordingStatus() {
-    this.openviduSessionService.getConnectedUserSession().on('recordingStarted', (event:any) => {
-      this.setRecordingStatus(true);
-    });
-    this.openviduSessionService.getConnectedUserSession().on('recordingStopped', (event:any) => {
-      this.setRecordingStatus(false);
     });
   }
 }

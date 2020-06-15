@@ -126,4 +126,14 @@ export class MenuService {
 			this._assistants.next(this.assistants);
 		});
 	}
+
+	subscribedToChangeRecordingStatus(setRecordingStatus: (recordingStatus: boolean) => void) {
+		const session = this.openviduSessionService.getWebcamSession();
+		session.on('recordingStarted', (event: any) => {
+			setRecordingStatus(true);
+		});
+		session.on('recordingStopped', (event: any) => {
+			setRecordingStatus(false);
+		});
+	}
 }
