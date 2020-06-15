@@ -38,10 +38,15 @@ export class OpenViduService {
   }
 
   syncRemoveUser(roomName: string) {
-    fetch(this.baseURL + '/room/' + roomName + '/user', {
-      method: 'DELETE',
-      keepalive: true
-    });
+    if(this.userSrv.isLogged && !!roomName) {
+			let headers = new Headers();
+			headers.set('Authorization', `Basic ${this.userSrv.user.authdata}`);
+			fetch(this.baseURL + '/room/' + roomName + '/user', {
+				method: 'DELETE',
+				headers: headers,
+				keepalive: true
+			});
+		}
   }
 
   getToken(mySessionId: string): Promise<string> {

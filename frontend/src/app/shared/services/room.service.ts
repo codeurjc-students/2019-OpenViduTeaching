@@ -84,14 +84,21 @@ export class RoomService {
   }
 
   syncLowerHand(roomName: string, connectionId: string) {
-    let body = {
-      "connectionId": connectionId
-    };
-    fetch(this.baseURL + '/room/' + roomName + '/raiseHand', {
-      method: 'DELETE',
-      body: JSON.stringify(body),
-      keepalive: true
-    });
+    if (this.userService.isLogged && !!roomName) {
+			let body = {
+				connectionId: connectionId
+			};
+			let headers = new Headers();
+			headers.set('Authorization', `Basic ${this.userService.user.authdata}`);
+			headers.set('Accept', 'application/json');
+			headers.set('Content-Type', 'application/json');
+			fetch(this.baseURL + '/room/' + roomName + '/raiseHand', {
+				method: 'DELETE',
+				body: JSON.stringify(body),
+				headers: headers,
+				keepalive: true
+			});
+		}
   }
 
   private handleError(error: any) {
