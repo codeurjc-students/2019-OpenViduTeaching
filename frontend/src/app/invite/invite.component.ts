@@ -37,12 +37,12 @@ export class InviteComponent implements OnInit {
       this.loading = true;
       this.userName = this.userSrv.user.name;
       if(this.userSrv.isModOfRoom(this.roomName)) { //Direct access if already a mod
-        this.router.navigate(['/',this.roomName]);
+        this.navigate();
       } else {
         this.roomSrv.enterRoom(this.code).subscribe( //Update user if they are not in the room or mod
           user => {
             this.userSrv.saveUser(user);
-            this.router.navigate(['/', this.roomName]);
+            this.navigate();
           },
           error => {
             this.loading = false;
@@ -63,7 +63,7 @@ export class InviteComponent implements OnInit {
               user => {
                 let auth = window.btoa(this.userName + ':' + this.password);
                 this.userSrv.saveUser(user, auth);
-                this.router.navigate(['/', this.roomName]);
+                this.navigate();
               },
               error => {
                 this.loading = false;
@@ -78,6 +78,12 @@ export class InviteComponent implements OnInit {
         );
       }
     }
+  }
+
+  navigate() {
+    this.router.navigate(['/', this.roomName]).then(() => {
+			window.location.reload();
+		});
   }
 
   checkRoom() {
