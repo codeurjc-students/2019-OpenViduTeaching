@@ -35,12 +35,12 @@ import org.apache.http.ssl.TrustStrategy;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.google.common.io.ByteStreams;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -326,9 +326,9 @@ public class OpenViduComponent {
 		}
 	}
 	
-	public byte[] getVideo(String videoId) throws IOException {
+	public Resource getVideo(String videoId) throws IOException {
 		if(RECORDING_ENABLED) {
-			return ByteStreams.toByteArray(resourceLoader.getResource("file:" + RECORDING_PATH + "/" + videoId + "/" + videoId + ".mp4").getInputStream());
+			return resourceLoader.getResource("file:" + RECORDING_PATH + "/" + videoId + "/" + videoId + ".mp4");
 		}
 		return null;
 	}

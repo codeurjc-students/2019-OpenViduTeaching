@@ -20,11 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import com.google.common.io.ByteStreams;
 
 import urjc.ovteaching.openvidu.OpenViduComponent;
 import urjc.ovteaching.openvidu.RecordingController;
@@ -42,6 +45,9 @@ public class RecordingTests {
 
 	@Autowired
 	private MockMvc mvc;
+	
+	@Autowired
+    ResourceLoader resourceLoader;
 
 	@Spy
 	private final RecordingController recordingController = new RecordingController();
@@ -366,12 +372,13 @@ public class RecordingTests {
 	
 	@Test
 	public void getVideo() throws Exception {
-		given(this.openviduComponent.getVideo("testRoom")).willReturn(new byte[] {1, 2, 3});
+		given(this.openviduComponent.getVideo("testRoom")).willReturn(resourceLoader.getResource("classpath:json/initialData.json"));
 		
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/testRoom/recording/testRoom")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(content().bytes(new byte[] {1, 2, 3}));
+				.andExpect(content().contentType("video/mp4"))
+				.andExpect(content().bytes(ByteStreams.toByteArray(resourceLoader.getResource("classpath:json/initialData.json").getInputStream())));
 		
 		verify(openviduComponent).getVideo("testRoom");
 	}
