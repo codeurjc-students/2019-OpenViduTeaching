@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -164,7 +166,7 @@ public class RecordingController {
 	 * @return the video in byte array
 	 */
 	@GetMapping("/room/{roomName}/recording/{video}")
-	public ResponseEntity<byte[]> getVideo(@PathVariable String roomName, @PathVariable String video) {
+	public ResponseEntity<Resource> getVideo(@PathVariable String roomName, @PathVariable String video) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
@@ -178,8 +180,11 @@ public class RecordingController {
 			return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
 		}
 		try {
-			byte[] bytes = this.openViduComponent.getVideo(video);			
-			return new ResponseEntity<>(bytes, new HttpHeaders(), HttpStatus.OK);
+			Resource resource = this.openViduComponent.getVideo(video);
+			return ResponseEntity.ok()
+	                .contentType(MediaType.parseMediaType("video/mp4"))
+	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+	                .body(resource);
 		} catch(IOException e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
