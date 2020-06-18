@@ -8,5 +8,5 @@
     <mat-card-content *ngIf="this.content">
        {{this.content}}
     </mat-card-content>
-    <button mat-flat-button *ngIf="isRaiseHand && userSrv.isModOfRoom(roomName)" (click)="sendSignalLowerHand()" color="primary">Lower their hand</button>
+    <button mat-flat-button *ngIf="isRaiseHand && userService.isModOfRoom(roomName)" (click)="sendSignalLowerHand()" color="primary">Lower their hand</button>
 </mat-card>

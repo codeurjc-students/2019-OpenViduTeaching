@@ -1,0 +1,94 @@
+<div id="assistantsContainer">
+    <div id="assistantsComponent">
+        <div id="cardContainer">
+            <mat-card *ngIf="!loading" id="connected">
+                <div>
+                    <h4>
+                        {{assistantsConnectedCount}} assistant<span *ngIf="this.assistantsConnectedCount!==1">s</span> online
+                    </h4>
+                </div>
+            
+                <mat-list>
+                    <div *ngIf="this.moderatorsConnected.length>0">
+                        <h1 mat-subheader>Moderators</h1>
+                        <mat-list-item *ngFor="let mod of this.moderatorsConnected">
+                            <mat-icon matListIcon *ngIf="mod===userName">person</mat-icon>
+                            <b *ngIf="mod===userName">{{mod}}</b>
+                            <mat-icon matListIcon *ngIf="mod!==userName">person_outline</mat-icon>
+                            <p *ngIf="mod!==userName">{{mod}}</p>
+                        </mat-list-item>
+                    </div>
+            
+                    <mat-divider *ngIf="this.moderatorsConnected.length>0 && this.presentersConnected.length>0"></mat-divider>
+            
+                    <div *ngIf="this.presentersConnected.length>0">
+                        <h1 mat-subheader>Presenters</h1>
+                        <mat-list-item *ngFor="let pres of this.presentersConnected">
+                            <mat-icon matListIcon *ngIf="pres===userName">person</mat-icon>
+                            <b *ngIf="pres===userName">{{pres}}</b>
+                            <mat-icon matListIcon *ngIf="pres!==userName">person_outline</mat-icon>
+                            <p *ngIf="pres!==userName">{{pres}}</p>
+                        </mat-list-item>
+                    </div>
+            
+                    <mat-divider
+                        *ngIf="(this.presentersConnected.length>0 || this.moderatorsConnected.length>0) && this.participantsConnected.length>0">
+                    </mat-divider>
+            
+                    <div *ngIf="this.participantsConnected.length>0">
+                        <h1 mat-subheader>Participants</h1>
+                        <mat-list-item *ngFor="let part of this.participantsConnected">
+                            <mat-icon matListIcon *ngIf="part===userName">person</mat-icon>
+                            <b *ngIf="part===userName">{{part}}</b>
+                            <mat-icon matListIcon *ngIf="part!==userName">person_outline</mat-icon>
+                            <p *ngIf="part!==userName">{{part}}</p>
+                        </mat-list-item>
+                    </div>
+                </mat-list>
+            </mat-card>
+            
+            <mat-card id="disconnected" *ngIf="this.assistantsDisconnectedCount>0 && !loading">
+                <div>
+                    <h4>
+                        {{assistantsDisconnectedCount}} assistant<span *ngIf="this.assistantsDisconnectedCount!==1">s</span> offline
+                    </h4>
+                </div>
+            
+                <mat-list>
+                    <div *ngIf="this.moderatorsDisconnected.length>0">
+                        <h1 mat-subheader>Moderators</h1>
+                        <mat-list-item *ngFor="let mod of this.moderatorsDisconnected">
+                            <mat-icon matListIcon>person_outline</mat-icon>
+                            {{mod}}
+                        </mat-list-item>
+                    </div>
+            
+                    <mat-divider *ngIf="this.moderatorsDisconnected.length>0 && this.presentersDisconnected.length>0">
+                    </mat-divider>
+            
+                    <div *ngIf="this.presentersDisconnected.length>0">
+                        <h1 mat-subheader>Presenters</h1>
+                        <mat-list-item *ngFor="let pres of this.presentersDisconnected">
+                            <mat-icon matListIcon>person_outline</mat-icon>
+                            {{pres}}
+                        </mat-list-item>
+                    </div>
+            
+                    <mat-divider
+                        *ngIf="(this.presentersDisconnected.length>0 || this.moderatorsDisconnected.length>0) && this.participantsDisconnected.length>0">
+                    </mat-divider>
+            
+                    <div *ngIf="this.participantsDisconnected.length>0">
+                        <h1 mat-subheader>Participants</h1>
+                        <mat-list-item *ngFor="let part of this.participantsDisconnected">
+                            <mat-icon matListIcon>person_outline</mat-icon>
+                            {{part}}
+                        </mat-list-item>
+                    </div>
+                </mat-list>
+            </mat-card>
+            
+            <mat-spinner id="spinner" *ngIf="loading"></mat-spinner>
+        </div>
+    </div>
+</div>

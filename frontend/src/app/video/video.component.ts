@@ -1,10 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { DomSanitizer } from '@angular/platform-browser';
-import { map } from 'rxjs/operators';
-import { OpenViduService } from '../shared/services/open-vidu.service';
 
 @Component({
   selector: 'app-video',
@@ -13,14 +8,13 @@ import { OpenViduService } from '../shared/services/open-vidu.service';
 })
 export class VideoComponent implements OnInit {
 
-  private roomName: string;
-  private videoId: string;
+  roomName: string;
+  videoId: string;
 
-  private src: string;
+  src: string;
 
   constructor(
-    private route: ActivatedRoute,
-    private openviduSrv: OpenViduService
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {

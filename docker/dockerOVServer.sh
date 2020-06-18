@@ -6,4 +6,4 @@ docker run -p 4443:4443 --name openvidu-server-kms --rm \
 -e OPENVIDU_RECORDING_PATH=/home/diegomzmn/Escritorio/OpenViduTeaching/2019-OpenViduTeaching/docker/videos \
 -e OPENVIDU_RECORDING_NOTIFICATION=moderator \
 -e OPENVIDU_SECRET=MY_SECRET \
-openvidu/openvidu-server-kms:2.13.0
+openvidu/openvidu-server-kms:2.14.0

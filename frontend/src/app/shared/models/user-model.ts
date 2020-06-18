@@ -1,285 +1,234 @@
-import { StreamManager } from 'openvidu-browser';
-
+import { StreamManager, Publisher } from 'openvidu-browser';
+import { VideoType } from '../types/video-type';
 
 /**
  * Packs all the information about the user
  */
 export class UserModel {
-  /**
-   * The Connection ID that is publishing the stream
-   */
-  private connectionId: string;
+	/**
+	 * The Connection ID that is publishing the stream
+	 */
+	connectionId: string;
 
-  /**
-   * Whether the user has a audio track active or not
-   */
-  private audioActive: boolean;
+	/**
+	 * The user nickname
+	 */
+	nickname: string;
 
-  /**
-   * Whether the user has a video track active or not
-   */
-  private videoActive: boolean;
+	/**
+	 * The user name in the server
+	 */
+	name: string;
 
-  /**
-   * Whether the user is sharing the screen or not
-   */
-  private screenShareActive: boolean;
+	/**
+	 * StreamManager object ([[Publisher]] or [[Subscriber]])
+	 */
+	streamManager: StreamManager;
 
-  /**
-   * Whether the user is raising their hand or not
-   */
-  private handRaised: boolean;
+	/**
+	 * The position in the queue of people who are raising their hand (0 if not raising their hand)
+	 */
+	positionInHandRaiseQueue: number;
 
-  /**
-   * The position in the queue of people who are raising their hand (0 if not raising their hand)
-   */
-  private positionInHandRaiseQueue: number;
+	/**
+	 * @hidden
+	 */
+	videoAvatar: HTMLCanvasElement;
 
-  /**
-   * The user nickname
-   */
-  private nickname: string;
+	/**
+	 * @hidden
+	 */
+	private randomAvatar: string;
 
-  /**
-   * StreamManager object ([[Publisher]] or [[Subscriber]])
-   */
-  private streamManager: StreamManager;
+	/**
+	 * @hidden
+	 */
+	private videoSizeBig: boolean;
 
-  /**
-   * User type (`local` or  `remote`)
-   */
-  private type: 'local' | 'remote' | 'screen';
+	/**
+	 * @hidden
+	 */
+	constructor(
+		connectionId?: string,
+		streamManager?: StreamManager,
+		nickname?: string,
+		name?: string
+	) {
+		this.connectionId = connectionId || '';
+		this.nickname = nickname || 'OpenVidu';
+		this.streamManager = streamManager || null;
+		this.name = name || this.nickname;
+		this.positionInHandRaiseQueue = 0;
+	}
 
-  /**
-   * @hidden
-   */
-  private videoAvatar: HTMLCanvasElement;
+	/**
+	 * Return `true` if audio track is active and `false` if audio track is muted
+	 */
+	public isAudioActive(): boolean {
+		// console.log("isAudioActive");
+		return (<Publisher>this.streamManager)?.stream?.audioActive;
+	}
 
-  /**
-   * @hidden
-   */
-  private randomAvatar: string;
+	/**
+	 * Return `true` if video track is active and `false` if video track is muted
+	 */
+	public isVideoActive(): boolean {
+		// console.log("isVideoActive");
+		return (<Publisher>this.streamManager)?.stream?.videoActive;
+	}
 
-  /**
-   * @hidden
-   */
-  private localConnectionId: string;
+	/**
+	 * Return the connection ID
+	 */
+	public getConnectionId(): string {
+		return this.streamManager?.stream?.connection?.connectionId || this.connectionId;
+	}
 
-  /**
-   * @hidden
-   */
-  constructor() {
-    this.connectionId = '';
-    this.audioActive = true;
-    this.videoActive = true;
-    this.screenShareActive = false;
-    this.handRaised = false;
-    this.positionInHandRaiseQueue = 0;
-    this.nickname = '';
-    this.streamManager = null;
-    this.type = 'local';
-  }
+	/**
+	 * Return the user nickname
+	 */
+	public getNickname(): string {
+		return this.nickname;
+	}
 
-  /**
-   * Return `true` if audio track is active and `false` if audio track is muted
-   */
-  public isAudioActive(): boolean {
-    return this.audioActive;
-  }
+	/**
+	 * Return the server user name
+	 */
+	public getName(): string {
+		return this.name;
+	}
 
-  /**
-   * Return `true` if video track is active and `false` if video track is muted
-   */
-  public isVideoActive(): boolean {
-    return this.videoActive;
-  }
+	/**
+	 * Return the [[streamManger]] object
+	 */
+	public getStreamManager(): StreamManager {
+		return this.streamManager;
+	}
 
-  /**
-   * Return `true` if user is sharing the screen and `false` if not
-   */
-  public isScreenShareActive(): boolean {
-    return this.screenShareActive;
-  }
+	/**
+	 * Return the user avatar
+	 */
+	public getAvatar(): string {
+		return this.videoAvatar ? this.videoAvatar.toDataURL() : this.randomAvatar;
+	}
 
-  /**
-   * Return `true` if user is raising their hand and `false` if it is lowered
-   */
-  public isHandRaised(): boolean {
-    return this.handRaised;
-  }
+	/**
+	 * Return the position in the queue of people who are raising their hand (0 if not raising their hand)
+	 */
+	public getPositionInHandRaiseQueue(): number {
+		return this.positionInHandRaiseQueue;
+	}
 
-  /**
-   * Return the position in the queue of people who are raising their hand (0 if not raising their hand)
-   */
-  public getPositionInHandRaiseQueue(): number {
-    return this.positionInHandRaiseQueue;
-  }
+	/**
+	 * Return `true` if user has a local role and `false` if not
+	 */
+	public isLocal(): boolean {
+		return !this.isRemote();
+	}
 
-  /**
-   * Return the connection ID
-   */
-  public getConnectionId(): string {
-    return this.connectionId;
-  }
+	/**
+	 * Return `true` if user has a remote role and `false` if not
+	 */
+	public isRemote(): boolean {
+		return (<Publisher>this.streamManager)?.remote;
+	}
 
-  /**
-   * @hidden
-   */
-  public getLocalConnectionId(): string {
-    return this.localConnectionId;
-  }
+	/**
+	 * Return `true` if user has a screen role and `false` if not
+	 */
+	public isScreen(): boolean {
+		// console.log("isScreen");
+		return (<Publisher>this.streamManager)?.stream?.typeOfVideo === VideoType.SCREEN;
+	}
 
-  /**
-   * Return the user nickname
-   */
-  public getNickname(): string {
-    return this.nickname;
-  }
+	/**
+	 * Return `true` if user has a camera role and `false` if not
+	 */
+	public isCamera(): boolean {
+		// console.log("CCC");
+		return (<Publisher>this.streamManager)?.stream?.typeOfVideo === VideoType.CAMERA || (this.isLocal() && !this.isScreen());
+	}
 
-  /**
-   * Return the [[streamManger]] object
-   */
-  public getStreamManager(): StreamManager {
-    return this.streamManager;
-  }
+	/**
+	 * Set the connectionId
+	 * @param connectionId value of connectionId
+	 */
+	public setConnectionId(connectionId: string) {
+		this.connectionId = connectionId;
+	}
 
-  /**
-   * Return the user avatar
-   */
-  public getAvatar(): string {
-    return this.videoAvatar ? this.videoAvatar.toDataURL() : this.randomAvatar;
-  }
+	/**
+	 * Set the streamManager value object
+	 * @param streamManager value of streamManager
+	 */
+	public setStreamManager(streamManager: StreamManager) {
+		this.streamManager = streamManager;
+	}
 
-  /**
-   * Return `true` if user has a local role and `false` if not
-   */
-  public isLocal(): boolean {
-    return this.type === 'local';
-  }
+	/**
+	 * Set the user nickname value
+	 * @param nickname value of user nickname
+	 */
+	public setNickname(nickname: string) {
+		this.nickname = nickname;
+	}
 
-  /**
-   * Return `true` if user has a remote role and `false` if not
-   */
-  public isRemote(): boolean {
-    return !this.isLocal();
-  }
+	/**
+	 * Set the user name value
+	 * @param name value of user name
+	 */
+	public setName(name: string) {
+		this.name = name;
+	}
 
-   /**
-   * Return `true` if user has a screen role and `false` if not
-   */
-  public isScreen(): boolean {
-    return this.type === 'screen';
-  }
+	/**
+	 * Set the position in the queue of people who are raising their hand
+	 * @param positionInHandRaiseQueue value of the position
+	 */
+	public setPositionInHandRaiseQueue(positionInHandRaiseQueue: number) {
+		this.positionInHandRaiseQueue = positionInHandRaiseQueue;
+	}
 
-  /**
-   * Set the audioActive value
-   * @param isAudioActive value of audioActive
-   */
-  public setAudioActive(isAudioActive: boolean) {
-    this.audioActive = isAudioActive;
-  }
+	public isVideoSizeBig(): boolean {
+		return this.videoSizeBig;
+	}
 
-  /**
-   * Set the videoActive value
-   * @param isVideoActive value of videoActive
-   */
-  public setVideoActive(isVideoActive: boolean) {
-    this.videoActive = isVideoActive;
-  }
+	/**
+	 * @hidden
+	 */
+	public setVideoSizeBig(big: boolean) {
+		this.videoSizeBig = big;
+	}
 
-  /**
-   * Set the screenShare value
-   * @param isScreenShareActive value of isScreenShareActive
-   */
-  public setScreenShareActive(isScreenShareActive: boolean) {
-    this.screenShareActive = isScreenShareActive;
-  }
+	/**
+	 * @hidden
+	 */
+	public setUserAvatar(img?: string): Promise<any> {
+		return new Promise(resolve => {
+			if (!img) {
+				this.createVideoAvatar();
+				const video = <HTMLVideoElement>document.getElementById('video-' + this.getStreamManager().stream.streamId);
+				const avatar = this.videoAvatar.getContext('2d');
+				avatar.drawImage(video, 200, 120, 285, 285, 0, 0, 100, 100);
+				resolve();
+			} else {
+				this.randomAvatar = img;
+				resolve();
+			}
+		});
+	}
 
-  /**
-   * Set the handRaised value
-   * @param isHandRaised value of isHandRaised
-   */
-  public setHandRaised(isHandRaised: boolean) {
-    this.handRaised = isHandRaised;
-  }
+	public removeVideoAvatar() {
+		this.videoAvatar = null;
+	}
 
-  /**
-   * Set the position in the queue of people who are raising their hand
-   * @param positionInHandRaiseQueue value of the position
-   */
-  public setPositionInHandRaiseQueue(positionInHandRaiseQueue: number) {
-    this.positionInHandRaiseQueue = positionInHandRaiseQueue;
-  }
-
-  /**
-   * Set the streamManager value object
-   * @param streamManager value of streamManager
-   */
-  public setStreamManager(streamManager: StreamManager) {
-    this.streamManager = streamManager;
-  }
-
-  /**
-   * Set the connectionId value
-   * @param conecctionId value of connectionId
-   */
-  public setConnectionId(conecctionId: string) {
-    this.connectionId = conecctionId;
-  }
-
-  /**
-   * @hidden
-   */
-  public setLocalConnectionId(connectionId: string) {
-    this.localConnectionId = connectionId;
-  }
-
-  /**
-   * Set the user nickname value
-   * @param nickname value of user nickname
-   */
-  public setNickname(nickname: string) {
-    this.nickname = nickname;
-  }
-
-  /**
-   * Set the user type value
-   * @param type value of user type
-   */
-  public setType(type: 'local' | 'remote' | 'screen') {
-    this.type = type;
-  }
-
-  /**
-   * @hidden
-   */
-  public setUserAvatar(img?: string): Promise<any> {
-    return new Promise((resolve) => {
-      if (!img) {
-        this.createVideoAvatar();
-        const video = <HTMLVideoElement>document.getElementById('video-' + this.getStreamManager().stream.streamId);
-        const avatar = this.videoAvatar.getContext('2d');
-        avatar.drawImage(video, 200, 120, 285, 285, 0, 0, 100, 100);
-        console.log('Photo was taken: ', this.videoAvatar);
-        resolve();
-      } else {
-        this.randomAvatar = img;
-        resolve();
-      }
-    });
-  }
-
-  public removeVideoAvatar() {
-    this.videoAvatar = null;
-  }
-
-  /**
-   * @hidden
-   */
-  private createVideoAvatar() {
-    this.videoAvatar = document.createElement('canvas');
-    this.videoAvatar.className = 'user-img';
-    this.videoAvatar.width = 100;
-    this.videoAvatar.height = 100;
-  }
+	/**
+	 * @hidden
+	 */
+	private createVideoAvatar() {
+		this.videoAvatar = document.createElement('canvas');
+		this.videoAvatar.className = 'user-img';
+		this.videoAvatar.width = 100;
+		this.videoAvatar.height = 100;
+	}
 }

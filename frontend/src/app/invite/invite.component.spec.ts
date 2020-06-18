@@ -1,8 +1,11 @@
+import { RoomServiceMock } from 'src/app/shared/services/room/room.service.mock';
+import { RoomService } from 'src/app/shared/services/room/room.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InviteComponent } from './invite.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { UserService } from '../shared/services/user/user.service';
+import { UserServiceMock } from '../shared/services/user/user.service.mock';
 
 describe('InviteComponent', () => {
   let component: InviteComponent;
@@ -10,7 +13,11 @@ describe('InviteComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
+      imports: [RouterTestingModule],
+      providers: [
+        { provide: RoomService, useClass: RoomServiceMock },
+        { provide: UserService, useClass: UserServiceMock },
+			],
       declarations: [ InviteComponent ]
     })
     .compileComponents();

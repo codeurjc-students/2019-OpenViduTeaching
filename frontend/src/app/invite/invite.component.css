@@ -50,10 +50,6 @@ p {
     opacity: 1;
 }
 
-.ng-star-inserted {
-    color: #dfdfdf;
-}
-
 mat-hint {
     font-size: 110%;
 }

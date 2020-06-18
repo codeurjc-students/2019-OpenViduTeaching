@@ -1,7 +1,10 @@
+import { RaiseHandServiceMock } from './../../services/raiseHand/raise-hand.service.mock';
+import { RaiseHandService } from './../../services/raiseHand/raise-hand.service';
+import { UserServiceMock } from './../../services/user/user.service.mock';
+import { UserService } from './../../services/user/user.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PopupComponent } from './popup.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PopupComponent', () => {
   let component: PopupComponent;
@@ -9,7 +12,11 @@ describe('PopupComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      imports: [],
+      providers: [
+        { provide: UserService, useClass: UserServiceMock },
+        { provide: RaiseHandService, useClass: RaiseHandServiceMock }
+			],
       declarations: [ PopupComponent ]
     })
     .compileComponents();

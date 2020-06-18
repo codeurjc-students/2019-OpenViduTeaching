@@ -1,0 +1,36 @@
+#assistantsContainer {
+    z-index: 0;
+    width: 100%;
+    height: calc(100% - 20px);
+}
+
+#assistantsComponent {
+    z-index: 99999;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
+}
+
+#cardContainer {
+    height: 100%;
+    overflow: auto;
+}
+
+.mat-card {
+    margin: 5%;
+}
+
+.mat-subheader {
+    padding-top: 15px;
+    font-size: 120%;
+    color: rgb(100, 100, 100);
+}
+
+#spinner {
+    margin:30% auto;
+}

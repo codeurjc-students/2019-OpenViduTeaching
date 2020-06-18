@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/openvidu-teaching",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -35,6 +36,12 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -52,6 +59,12 @@
               "buildOptimizer": true
             },
             "ci": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -73,7 +86,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "openvidu-teaching:build"
+            "browserTarget": "openvidu-teaching:build",
+            "proxyConfig": "src/proxy.conf.json"
           },
           "configurations": {
             "production": {
@@ -94,14 +108,16 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles.css",
-              "src/theme.scss"
-            ],
+            "codeCoverage": true,
+            "styles": [],
             "scripts": [],
             "assets": [
               "src/favicon.ico",
               "src/assets"
+            ],
+            "codeCoverageExclude": [
+              "/**/*mock*.ts",
+              "/**/openvidu-layout.ts"
             ]
           }
         },
@@ -155,7 +171,8 @@
           },
           "configurations": {
             "production": {
-              "project": "projects/openvidu-angular/ng-package.prod.json"
+              "project": "projects/openvidu-angular/ng-package.prod.json",
+              "tsConfig": "projects/openvidu-angular/tsconfig.lib.prod.json"
             }
           }
         },
@@ -184,6 +201,6 @@
   },
   "defaultProject": "openvidu-teaching",
   "cli": {
-    "analytics": "67b94364-25e3-4d93-9e2f-d99a6e7f1420"
+    "analytics": "f17912cf-0c44-4f6a-b9f7-5beff4709cd8"
   }
 }

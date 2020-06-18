@@ -1,27 +1,34 @@
 .nickname {
-  padding: 5px !important;
+  padding: 0px;
   position: absolute;
-  z-index: 100;
-  border-radius: 5px; 
-  color: #313131;
+  z-index: 999;
+  border-radius: 5px;
+  color: #ffffff;
   font-family: 'Ubuntu', sans-serif;
+}
+.nicknameContainer {
+  background-color: #0000005e;
+  padding: 5px;
+  color: #ffffff;
+  font-weight: bold;
 }
 
 #dialogNickname {
-  background-color:  #fffffffb;
-  border-radius: 8px;
+  background-color:  #0000005e;
+  border-radius: 5px;
 }
 
 #closeButton {
   position: absolute;
   top: -3px;
   right: 0;
-  z-index: 100;
+  z-index: 999;
 }
 
 #nicknameForm {
   padding: 10px;
 }
+
 .fullscreen {
   top: 40px;
 }
@@ -53,32 +60,50 @@ video {
 }
 
 .statusIcons mat-icon {
-  padding: 8px;
+  vertical-align: -webkit-baseline-middle;
+  vertical-align: -moz-middle-with-baseline;
+}
+
+.statusIcons mat-icon {
+  font-size: 20px;
+}
+
+.videoButtons mat-icon {
+  font-size: 24px;
+}
+.videoButtons .mat-icon-button{
+  line-height: 0px;
 }
 
 #camStatus {
   bottom: 43px;
 }
 
-#statusCam, #statusMic { 
+#statusCam, #statusMic {
+  text-align: center;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   background: #c71100;
-  margin: 5px 0px;
+  margin: 5px auto;
 }
 
-.streamButtons {
+.videoButtons{
+  right: 0;
   position: absolute;
-  z-index: 101;
+  bottom: 0;
+  z-index: 9999999;
+  width: 50px;
+  text-align: center;
+}
+.videoButtons button {
   background-color: #000000c4;
-  right: 1px;
+  width: 30px;
+  height: 30px;
+  margin: 1px;
+
 }
 
-#fullscreenButton {
-  bottom: 1px;
-}
-#volumeButton {
-  bottom: 45px;
-}
 /* Contains the video element, used to fix video letter-boxing */
 .OT_widget-container {
   width: 100%;
@@ -87,14 +112,17 @@ video {
   overflow: hidden;
 }
 
+mat-error,
+::ng-deep .mat-focused .mat-form-field-label,
 ::ng-deep .mat-form-field-appearance-legacy .mat-form-field-label {
-  color: #696969;
+  color: #cacaca !important;
 }
 
-::ng-deep .mat-form-field-appearance-legacy .mat-form-field-underline{
-  background-color: #444444 !important;
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-underline,
+::ng-deep .mat-form-field.mat-focused .mat-form-field-ripple {
+  background-color: #cacaca !important;
 }
 
-::ng-deep .mat-form-field.mat-focused .mat-form-field-ripple{
-  background-color: #696969 !important;
+input {
+  caret-color: #ffffff !important;
 }

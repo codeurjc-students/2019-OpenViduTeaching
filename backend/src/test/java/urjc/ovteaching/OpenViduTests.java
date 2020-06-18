@@ -1,12 +1,11 @@
 package urjc.ovteaching;
 
-import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
@@ -151,7 +150,7 @@ public class OpenViduTests {
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/testRoom/token")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token", is(token)));
+				.andExpect(content().string("\"" + token + "\""));
 		
 		verify(openviduComponent, never()).createSession(any());
 		verify(openviduComponent).generateToken(room, user);
@@ -193,7 +192,7 @@ public class OpenViduTests {
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/testRoom/token")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token", is(token)));
+				.andExpect(content().string("\"" + token + "\""));
 		
 		verify(openviduComponent).createSession(room);
 		verify(openviduComponent).generateToken(room, user);
@@ -257,7 +256,7 @@ public class OpenViduTests {
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/testRoom/token")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.token", is(token)));
+				.andExpect(content().string("\"" + token + "\""));
 		
 		verify(openviduComponent).generateToken(room, user);
 		verify(openviduComponent).replaceSession(room, user);

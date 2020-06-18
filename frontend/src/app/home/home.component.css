@@ -1,0 +1,155 @@
+.section1 {
+  background: url('~/assets/images/bg.jpg')  top center no-repeat;
+  background-size: cover;
+  height: 100%;
+  text-align: center;
+  position: relative;
+  color: #fff;
+}
+
+#header, .footer {
+  background-color: transparent;
+  color: #ffffff;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  font-size: 9px;
+  height: auto;
+}
+
+.footer a {
+  color: #ffffff;
+}
+
+#header_img {
+  max-width: 200px;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+
+.ovVersion {
+  position: absolute;
+  right: 5px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.ovLogo {
+  margin: auto;
+}
+
+login-component {
+  max-width: 200%;
+  max-height: 200%;
+}
+
+#card_content {
+  height: 50%;
+  margin-top: 10px;
+}
+
+#room_card mat-form-field {
+  margin: auto;
+  padding: 0px 5px;
+}
+
+#spinner {
+  margin:5% auto;
+}
+
+.invitePresenter {
+  color: rgb(6, 211, 98);
+}
+
+.addRoomButton {
+  background-color: rgb(6, 211, 98);
+}
+
+.dialogCentered {
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #dfdfdf;
+  opacity: 1;
+}
+
+#videosDrawer{
+  min-width: 20%;
+  background-color: #494949;
+}
+
+#drawerTitle{
+  color: rgb(255, 193, 7);
+}
+
+#noVideosMessage {
+  color: #dfdfdf;
+  margin: 5%;
+}
+
+.videoDate{
+  margin-left: 10%;
+  color: #494949;
+}
+
+#room_card {
+  color: #303030;
+  position: inherit;
+  max-width: 700px;
+  width: 75%;
+  margin: auto;
+  background: rgba(221, 221, 221, 0.856);
+}
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+  #header_img, .ovVersion, .footer {
+    display: none;
+  }
+  .ovLogo {
+    max-width: 80%;
+  }
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  padding: 100px 0;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+  .ovLogo {
+    max-width: 75%;
+  }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  .ovLogo {
+    max-width: 60%;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  .section1 {
+    background-attachment: fixed;
+  }
+  .ovLogo {
+    max-width: 50%;
+  }
+}

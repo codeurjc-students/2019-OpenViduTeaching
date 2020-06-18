@@ -1,4 +1,4 @@
-import { UserService } from '../app/shared/services/user.service';
+import { UserService } from 'src/app/shared/services/user/user.service';
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';

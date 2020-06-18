@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RoomService } from '../shared/services/room.service';
-import { UserService } from '../shared/services/user.service';
+import { RoomService } from '../shared/services/room/room.service';
+import { UserService } from '../shared/services/user/user.service';
 
 @Component({
   selector: 'app-invite',
@@ -103,5 +103,9 @@ export class InviteComponent implements OnInit {
       // Press Enter
       this.enterRoom();
     }
+  }
+
+  isLogged(): boolean {
+    return this.userSrv.isLogged;
   }
 }

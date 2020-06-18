@@ -30,7 +30,7 @@ This document will explain how is used the Licensoft-Web API.
     * [Stop recording](#stop-recording)
     * [Get recording status](#get-recording-status)
     * [Get recording enabled](#get-recording-enabled)
-    * [Get recordings' info](#get-recordings'-info)
+    * [Get recordings info](#get-recordings-info)
     * [Get video](#get-video)
 
 
@@ -464,9 +464,7 @@ Gets the OpenVidu Token for the current user according to it's role (moderator=m
     Password: pass
   - **Response**:
     ~~~~ json
-    {
-        "token": "wss://localhost:4443?sessionId=roomA&token=l5lcdqshsjb0tsym&role=MODERATOR&version=2.11.0"
-    }
+    "wss://localhost:4443?sessionId=roomA&token=l5lcdqshsjb0tsym&role=MODERATOR&version=2.11.0"
     ~~~~
 
 ### Disconnect current user ###
@@ -603,7 +601,7 @@ Check whether recording was enabled in the server. It it disabled by default and
     true
     ~~~~
 
-### Get recordings' info ###
+### Get recordings info ###
 Get the info of the recordings of a room.
 - **URL**  
    `/ovTeachingApi/room/{roomName}/recordings`
