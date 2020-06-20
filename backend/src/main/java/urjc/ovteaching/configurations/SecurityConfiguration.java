@@ -24,6 +24,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/ovTeachingApi/room/*/raiseHand").hasAnyRole("USER");
 		http.authorizeRequests().antMatchers(HttpMethod.DELETE, "/ovTeachingApi/room/*/raiseHand").hasAnyRole("USER");
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/room/*/raiseHand").hasAnyRole("USER");
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/ovTeachingApi/rooms").hasAnyRole("ADMIN");
 
 		//OpenVidu
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/room/*/token").hasAnyRole("USER");

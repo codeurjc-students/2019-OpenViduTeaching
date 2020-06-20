@@ -5,7 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import urjc.ovteaching.jsonReader.JsonReaderException;
+import urjc.ovteaching.jsonReader.JsonReaderService;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
 import urjc.ovteaching.users.UserService;
@@ -38,6 +43,9 @@ public class RoomController {
 
 	@Autowired
 	private UserComponent userComponent;
+	
+	@Autowired
+	private JsonReaderService jsonReaderService;
 
 	/**
 	 * Creates a new room
@@ -54,6 +62,21 @@ public class RoomController {
 		Room room = new Room(roomName);
 		roomServ.addRoomWithMod(room, user);
 		return new ResponseEntity<>(room, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/rooms")
+	public ResponseEntity<?> addRooms(@RequestBody JSONObject body) {
+		try {
+			body = (JSONObject) new JSONParser().parse(body.toString());
+			this.jsonReaderService.readRooms((JSONArray) body.get("rooms"));
+		} catch (JsonReaderException e) {
+			System.err.println(e.getCause());
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} catch (ParseException e) {
+			System.err.println(e.toString());
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	/**
