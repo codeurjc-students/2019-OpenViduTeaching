@@ -23,6 +23,10 @@ public class UserService {
 	public User save(User user) {
 		return userRep.save(user);
 	}
+	
+	public List<User> saveAll(List<User> users) {
+		return userRep.saveAll(users);
+	}
 
 	public void delete(long id) {
 		userRep.deleteById(id);

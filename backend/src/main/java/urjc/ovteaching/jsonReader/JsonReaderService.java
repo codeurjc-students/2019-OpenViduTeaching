@@ -1,5 +1,6 @@
 package urjc.ovteaching.jsonReader;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.simple.JSONArray;
@@ -40,9 +41,15 @@ public class JsonReaderService {
 	@SuppressWarnings("unchecked")
 	public void readUsers(JSONArray userList) throws JsonReaderException {
 		try {
+			List<User> users = new ArrayList<>();
 			if (userList != null) {
-				userList.forEach(user -> saveUserObject((JSONObject) user));
+				userList.forEach(userObject -> {
+					User user = getUserObject((JSONObject) userObject);
+					users.add(user);
+				});
 			}
+			this.userServ.saveAll(users);
+			System.out.println("Saved all users");
 		} catch (Exception e) {
 			throw new JsonReaderException(e);
 		}
@@ -51,11 +58,11 @@ public class JsonReaderService {
 	private void saveRoomObject(JSONObject roomObject) {
 		String roomName = (String) roomObject.get("name");
 		roomServ.save(new Room(roomName));
-		System.out.println("Added room: " + roomName);
+		System.out.println("Saved room: " + roomName);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void saveUserObject(JSONObject userObject) {
+	private User getUserObject(JSONObject userObject) {
 		String userName = (String) userObject.get("name");
 		String password = (String) userObject.get("password");
 		String[] roles = new String[2];
@@ -88,10 +95,9 @@ public class JsonReaderService {
 				user.addParticipatedRoom(participatedRoom);
 			}
 		}
-
-		userServ.save(user);
-
+		
 		System.out.println("Added user: " + userName);
+		return user;
 	}
 
 }

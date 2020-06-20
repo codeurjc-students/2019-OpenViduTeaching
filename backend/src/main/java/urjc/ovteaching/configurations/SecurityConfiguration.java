@@ -15,6 +15,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		//Users
 		http.authorizeRequests().antMatchers(HttpMethod.GET, "/ovTeachingApi/user/rooms").hasAnyRole("USER");
+		http.authorizeRequests().antMatchers(HttpMethod.POST, "/ovTeachingApi/users").hasAnyRole("ADMIN");
 		
 		//Rooms
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/ovTeachingApi/room/*").hasAnyRole("ADMIN");
