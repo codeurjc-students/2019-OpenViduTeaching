@@ -23,33 +23,41 @@ public class JsonReaderService {
 	@Autowired
 	RoomService roomServ;
 
-	public void readJson(JSONObject json) throws JsonReaderException, NotFoundDatabaseException {
+	public void readJson(JSONObject json) throws JsonReaderException, NotFoundDatabaseException, ConflictDatabaseException {
 		this.readRooms((JSONArray) json.get("rooms"));
 		this.readUsers((JSONArray) json.get("users"));
 	}
 
-	public void readRooms(JSONArray roomList) throws JsonReaderException {
+	public void readRooms(JSONArray roomList) throws JsonReaderException, ConflictDatabaseException {
 		try {
 			Set<Room> rooms = new HashSet<>();
 			if (roomList != null) {
 				for (Object roomObject : roomList) {
 					Room room = getRoomObject((JSONObject) roomObject);
+					if(rooms.contains(room)) {
+						throw new ConflictDatabaseException(room.getName(), "Room");
+					}
 					rooms.add(room);
 				}
 				this.roomServ.saveAll(rooms);
 				System.out.println("Saved all rooms");
 			}
+		}  catch (ConflictDatabaseException e) {
+			throw new ConflictDatabaseException(e.getName(), e.getClassName());
 		} catch (Exception e) {
 			throw new JsonReaderException(e);
 		}
 	}
 
-	public void readUsers(JSONArray userList) throws JsonReaderException, NotFoundDatabaseException {
+	public void readUsers(JSONArray userList) throws JsonReaderException, NotFoundDatabaseException, ConflictDatabaseException {
 		try {
 			if (userList != null) {
 				Set<User> users = new HashSet<>();
 				for (Object userObject : userList) {
 					User user = getUserObject((JSONObject) userObject);
+					if(users.contains(user)) {
+						throw new ConflictDatabaseException(user.getName(), "User");
+					}
 					users.add(user);
 				}
 				this.userServ.saveAll(users);
@@ -59,18 +67,26 @@ public class JsonReaderService {
 			throw new JsonReaderException(e);
 		} catch (NotFoundDatabaseException e) {
 			throw new NotFoundDatabaseException(e.getRoomName(), e.getUserName());
+		} catch (ConflictDatabaseException e) {
+			throw new ConflictDatabaseException(e.getName(), e.getClassName());
 		}
 	}
 
-	private Room getRoomObject(JSONObject roomObject) {
+	private Room getRoomObject(JSONObject roomObject) throws ConflictDatabaseException {
 		String roomName = (String) roomObject.get("name");
+		if(this.roomServ.findByName(roomName) != null) {
+			throw new ConflictDatabaseException(roomName, "Room");
+		}
 		System.out.println("Added room: " + roomName);
 		return new Room(roomName);
 	}
 
 	@SuppressWarnings("unchecked")
-	private User getUserObject(JSONObject userObject) throws NotFoundDatabaseException {
+	private User getUserObject(JSONObject userObject) throws NotFoundDatabaseException, ConflictDatabaseException {
 		String userName = (String) userObject.get("name");
+		if(this.userServ.findByName(userName) != null) {
+			throw new ConflictDatabaseException(userName, "User");
+		}
 		String password = (String) userObject.get("password");
 		String[] roles = new String[2];
 		roles[0] = "ROLE_USER";

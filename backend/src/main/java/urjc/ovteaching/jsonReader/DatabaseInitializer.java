@@ -39,6 +39,8 @@ public class DatabaseInitializer {
 			System.err.println(e.getCause());
 		} catch (NotFoundDatabaseException e) {
 			System.err.println("Room not found: " + e.getRoomName() + " for user: " + e.getUserName());
+		} catch (ConflictDatabaseException e) {
+			System.err.println(e.getClassName() + " \"" + e.getName() + "\" already found in the database");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

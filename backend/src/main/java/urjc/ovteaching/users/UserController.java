@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import urjc.ovteaching.jsonReader.ConflictDatabaseException;
 import urjc.ovteaching.jsonReader.JsonReaderException;
 import urjc.ovteaching.jsonReader.JsonReaderService;
 import urjc.ovteaching.jsonReader.NotFoundDatabaseException;
@@ -86,6 +87,10 @@ public class UserController {
 			String message = "Room not found: " + e.getRoomName() + " for user: " + e.getUserName();
 			System.err.println(message);
 			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+		} catch (ConflictDatabaseException e) {
+			String message = e.getClassName() + " \"" + e.getName() + "\" already found in the database";
+			System.err.println(message);
+			return new ResponseEntity<>(message, HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

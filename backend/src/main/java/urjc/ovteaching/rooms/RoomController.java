@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import urjc.ovteaching.jsonReader.ConflictDatabaseException;
 import urjc.ovteaching.jsonReader.JsonReaderException;
 import urjc.ovteaching.jsonReader.JsonReaderService;
 import urjc.ovteaching.users.User;
@@ -75,6 +76,10 @@ public class RoomController {
 		} catch (ParseException e) {
 			System.err.println(e.toString());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} catch (ConflictDatabaseException e) {
+			String message = e.getClassName() + " \"" + e.getName() + "\" already found in the database";
+			System.err.println(message);
+			return new ResponseEntity<>(message, HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
