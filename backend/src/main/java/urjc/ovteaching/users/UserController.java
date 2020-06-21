@@ -78,13 +78,14 @@ public class UserController {
 			this.jsonReaderService.readUsers((JSONArray) body.get("users"));
 		} catch (JsonReaderException e) {
 			System.err.println(e.getCause());
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		} catch (ParseException e) {
 			System.err.println(e.toString());
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		} catch (NotFoundDatabaseException e) {
-			System.err.println("Room not found: " + e.getRoomName() + " for user: " + e.getUserName());
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			String message = "Room not found: " + e.getRoomName() + " for user: " + e.getUserName();
+			System.err.println(message);
+			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

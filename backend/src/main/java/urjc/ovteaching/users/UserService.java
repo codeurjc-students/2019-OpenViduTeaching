@@ -1,5 +1,6 @@
 package urjc.ovteaching.users;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,7 @@ public class UserService {
 		return userRep.save(user);
 	}
 	
-	public List<User> saveAll(List<User> users) {
+	public List<User> saveAll(Collection<User> users) {
 		return userRep.saveAll(users);
 	}
 

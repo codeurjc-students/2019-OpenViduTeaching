@@ -1,7 +1,8 @@
 package urjc.ovteaching.jsonReader;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,7 +30,7 @@ public class JsonReaderService {
 
 	public void readRooms(JSONArray roomList) throws JsonReaderException {
 		try {
-			List<Room> rooms = new ArrayList<>();
+			Set<Room> rooms = new HashSet<>();
 			if (roomList != null) {
 				for (Object roomObject : roomList) {
 					Room room = getRoomObject((JSONObject) roomObject);
@@ -46,7 +47,7 @@ public class JsonReaderService {
 	public void readUsers(JSONArray userList) throws JsonReaderException, NotFoundDatabaseException {
 		try {
 			if (userList != null) {
-				List<User> users = new ArrayList<>();
+				Set<User> users = new HashSet<>();
 				for (Object userObject : userList) {
 					User user = getUserObject((JSONObject) userObject);
 					users.add(user);

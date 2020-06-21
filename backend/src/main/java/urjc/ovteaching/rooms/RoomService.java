@@ -37,7 +37,7 @@ public class RoomService {
 		roomRep.save(room);
 	}
 	
-	public void saveAll(List<Room> rooms) {
+	public void saveAll(Collection<Room> rooms) {
 		roomRep.saveAll(rooms);
 	}
 
