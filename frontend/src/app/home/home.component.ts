@@ -132,7 +132,7 @@ export class HomeComponent implements OnInit {
 			(room) => {
 				this.dialogRef.close('Room created');
 				this.userSrv.user.moddedRooms.push(room);
-				this.router.navigate([room.name]);
+				this.goToRoom(room.name);
 			},
 			(error) => console.error(error)
 		);
