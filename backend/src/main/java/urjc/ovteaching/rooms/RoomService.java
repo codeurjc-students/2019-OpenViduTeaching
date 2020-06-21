@@ -36,6 +36,10 @@ public class RoomService {
 	public void save(Room room) {
 		roomRep.save(room);
 	}
+	
+	public void saveAll(List<Room> rooms) {
+		roomRep.saveAll(rooms);
+	}
 
 	public void delete(long id) {
 		roomRep.deleteById(id);

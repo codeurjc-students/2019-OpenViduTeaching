@@ -27,38 +27,42 @@ public class JsonReaderService {
 		this.readUsers((JSONArray) json.get("users"));
 	}
 
-	@SuppressWarnings("unchecked")
 	public void readRooms(JSONArray roomList) throws JsonReaderException {
 		try {
+			List<Room> rooms = new ArrayList<>();
 			if (roomList != null) {
-				roomList.forEach(room -> saveRoomObject((JSONObject) room));
+				for (Object roomObject : roomList) {
+					Room room = getRoomObject((JSONObject) roomObject);
+					rooms.add(room);
+				}
+				this.roomServ.saveAll(rooms);
+				System.out.println("Saved all rooms");
 			}
 		} catch (Exception e) {
 			throw new JsonReaderException(e);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void readUsers(JSONArray userList) throws JsonReaderException {
 		try {
-			List<User> users = new ArrayList<>();
 			if (userList != null) {
-				userList.forEach(userObject -> {
+				List<User> users = new ArrayList<>();
+				for (Object userObject : userList) {
 					User user = getUserObject((JSONObject) userObject);
 					users.add(user);
-				});
+				}
+				this.userServ.saveAll(users);
+				System.out.println("Saved all users");
 			}
-			this.userServ.saveAll(users);
-			System.out.println("Saved all users");
 		} catch (Exception e) {
 			throw new JsonReaderException(e);
 		}
 	}
 
-	private void saveRoomObject(JSONObject roomObject) {
+	private Room getRoomObject(JSONObject roomObject) {
 		String roomName = (String) roomObject.get("name");
-		roomServ.save(new Room(roomName));
-		System.out.println("Saved room: " + roomName);
+		System.out.println("Added room: " + roomName);
+		return new Room(roomName);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -95,7 +99,7 @@ public class JsonReaderService {
 				user.addParticipatedRoom(participatedRoom);
 			}
 		}
-		
+
 		System.out.println("Added user: " + userName);
 		return user;
 	}
