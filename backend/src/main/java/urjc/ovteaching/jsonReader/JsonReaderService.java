@@ -22,7 +22,7 @@ public class JsonReaderService {
 	@Autowired
 	RoomService roomServ;
 
-	public void readJson(JSONObject json) throws JsonReaderException {
+	public void readJson(JSONObject json) throws JsonReaderException, NotFoundDatabaseException {
 		this.readRooms((JSONArray) json.get("rooms"));
 		this.readUsers((JSONArray) json.get("users"));
 	}
@@ -43,7 +43,7 @@ public class JsonReaderService {
 		}
 	}
 
-	public void readUsers(JSONArray userList) throws JsonReaderException {
+	public void readUsers(JSONArray userList) throws JsonReaderException, NotFoundDatabaseException {
 		try {
 			if (userList != null) {
 				List<User> users = new ArrayList<>();
@@ -54,8 +54,10 @@ public class JsonReaderService {
 				this.userServ.saveAll(users);
 				System.out.println("Saved all users");
 			}
-		} catch (Exception e) {
+		} catch (RuntimeException e) {
 			throw new JsonReaderException(e);
+		} catch (NotFoundDatabaseException e) {
+			throw new NotFoundDatabaseException(e.getRoomName(), e.getUserName());
 		}
 	}
 
@@ -66,7 +68,7 @@ public class JsonReaderService {
 	}
 
 	@SuppressWarnings("unchecked")
-	private User getUserObject(JSONObject userObject) {
+	private User getUserObject(JSONObject userObject) throws NotFoundDatabaseException {
 		String userName = (String) userObject.get("name");
 		String password = (String) userObject.get("password");
 		String[] roles = new String[2];
@@ -80,6 +82,9 @@ public class JsonReaderService {
 		if (moddedRooms != null && !moddedRooms.isEmpty()) {
 			for (String moddedName : moddedRooms) {
 				Room moddedRoom = roomServ.findByName(moddedName);
+				if (moddedRoom == null) {
+					throw new NotFoundDatabaseException(moddedName, userName);
+				}
 				user.addModdedRoom(moddedRoom);
 			}
 		}
@@ -88,6 +93,9 @@ public class JsonReaderService {
 		if (presentedRooms != null && !presentedRooms.isEmpty()) {
 			for (String presentedName : presentedRooms) {
 				Room presentedRoom = roomServ.findByName(presentedName);
+				if (presentedRoom == null) {
+					throw new NotFoundDatabaseException(presentedName, userName);
+				}
 				user.addPresentedRoom(presentedRoom);
 			}
 		}
@@ -96,6 +104,9 @@ public class JsonReaderService {
 		if (participatedRooms != null && !participatedRooms.isEmpty()) {
 			for (String participatedName : participatedRooms) {
 				Room participatedRoom = roomServ.findByName(participatedName);
+				if (participatedRoom == null) {
+					throw new NotFoundDatabaseException(participatedName, userName);
+				}
 				user.addParticipatedRoom(participatedRoom);
 			}
 		}

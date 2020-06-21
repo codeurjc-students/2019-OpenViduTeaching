@@ -14,27 +14,31 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseInitializer {
-	
+
 	@Autowired
 	JsonReaderService jsonReaderService;
-	
+
 	@Autowired
-    ResourceLoader resourceLoader;
-	
+	ResourceLoader resourceLoader;
+
 	@Value("${INITIAL_DATA_FILE}")
 	private String initialFile;
 
 	@PostConstruct
 	public void init() {
 		try {
-			if(initialFile.startsWith("/") || initialFile.matches("[a-zA-Z]\\:.*")) {
+			if (initialFile.startsWith("/") || initialFile.matches("[a-zA-Z]\\:.*")) {
 				initialFile = "file:" + initialFile;
 			}
 			System.out.println("Reading from file: " + initialFile);
 			Reader reader = new InputStreamReader(resourceLoader.getResource(initialFile).getInputStream());
 			JSONObject fileObject = (JSONObject) (new JSONParser().parse(reader));
-			
+
 			this.jsonReaderService.readJson(fileObject);
+		} catch (JsonReaderException e) {
+			System.err.println(e.getCause());
+		} catch (NotFoundDatabaseException e) {
+			System.err.println("Room not found: " + e.getRoomName() + " for user: " + e.getUserName());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
