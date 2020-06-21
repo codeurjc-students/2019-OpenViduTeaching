@@ -9,14 +9,16 @@ This document will explain how is used the Licensoft-Web API.
     * [Register](#register)
     * [Check username](#check-username)
     * [Get rooms](#get-rooms)
+    * [Create users](#create-users)
 * [Assets requests](#assets-requests)
     * [Get image](#get-image)
 * [Rooms requests](#rooms-requests)
     * [Create new room](#create-new-room)
     * [Get invite code](#get-invite-code)
     * [Check room](#check-room)
-    * [Add current user to room](#add-current-user-to-room)
+    * [Add user to room](#add-user-to-room)
     * [Get assistants](#get-assistants)
+    * [Create rooms](#create-rooms)
     * [Raise hand](#raise-hand)
     * [Lower hand](#lower-hand)
     * [Get hand raised users](#get-hand-raised-users)
@@ -169,6 +171,66 @@ Gets all the rooms the current user is in
     }
     ~~~~
 
+### Create users ###
+Creates rooms with the specified names, passwords and rooms. Two users cannot have the same name. All asigned rooms must have been created before.
+- **URL**  
+   `/ovTeachingApi/users`
+- **Method**  
+    `POST`
+- **Required role**:  
+    System: ADMIN
+    Room: NA
+- **Data Params**
+    * Body:
+        ~~~~ typescript
+        {
+            "users": [
+                {
+                    "name": string,
+                    "password": string,
+                    "participatedRooms"?: string[],
+                    "presentedRooms"?: string[],
+                    "moderatedRooms"?: string[]
+                }
+            ]
+        }
+        ~~~~
+- **Example**
+  - **Request**:
+    Username: teacher
+    Password: pass
+    * Body:
+        ~~~~ typescript
+        {
+            "users": [
+                {
+                    "name": "participant1",
+                    "password": "pass",
+                    "participatedRooms": [
+                        "roomA"
+                    ]
+                },
+                {
+                    "name": "participant2",
+                    "password": "pass",
+                    "participatedRooms": [
+                        "roomB"
+                    ]
+                },
+                {
+                    "name": "moderator",
+                    "password": "pass",
+                    "moddedRooms": [
+                        "roomA",
+                        "roomB"
+                    ]
+                }
+            ]
+        }
+        ~~~~
+  - **Response**:
+    200 OK
+
 ## Assets requests ##
 
 ### Get Image ###
@@ -249,7 +311,7 @@ Returns the room's name if there is a room in the system with than name or invit
     roomA
     ~~~~
 
-### Add current user to room ###
+### Add user to room ###
 Adds the current user to the room with the role of the code sent. If the user is added as a moderator and was already in the room as presenter or participant it gets the moderator role. A user who becomes moderator of any room for the first time becomes admin in the system. The method returns the user object.
 - **URL**  
    `/ovTeachingApi/room/{code}/user`
@@ -321,6 +383,46 @@ Gets all people who are in the room, and specifies their role and wheter or not 
     }
     ~~~~
 
+### Create rooms ###
+Creates rooms with the specified names. Two rooms cannot have the same name.
+- **URL**  
+   `/ovTeachingApi/rooms`
+- **Method**  
+    `POST`
+- **Required role**:  
+    System: ADMIN
+    Room: NA
+- **Data Params**
+    * Body:
+        ~~~~ typescript
+        {
+            "rooms": [
+                {
+                    "name": string
+                }
+            ]
+        }
+        ~~~~
+- **Example**
+  - **Request**:
+    Username: teacher
+    Password: pass
+    * Body:
+        ~~~~ typescript
+        {
+            "rooms": [
+                {
+                    "name": "roomA"
+                },
+                {
+                    "name": "roomB"
+                }
+            ]
+        }
+        ~~~~
+  - **Response**:
+    200 OK
+
 ### Raise hand ###
 Makes the user raise their hand. This method does not send signals to other users, it just acknowledges that the user did it in the backend.
 - **URL**  
@@ -334,7 +436,7 @@ Makes the user raise their hand. This method does not send signals to other user
     Path Variables:
     * String roomName\
     * Body:
-        ~~~~ json
+        ~~~~ typescript
         {
             "nickname": string,
             "avatar": string,
@@ -371,7 +473,7 @@ Makes the user lower their hand. This method does not send signals to other user
     Path Variables:
     * String roomName\
     * Body:
-        ~~~~ json
+        ~~~~ typescript
         {
             "connectionId": string
         }
@@ -500,7 +602,7 @@ Send an OpenVidu signal from the backend. Intended for moderators only. Users wh
     * String roomName
     * String type: The type of the OpenVidu signal. Users must be subscribed to `signal:{type}`\
     Body:
-        ~~~~ json
+        ~~~~ typescript
         {
             "to": string[],
             "data": any
