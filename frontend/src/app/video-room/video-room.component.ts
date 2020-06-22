@@ -35,9 +35,11 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { ChatService } from '../shared/services/chat/chat.service';
 import { MenuService } from '../shared/services/menu/menu.service';
 import { RemoteUsersService } from '../shared/services/remote-users/remote-users.service';
+import { CanvasWhiteboardComponent } from 'ng2-canvas-whiteboard';
 
 @Component({
 	selector: 'app-video-room',
+	viewProviders: [CanvasWhiteboardComponent],
 	templateUrl: './video-room.component.html',
 	styleUrls: ['./video-room.component.css'],
 	animations: [
