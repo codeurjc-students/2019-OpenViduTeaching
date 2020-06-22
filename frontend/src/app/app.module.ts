@@ -79,6 +79,7 @@ import { RoomService } from './shared/services/room/room.service';
 import { MenuService } from './shared/services/menu/menu.service';
 import { RaiseHandService } from './shared/services/raiseHand/raise-hand.service';
 import { SignalService } from './shared/services/signal/signal.service';
+import { WhiteboardService } from './shared/services/whiteboard/whiteboard.service';
 
 // Interceptors
 import { BasicAuthInterceptor } from 'src/interceptors/auth.interceptor';
@@ -163,6 +164,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		RoomService,
 		MenuService,
 		RaiseHandService,
+		WhiteboardService,
     	{ provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
 		{ provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
 		SignalService

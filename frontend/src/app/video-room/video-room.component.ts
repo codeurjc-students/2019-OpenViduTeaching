@@ -1,3 +1,4 @@
+import { WhiteboardService } from './../shared/services/whiteboard/whiteboard.service';
 import { RaiseHandService } from './../shared/services/raiseHand/raise-hand.service';
 import { NotificationsService } from './../shared/services/notifications/notifications.service';
 import { UserService } from './../shared/services/user/user.service';
@@ -35,41 +36,41 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { ChatService } from '../shared/services/chat/chat.service';
 import { MenuService } from '../shared/services/menu/menu.service';
 import { RemoteUsersService } from '../shared/services/remote-users/remote-users.service';
-import { CanvasWhiteboardComponent } from 'ng2-canvas-whiteboard';
 
 @Component({
 	selector: 'app-video-room',
-	viewProviders: [CanvasWhiteboardComponent],
 	templateUrl: './video-room.component.html',
 	styleUrls: ['./video-room.component.css'],
 	animations: [
 		trigger('popup', [
 			transition(':enter', [
-			style({ transform: 'scale(0.1)', opacity: 0 }),
-			animate('0.75s cubic-bezier(.8, -0.6, 0.26, 1.6)',
-				style({ transform: 'scale(1)', opacity: 1 }))
+				style({ transform: 'scale(0.1)', opacity: 0 }),
+				animate('0.75s cubic-bezier(.8, -0.6, 0.26, 1.6)', style({ transform: 'scale(1)', opacity: 1 }))
 			]),
 			transition(':leave', [
-			style({ transform: 'scale(1)', opacity: 1, height: '*' }),
-			animate('0.5s cubic-bezier(.8, -0.6, 0.2, 1.5)',
-				style({
-				transform: 'scale(0.1)', opacity: 0,
-				height: '0px', margin: '0px'
-				}))
+				style({ transform: 'scale(1)', opacity: 1, height: '*' }),
+				animate(
+					'0.5s cubic-bezier(.8, -0.6, 0.2, 1.5)',
+					style({
+						transform: 'scale(0.1)',
+						opacity: 0,
+						height: '0px',
+						margin: '0px'
+					})
+				)
 			])
 		])
 	]
 })
 export class VideoRoomComponent implements OnInit, OnDestroy {
-
 	@ViewChild('sidenav') menuSidenav: MatSidenav;
 	@ViewChildren('popup', { read: ElementRef }) currentPopups: QueryList<ElementRef>;
-  	@ViewChild('raisedHands', { read: ElementRef }) set content(content: ElementRef) {
-		if(content) {
-			this.raisedHandsPopup = content;
+	@ViewChild('raisedHands', { read: ElementRef }) set raisedHands(raisedHands: ElementRef) {
+		if (raisedHands) {
+			this.raisedHandsPopup = raisedHands;
 			this.notificationsService.setRaiseHandsPopupRef(this.raisedHandsPopup);
 		}
-	};
+	}
 	private raisedHandsPopup: ElementRef;
 
 	ovSettings: OvSettingsModel;
@@ -112,6 +113,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		private menuService: MenuService,
 		public notificationsService: NotificationsService,
 		private raiseHandService: RaiseHandService,
+		private whiteboardService: WhiteboardService,
 		@Inject('assistantsChatService') private assistantsChatService: ChatService,
 		@Inject('moderatorsChatService') private moderatorsChatService: ChatService,
 		private userService: UserService
@@ -133,11 +135,11 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	}
 
 	async ngOnInit() {
-		if(!this.userService.isLogged) {
+		if (!this.userService.isLogged) {
 			this.utilsSrv.showErrorMessage('You need to be logged in to enter a room', 'Rooms can only be accessed with an invite link');
 		}
-		this.route.paramMap.subscribe(params => {
-			this.roomName = params.get("roomName");
+		this.route.paramMap.subscribe((params) => {
+			this.roomName = params.get('roomName');
 			this.lightTheme = false;
 			this.ovSettings = new OvSettingsModel().setDefaultTeachingSettings(this.userService, this.roomName);
 			this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());
@@ -206,7 +208,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.subscribeToFirstConnection();
 		this.menuService.setMenuSidenav(this.menuSidenav);
 		this.assistantsChatService.subscribeToChat('chat');
-		if(this.userService.isModOfRoom(this.roomName)) {
+		if (this.userService.isModOfRoom(this.roomName)) {
 			this.moderatorsChatService.subscribeToChat('chatMod');
 		}
 		this.raiseHandService.subscribeToHandRaiseSignal();
@@ -222,7 +224,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.log.d('Leaving session...');
 		if (!this.showConfigRoomCard) {
 			this.networkSrv.keepaliveRemoveUser(this.roomName);
-			if(this.localUsers[0].getPositionInHandRaiseQueue() > 0) {
+			if (this.localUsers[0].getPositionInHandRaiseQueue() > 0) {
 				this.raiseHandService.keepaliveLowerHand(this.roomName, this.localUsers[0].getConnectionId());
 			}
 		}
@@ -296,7 +298,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			screenPublisher.once('accessDenied', (event) => {
 				this.log.w('ScreenShare: Access Denied');
 			});
-
 
 			return;
 		}
@@ -411,7 +412,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			const connectionId = event.connection.connectionId;
 			const cameraOrScreen: boolean = JSON.parse(event.connection.data.split('%/%')[0])?.cameraOrScreen;
 
-			if(this.oVSessionService.getWebcamSession().connection.connectionId == connectionId) {
+			if (this.oVSessionService.getWebcamSession().connection.connectionId == connectionId) {
 				this.localUsers[0].setConnectionId(connectionId);
 				this.localUsers[0].setName(event.connection.data.split('%/%SERVER=')[1]);
 				this.connection = event.connection;
@@ -457,7 +458,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.remoteStreamersService.add(event, subscriber);
 		});
 	}
-
 
 	private subscribeToStreamDestroyed() {
 		this.session.on('streamDestroyed', (event: StreamEvent) => {
@@ -578,7 +578,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	private sendNicknameSignal(nickname: string , connection?: Connection) {
+	private sendNicknameSignal(nickname: string, connection?: Connection) {
 		const signalOptions: SignalOptions = {
 			data: JSON.stringify({ nickname }),
 			type: 'nicknameChanged',
@@ -637,7 +637,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private subscribeToModConnections() {
 		this.modConnectionsSubscription = this.remoteStreamersService.moderatorConnectionsObs.subscribe((connections) => {
 			this.modConnections = [...connections];
-			if(this.connection) {
+			if (this.connection) {
 				this.modConnections.push(this.connection);
 			}
 			this.moderatorsChatService.setToConnections(this.modConnections);
