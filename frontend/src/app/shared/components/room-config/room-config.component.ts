@@ -13,7 +13,6 @@ import { AvatarType } from '../../types/chat-type';
 import { LoggerService } from '../../services/logger/logger.service';
 import { ILogger } from '../../types/logger-type';
 import { ScreenType } from '../../types/video-type';
-import { ExternalConfigModel } from '../../models/external-config';
 import { OvSettingsModel } from '../../models/ovSettings';
 import { StorageService } from '../../services/storage/storage.service';
 import { UserService } from '../../services/user/user.service';
@@ -28,13 +27,9 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 	private readonly USER_NICKNAME = 'openviduTeachingNickname';
 	@ViewChild('bodyCard') bodyCard: ElementRef;
 
-	@Input() externalConfig: ExternalConfigModel;
 	@Input() ovSettings: OvSettingsModel;
 	@Output() join = new EventEmitter<any>();
 	@Output() leaveSession = new EventEmitter<any>();
-
-	// Webcomponent event
-	@Output() publisherCreated = new EventEmitter<any>();
 
 	mySessionId: string;
 
@@ -192,12 +187,7 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 		this.oVSessionService.setAvatar(AvatarType.VIDEO);
 	}
 
-	setNicknameForm() {
-		if (this.externalConfig) {
-			this.nicknameFormControl.setValue(this.externalConfig.getNickname());
-			return;
-		}
-		const nickname = this.userService.user.name || this.utilsSrv.generateNickname();
+	setNicknameForm() {const nickname = this.userService.user.name || this.utilsSrv.generateNickname();
 		this.nicknameFormControl.setValue(nickname);
 	}
 
@@ -267,7 +257,7 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 
 	private setSessionName() {
 		this.route.params.subscribe((params: Params) => {
-			this.mySessionId = this.externalConfig ? this.externalConfig.getSessionName() : params.roomName;
+			this.mySessionId = params.roomName;
 			this.oVSessionService.setSessionId(this.mySessionId);
 		});
 	}
@@ -326,10 +316,6 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 		this.handlePublisherError(publisher);
 	}
 
-	private emitPublisher(publisher) {
-		this.publisherCreated.emit(publisher);
-	}
-
 	private handlePublisherSuccess(publisher: Publisher) {
 		publisher.once('accessAllowed', async () => {
 			if (this.oVDevicesService.areEmptyLabels()) {
@@ -345,8 +331,6 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 				}
 				this.setDevicesInfo();
 			}
-			// Emit publisher to webcomponent and angular-library
-			this.emitPublisher(publisher);
 
 			if (this.ovSettings.isAutoPublish()) {
 				this.joinSession();

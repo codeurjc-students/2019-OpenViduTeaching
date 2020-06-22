@@ -2,10 +2,8 @@
   <app-room-config
     *ngIf="showConfigRoomCard && this.userService.isLogged"
     [ovSettings]="ovSettings"
-    [externalConfig]="externalConfig"
     (join)="onConfigRoomJoin()"
     (leaveSession)="leaveSession()"
-    (publisherCreated)="emitPublisher($event)"
   ></app-room-config>
 
   <div *ngIf="localUsers && localUsers.length > 0">
