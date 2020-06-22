@@ -6,6 +6,7 @@ import { AppRoutingModule } from './/app-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { CanvasWhiteboardModule } from 'ng2-canvas-whiteboard';
 
 // Angular Material
 import { MatBadgeModule } from '@angular/material/badge';
@@ -144,6 +145,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		AppRoutingModule,
 		HttpClientModule,
 		FlexLayoutModule,
+		CanvasWhiteboardModule,
 		NgxLinkifyjsModule.forRoot()
 	],
 	entryComponents: [DialogErrorComponent],
