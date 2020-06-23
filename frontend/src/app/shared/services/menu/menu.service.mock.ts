@@ -6,30 +6,30 @@ import { AssistantGroup } from './menu.service';
 
 @Injectable()
 export class MenuServiceMock {
-	private menuOpened: boolean;
 	private _toggleMenu = <BehaviorSubject<boolean>>new BehaviorSubject(false);
 	toggleMenuObs: Observable<boolean>;
 
-	private assistantMessagesUnread = 0;
 	private _assistantMessagesUnread = <BehaviorSubject<number>>new BehaviorSubject(0);
 	assistantMessagesUnreadObs: Observable<number>;
 
-	private moderatorMessagesUnread = 0;
 	private _moderatorMessagesUnread = <BehaviorSubject<number>>new BehaviorSubject(0);
 	moderatorMessagesUnreadObs: Observable<number>;
 
 	private _totalMessagesUnread = <BehaviorSubject<number>>new BehaviorSubject(0);
 	totalMessagesUnreadObs: Observable<number>;
 
-	private assistants: AssistantGroup = { moderators: [], participants: [], presenters: [] };
 	private _assistants = <BehaviorSubject<AssistantGroup>>new BehaviorSubject({ moderators: [], participants: [], presenters: [] });
 	assistantsObs: Observable<AssistantGroup>;
+
+	private _isBeingRecorded = <BehaviorSubject<boolean>>new BehaviorSubject(false);
+	isBeingRecordedObs: Observable<boolean>;
 
 	constructor() {
 		this.toggleMenuObs = this._toggleMenu.asObservable();
 		this.totalMessagesUnreadObs = this._totalMessagesUnread.asObservable();
 		this.assistantMessagesUnreadObs = this._assistantMessagesUnread.asObservable();
 		this.moderatorMessagesUnreadObs = this._moderatorMessagesUnread.asObservable();
+		this.isBeingRecordedObs = this._isBeingRecorded.asObservable();
 		this.assistantsObs = this._assistants.asObservable();
 	}
 
@@ -42,4 +42,6 @@ export class MenuServiceMock {
 	updateAssistants() {}
 
 	subscribedToChangeRecordingStatus() {}
+
+	setIsBeingRecorded(isBeingRecorded: boolean) {}
 }

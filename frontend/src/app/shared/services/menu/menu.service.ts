@@ -46,6 +46,10 @@ export class MenuService {
 	private _assistants = <BehaviorSubject<AssistantGroup>>new BehaviorSubject({ moderators: [], participants: [], presenters: [] });
 	assistantsObs: Observable<AssistantGroup>;
 
+	private isBeingRecorded: boolean = false;
+	private _isBeingRecorded = <BehaviorSubject<boolean>>new BehaviorSubject(false);
+	isBeingRecordedObs: Observable<boolean>;
+
 	constructor(
 		private loggerSrv: LoggerService,
 		private openviduSessionService: OpenViduSessionService,
@@ -56,6 +60,7 @@ export class MenuService {
 		this.totalMessagesUnreadObs = this._totalMessagesUnread.asObservable();
 		this.assistantMessagesUnreadObs = this._assistantMessagesUnread.asObservable();
 		this.moderatorMessagesUnreadObs = this._moderatorMessagesUnread.asObservable();
+		this.isBeingRecordedObs = this._isBeingRecorded.asObservable();
 		this.assistantsObs = this._assistants.asObservable();
 	}
 
@@ -127,13 +132,18 @@ export class MenuService {
 		});
 	}
 
-	subscribedToChangeRecordingStatus(setRecordingStatus: (recordingStatus: boolean) => void) {
+	setIsBeingRecorded(isBeingRecorded: boolean) {
+		this.isBeingRecorded = isBeingRecorded;
+		this._isBeingRecorded.next(this.isBeingRecorded);
+	}
+
+	subscribeToChangeRecordingStatus() {
 		const session = this.openviduSessionService.getWebcamSession();
 		session.on('recordingStarted', (event: any) => {
-			setRecordingStatus(true);
+			this.setIsBeingRecorded(true);
 		});
 		session.on('recordingStopped', (event: any) => {
-			setRecordingStatus(false);
+			this.setIsBeingRecorded(false);
 		});
 	}
 }

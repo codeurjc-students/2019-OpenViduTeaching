@@ -33,8 +33,8 @@ export class SettingsComponent implements OnInit {
 	ngOnInit() {
 		this.roomName = this.openviduSessionService.getSessionId();
         this.checkIsRecordingEnabled();
-        this.subscribeToWhiteboardActive();
-		this.menuService.subscribedToChangeRecordingStatus(this.setRecordingStatus);
+		this.subscribeToWhiteboardActive();
+		this.subscribeToRecordingStatus();
 	}
 
 	showWhiteboard() {
@@ -44,10 +44,6 @@ export class SettingsComponent implements OnInit {
 	hideWhiteboard() {
         this.whiteboardService.hideWhiteBoard();
     }
-
-	setRecordingStatus(recordingStatus: boolean) {
-		this.isBeingRecorded = recordingStatus;
-	}
 
 	private checkIsRecordingEnabled() {
 		this.recordingService.isRecordingEnabled().subscribe(
@@ -65,7 +61,7 @@ export class SettingsComponent implements OnInit {
 		this.changingRecordStatus = true;
 		this.recordingService.isBeingRecorded(this.roomName).subscribe(
 			(isBeingRecorded) => {
-				this.isBeingRecorded = isBeingRecorded;
+				this.menuService.setIsBeingRecorded(isBeingRecorded);
 				this.changingRecordStatus = false;
 			},
 			(error) => console.error(error)
@@ -76,7 +72,7 @@ export class SettingsComponent implements OnInit {
 		this.changingRecordStatus = true;
 		this.recordingService.startRecording(this.roomName).subscribe(
 			() => {
-				this.isBeingRecorded = true;
+				this.menuService.setIsBeingRecorded(true);
 				this.changingRecordStatus = false;
 			},
 			(error) => console.error(error)
@@ -87,7 +83,7 @@ export class SettingsComponent implements OnInit {
 		this.changingRecordStatus = true;
 		this.recordingService.stopRecording(this.roomName).subscribe(
 			() => {
-				this.isBeingRecorded = false;
+				this.menuService.setIsBeingRecorded(false);
 				this.changingRecordStatus = false;
 			},
 			(error) => console.error(error)
@@ -110,5 +106,11 @@ export class SettingsComponent implements OnInit {
 		this.whiteboardService.isWhiteBoardActiveObs.subscribe((active) => {
             this.isWhiteboardActive = active;
 		});
+	}
+
+	private subscribeToRecordingStatus() {
+		this.menuService.isBeingRecordedObs.subscribe((status) => {
+			this.isBeingRecorded = status;
+		})
 	}
 }
