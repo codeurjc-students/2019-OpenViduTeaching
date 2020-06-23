@@ -36,6 +36,7 @@ import { WhiteboardService } from './../shared/services/whiteboard/whiteboard.se
 import { RaiseHandService } from './../shared/services/raiseHand/raise-hand.service';
 import { NotificationsService } from './../shared/services/notifications/notifications.service';
 import { UserService } from './../shared/services/user/user.service';
+import { CanvasWhiteboardOptions } from 'ng2-canvas-whiteboard';
 
 @Component({
 	selector: 'app-video-room',
@@ -105,6 +106,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	hasVideoDevices: boolean;
 	hasAudioDevices: boolean;
 	whiteboardActive: boolean;
+	whiteboardOptions: CanvasWhiteboardOptions;
 	private log: ILogger;
 	private oVUsersSubscription: Subscription;
 	private remoteUsersSubscription: Subscription;
@@ -156,6 +158,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.lightTheme = false;
 			this.ovSettings = new OvSettingsModel().setDefaultTeachingSettings(this.userService, this.roomName);
 			this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());
+			this.whiteboardOptions = this.whiteboardService.getWhiteboardOptions(this.roomName);
 		});
 	}
 
