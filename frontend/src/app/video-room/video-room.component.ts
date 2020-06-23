@@ -77,9 +77,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.whiteboard = canvasWhiteboard;
 			this.updateOpenViduLayout();
 			this.onToggleVideoSize({ element: this.whiteboard.nativeElement, resetAll: true });
-			setTimeout(() => {
-				window.dispatchEvent(new Event('resize'));
-			}, 200);
+			this.resize(200);
 		} else {
 			this.updateOpenViduLayout();
 		}
@@ -377,6 +375,12 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.updateOpenViduLayout();
 	}
 
+	private resize(timeout: number) {
+		setTimeout(() => {
+			window.dispatchEvent(new Event('resize'));
+		}, timeout);
+	}
+
 	toolbarMicIconEnabled(): boolean {
 		if (this.oVSessionService.isWebCamEnabled()) {
 			return this.oVSessionService.hasWebcamAudioActive();
@@ -544,19 +548,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.oVSessionService.unpublishScreen();
 	}
 
-	private subscribeToMenuToggle() {
-		this.menuToggleSubscription = this.menuService.toggleMenuObs.subscribe((opened) => {
-			const timeout = 0;
-			this.updateOpenViduLayout(timeout);
-		});
-	}
-
-	private subscribeToWhiteBoardActive() {
-		this.whiteboardActiveSubscription = this.whiteboardService.isWhiteBoardActiveObs.subscribe((active) => {
-			this.whiteboardActive = active;
-		});
-	}
-
 	private subscribeToReconnection() {
 		this.session.on('reconnecting', () => {
 			this.log.w('Connection lost: Reconnecting');
@@ -666,6 +657,22 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 				this.modConnections.push(this.connection);
 			}
 			this.moderatorsChatService.setToConnections(this.modConnections);
+		});
+	}
+
+	private subscribeToMenuToggle() {
+		this.menuToggleSubscription = this.menuService.toggleMenuObs.subscribe((opened) => {
+			const timeout = 0;
+			this.updateOpenViduLayout(timeout);
+			if(this.whiteboardActive) {
+				this.resize(200);
+			}
+		});
+	}
+
+	private subscribeToWhiteBoardActive() {
+		this.whiteboardActiveSubscription = this.whiteboardService.isWhiteBoardActiveObs.subscribe((active) => {
+			this.whiteboardActive = active;
 		});
 	}
 }
