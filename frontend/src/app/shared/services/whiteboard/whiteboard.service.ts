@@ -1,71 +1,102 @@
 import { SignalService } from './../signal/signal.service';
 import { OpenViduSessionService } from './../openvidu-session/openvidu-session.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
-import { Injectable, ElementRef } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CanvasWhiteboardOptions } from 'ng2-canvas-whiteboard';
+import { CanvasWhiteboardOptions, CanvasWhiteboardUpdate, CanvasWhiteboardService } from 'ng2-canvas-whiteboard';
 import { SignalEvent } from 'openvidu-browser';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class WhiteboardService {
-
-  private isActive: boolean = true;
+	private isActive: boolean = true;
 	private _isActive = <BehaviorSubject<boolean>>new BehaviorSubject(false);
-  isWhiteBoardActiveObs: Observable<boolean>;
+	isWhiteBoardActiveObs: Observable<boolean>;
 
-  constructor(
-    private userService: UserService,
-    private signalService: SignalService,
-    private openviduSessionService: OpenViduSessionService
-  ) {
-    this.isWhiteBoardActiveObs = this._isActive.asObservable();
+	constructor(
+		private userService: UserService,
+		private signalService: SignalService,
+		private openviduSessionService: OpenViduSessionService,
+		private canvasWhiteboardService: CanvasWhiteboardService
+	) {
+		this.isWhiteBoardActiveObs = this._isActive.asObservable();
+	}
 
-  }
+	getWhiteboardOptions(roomName: string): CanvasWhiteboardOptions {
+		return {
+			shapeSelectorEnabled: this.userService.canStream(roomName),
+			drawingEnabled: true,
+			drawButtonEnabled: false,
+			clearButtonEnabled: this.userService.canStream(roomName),
+			clearButtonClass: 'clearButtonClass',
+			clearButtonText: 'Clear',
+			undoButtonText: 'Undo',
+			undoButtonEnabled: this.userService.canStream(roomName),
+			redoButtonText: 'Redo',
+			redoButtonEnabled: this.userService.canStream(roomName),
+			colorPickerEnabled: this.userService.canStream(roomName),
+			saveDataButtonEnabled: true,
+			saveDataButtonText: 'Save',
+			lineWidth: 5,
+			shouldDownloadDrawing: true
+		};
+	}
 
-  getWhiteboardOptions(roomName: string): CanvasWhiteboardOptions {
-    return {
-      shapeSelectorEnabled: this.userService.canStream(roomName),
-      drawingEnabled: true,
-      drawButtonEnabled: false,
-      clearButtonEnabled: this.userService.canStream(roomName),
-      clearButtonClass: "clearButtonClass",
-      clearButtonText: "Clear",
-      undoButtonText: "Undo",
-      undoButtonEnabled: this.userService.canStream(roomName),
-      redoButtonText: "Redo",
-      redoButtonEnabled: this.userService.canStream(roomName),
-      colorPickerEnabled: this.userService.canStream(roomName),
-      saveDataButtonEnabled: true,
-      saveDataButtonText: "Save",
-      lineWidth: 5,
-      shouldDownloadDrawing: true
-    }
-  }
+	showWhiteboard() {
+		this.isActive = true;
+		this._isActive.next(this.isActive);
+		this.sendOpenWhiteBoardSignal(true);
+	}
 
-  showWhiteboard() {
-    this.isActive = true;
-    this._isActive.next(this.isActive);
-    this.sendOpenWhiteBoardSignal(true);
-  }
+	hideWhiteBoard() {
+		this.isActive = false;
+		this._isActive.next(this.isActive);
+		this.sendOpenWhiteBoardSignal(false);
+	}
 
-  hideWhiteBoard() {
-    this.isActive = false;
-    this._isActive.next(this.isActive);
-    this.sendOpenWhiteBoardSignal(false);
-  }
+	onDraw(type: string, update?: CanvasWhiteboardUpdate[] | string) {
+		this.signalService
+			.sendSignal(this.openviduSessionService.getSessionId(), 'whiteboardDraw', [], { type: type, update: update, connectionId: this.openviduSessionService.getWebcamSession().connection.connectionId })
+			.subscribe((_) => {});
+	}
 
-  private sendOpenWhiteBoardSignal(active: boolean) {
-    this.signalService.sendSignal(this.openviduSessionService.getSessionId(), 'openWhiteBoard', [], { whiteboardActive: active }).subscribe((_) => {});
-  }
+	private sendOpenWhiteBoardSignal(active: boolean) {
+		this.signalService
+			.sendSignal(this.openviduSessionService.getSessionId(), 'openWhiteBoard', [], { whiteboardActive: active })
+			.subscribe((_) => {});
+	}
 
-  subscribeToOpenWhiteBoardSignal() {
-    this.openviduSessionService.getWebcamSession().on('signal:openWhiteBoard', (event: SignalEvent) => {
-      if(event.from == undefined) {
-        this.isActive = JSON.parse(event.data).whiteboardActive;
-        this._isActive.next(this.isActive);
-      }
+	subscribeToWhiteboardSignals() {
+		const session = this.openviduSessionService.getWebcamSession();
+		session.on('signal:openWhiteBoard', (event: SignalEvent) => {
+			if (event.from == undefined) {
+				this.isActive = JSON.parse(event.data).whiteboardActive;
+				this._isActive.next(this.isActive);
+			}
 		});
-  }
+		session.on('signal:whiteboardDraw', (event: SignalEvent) => {
+			if (event.from == undefined) {
+        const data = JSON.parse(event.data);
+        if(!this.openviduSessionService.isMyOwnConnection(data.connectionId)) {
+          const type = data.type;
+          const update = data.update;
+          switch (type) {
+            case 'BatchUpdate':
+              this.canvasWhiteboardService.drawCanvas(update);
+              break;
+            case 'Undo':
+              this.canvasWhiteboardService.undoCanvas(update);
+              break;
+            case 'Redo':
+              this.canvasWhiteboardService.redoCanvas(update);
+              break;
+            case 'Clear':
+              this.canvasWhiteboardService.clearCanvas();
+              break;
+          }
+        }
+			}
+		});
+	}
 }

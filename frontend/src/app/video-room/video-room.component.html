@@ -101,7 +101,11 @@
           <canvas-whiteboard
             #canvasWhiteboard
             *ngIf="whiteboardActive"
-            [options]="whiteboardOptions">
+            [options]="whiteboardOptions"
+            (onBatchUpdate)="onWhiteboardDraw('BatchUpdate', $event)"
+            (onUndo)="onWhiteboardDraw('Undo', $event)"
+            (onRedo)="onWhiteboardDraw('Redo', $event)"
+            (onClear)="onWhiteboardDraw('Clear')">
           </canvas-whiteboard>
           <div
             *ngFor="let user of remoteStreamers"

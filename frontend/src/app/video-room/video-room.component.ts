@@ -36,7 +36,8 @@ import { WhiteboardService } from './../shared/services/whiteboard/whiteboard.se
 import { RaiseHandService } from './../shared/services/raiseHand/raise-hand.service';
 import { NotificationsService } from './../shared/services/notifications/notifications.service';
 import { UserService } from './../shared/services/user/user.service';
-import { CanvasWhiteboardOptions } from 'ng2-canvas-whiteboard';
+import { CanvasWhiteboardOptions, CanvasWhiteboardUpdate } from 'ng2-canvas-whiteboard';
+import { CanvasWhiteboardUpdateType } from 'ng2-canvas-whiteboard/src/canvas-whiteboard-update.model';
 
 @Component({
 	selector: 'app-video-room',
@@ -236,7 +237,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.subscribeToMenuToggle();
 		this.subscribeToModConnections();
 		this.subscribeToWhiteBoardActive();
-		this.whiteboardService.subscribeToOpenWhiteBoardSignal();
+		this.whiteboardService.subscribeToWhiteboardSignals();
 		this.notificationsService.setPopupsRef(this.currentPopups);
 		this.subscribeToReconnection();
 		this.connectToSession();
@@ -380,17 +381,21 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.updateOpenViduLayout();
 	}
 
-	private resize(timeout: number) {
-		setTimeout(() => {
-			window.dispatchEvent(new Event('resize'));
-		}, timeout);
-	}
-
 	toolbarMicIconEnabled(): boolean {
 		if (this.oVSessionService.isWebCamEnabled()) {
 			return this.oVSessionService.hasWebcamAudioActive();
 		}
 		return this.oVSessionService.hasScreenAudioActive();
+	}
+
+	onWhiteboardDraw(type: string, update?: CanvasWhiteboardUpdate[] | string) {
+		this.whiteboardService.onDraw(type, update);
+	}
+
+	private resize(timeout: number) {
+		setTimeout(() => {
+			window.dispatchEvent(new Event('resize'));
+		}, timeout);
 	}
 
 	private async connectToSession(): Promise<void> {
