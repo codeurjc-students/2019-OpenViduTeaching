@@ -1,7 +1,3 @@
-import { WhiteboardService } from './../shared/services/whiteboard/whiteboard.service';
-import { RaiseHandService } from './../shared/services/raiseHand/raise-hand.service';
-import { NotificationsService } from './../shared/services/notifications/notifications.service';
-import { UserService } from './../shared/services/user/user.service';
 import { Component, HostListener, OnDestroy, OnInit, ViewChild, Inject, ViewChildren, ElementRef, QueryList } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -36,6 +32,10 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { ChatService } from '../shared/services/chat/chat.service';
 import { MenuService } from '../shared/services/menu/menu.service';
 import { RemoteUsersService } from '../shared/services/remote-users/remote-users.service';
+import { WhiteboardService } from './../shared/services/whiteboard/whiteboard.service';
+import { RaiseHandService } from './../shared/services/raiseHand/raise-hand.service';
+import { NotificationsService } from './../shared/services/notifications/notifications.service';
+import { UserService } from './../shared/services/user/user.service';
 
 @Component({
 	selector: 'app-video-room',
@@ -72,6 +72,19 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		}
 	}
 	private raisedHandsPopup: ElementRef;
+	@ViewChild('canvasWhiteboard', { read: ElementRef }) set canvasWhiteboard(canvasWhiteboard: ElementRef) {
+		if(canvasWhiteboard) {
+			this.whiteboard = canvasWhiteboard;
+			this.updateOpenViduLayout();
+			this.onToggleVideoSize({ element: this.whiteboard.nativeElement, resetAll: true });
+			setTimeout(() => {
+				window.dispatchEvent(new Event('resize'));
+			}, 200);
+		} else {
+			this.updateOpenViduLayout();
+		}
+	}
+	private whiteboard: ElementRef;
 
 	ovSettings: OvSettingsModel;
 	compact = false;
@@ -93,12 +106,14 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	isAutoLayout = false;
 	hasVideoDevices: boolean;
 	hasAudioDevices: boolean;
+	whiteboardActive: boolean;
 	private log: ILogger;
 	private oVUsersSubscription: Subscription;
 	private remoteUsersSubscription: Subscription;
 	private remoteStreamersSubscription: Subscription;
 	private menuToggleSubscription: Subscription;
 	private modConnectionsSubscription: Subscription;
+	private whiteboardActiveSubscription: Subscription;
 
 	constructor(
 		private networkSrv: NetworkService,
@@ -175,6 +190,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		if (this.modConnectionsSubscription) {
 			this.modConnectionsSubscription.unsubscribe();
 		}
+		if (this.whiteboardActiveSubscription) {
+			this.whiteboardActiveSubscription.unsubscribe();
+		}
 	}
 
 	onConfigRoomJoin() {
@@ -215,6 +233,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.raiseHandService.subscribedToLowerYourHand();
 		this.subscribeToMenuToggle();
 		this.subscribeToModConnections();
+		this.subscribeToWhiteBoardActive();
 		this.notificationsService.setPopupsRef(this.currentPopups);
 		this.subscribeToReconnection();
 		this.connectToSession();
@@ -529,6 +548,12 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.menuToggleSubscription = this.menuService.toggleMenuObs.subscribe((opened) => {
 			const timeout = 0;
 			this.updateOpenViduLayout(timeout);
+		});
+	}
+
+	private subscribeToWhiteBoardActive() {
+		this.whiteboardActiveSubscription = this.whiteboardService.isWhiteBoardActiveObs.subscribe((active) => {
+			this.whiteboardActive = active;
 		});
 	}
 

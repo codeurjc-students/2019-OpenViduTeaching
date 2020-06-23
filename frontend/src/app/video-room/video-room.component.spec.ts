@@ -1,3 +1,5 @@
+import { WhiteboardServiceMock } from './../shared/services/whiteboard/whiteboard.service.mock';
+import { WhiteboardService } from './../shared/services/whiteboard/whiteboard.service';
 import { RaiseHandServiceMock } from './../shared/services/raiseHand/raise-hand.service.mock';
 import { RaiseHandService } from './../shared/services/raiseHand/raise-hand.service';
 import { MenuServiceMock } from './../shared/services/menu/menu.service.mock';
@@ -39,7 +41,8 @@ describe('VideoRoomComponent unit test', () => {
 				{ provide: MenuService, useClass: MenuServiceMock },
 				{ provide: 'assistantsChatService', useClass: ChatServiceMock },
 				{ provide: 'moderatorsChatService', useClass: ChatServiceMock },
-				{ provide: RaiseHandService, useClass: RaiseHandServiceMock }
+				{ provide: RaiseHandService, useClass: RaiseHandServiceMock },
+				{ provide: WhiteboardService, useClass: WhiteboardServiceMock }
 			],
 			imports: [RouterTestingModule.withRoutes([])]
 		}).compileComponents();
