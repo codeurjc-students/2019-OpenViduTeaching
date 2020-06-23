@@ -8,6 +8,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { RecordingService } from 'src/app/shared/services/recording/recording.service';
 import { RecordingServiceMock } from 'src/app/shared/services/recording/recording.service.mock';
 import { MenuService } from 'src/app/shared/services/menu/menu.service';
+import { WhiteboardServiceMock } from 'src/app/shared/services/whiteboard/whiteboard.service.mock';
+import { WhiteboardService } from 'src/app/shared/services/whiteboard/whiteboard.service';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -20,7 +22,8 @@ describe('SettingsComponent', () => {
         { provide: MatSnackBar, useValue: {} },
         { provide: RecordingService, useClass: RecordingServiceMock },
         { provide: UserService, useClass: UserServiceMock },
-        { provide: MenuService, useClass: MenuServiceMock }
+        { provide: MenuService, useClass: MenuServiceMock },
+        { provide: WhiteboardService, useClass: WhiteboardServiceMock}
       ],
       declarations: [ SettingsComponent ]
     })

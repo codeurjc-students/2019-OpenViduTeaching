@@ -1,5 +1,15 @@
 <mat-card id="settingsCard">
-    <div id="recordSection" *ngIf="isRecordingEnabled">
+    <div id="buttonSection">
+        <button mat-flat-button color="accent" *ngIf="!isWhiteboardActive" (click)="showWhiteboard()">
+            <mat-icon>create</mat-icon>
+            Open whiteboard
+        </button>
+        <button mat-flat-button color="warn" *ngIf="isWhiteboardActive" (click)="hideWhiteboard()">
+            <mat-icon>create</mat-icon>
+            Close whiteboard
+        </button>
+    </div>
+    <div id="buttonSection" *ngIf="isRecordingEnabled">
         <button mat-flat-button color="accent" *ngIf="!isBeingRecorded" (click)="startRecording()" [disabled]="changingRecordStatus">
             <mat-icon>videocam</mat-icon>
             Start recording
@@ -10,7 +20,7 @@
         </button>
         <mat-spinner *ngIf="changingRecordStatus" color="accent" [diameter]="40"></mat-spinner>
     </div>
-    <br *ngIf="isRecordingEnabled">
+    <br>
     <div *ngIf="this.userService.isModOfRoom(this.roomName)">
         <b>Invite links:</b>
         <button mat-icon-button (click)="getInviteURL('moderator')">
