@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 	providedIn: 'root'
 })
 export class SignalService {
-	baseURL: string = '/ovTeachingApi';
+	private baseURL: string = '/ovTeachingApi';
 
 	constructor(private http: HttpClient) {}
 

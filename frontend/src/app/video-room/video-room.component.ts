@@ -236,6 +236,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.subscribeToMenuToggle();
 		this.subscribeToModConnections();
 		this.subscribeToWhiteBoardActive();
+		this.whiteboardService.subscribeToOpenWhiteBoardSignal();
 		this.notificationsService.setPopupsRef(this.currentPopups);
 		this.subscribeToReconnection();
 		this.connectToSession();

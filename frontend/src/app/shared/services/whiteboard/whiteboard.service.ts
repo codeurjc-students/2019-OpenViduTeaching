@@ -1,8 +1,10 @@
+import { SignalService } from './../signal/signal.service';
 import { OpenViduSessionService } from './../openvidu-session/openvidu-session.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
 import { Injectable, ElementRef } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CanvasWhiteboardOptions } from 'ng2-canvas-whiteboard';
+import { SignalEvent } from 'openvidu-browser';
 
 @Injectable({
   providedIn: 'root'
@@ -14,13 +16,17 @@ export class WhiteboardService {
   isWhiteBoardActiveObs: Observable<boolean>;
 
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private signalService: SignalService,
+    private openviduSessionService: OpenViduSessionService
   ) {
     this.isWhiteBoardActiveObs = this._isActive.asObservable();
+
   }
 
   getWhiteboardOptions(roomName: string): CanvasWhiteboardOptions {
     return {
+      shapeSelectorEnabled: this.userService.canStream(roomName),
       drawingEnabled: true,
       drawButtonEnabled: false,
       clearButtonEnabled: this.userService.canStream(roomName),
@@ -41,10 +47,25 @@ export class WhiteboardService {
   showWhiteboard() {
     this.isActive = true;
     this._isActive.next(this.isActive);
+    this.sendOpenWhiteBoardSignal(true);
   }
 
   hideWhiteBoard() {
     this.isActive = false;
     this._isActive.next(this.isActive);
+    this.sendOpenWhiteBoardSignal(false);
+  }
+
+  private sendOpenWhiteBoardSignal(active: boolean) {
+    this.signalService.sendSignal(this.openviduSessionService.getSessionId(), 'openWhiteBoard', [], { whiteboardActive: active }).subscribe((_) => {});
+  }
+
+  subscribeToOpenWhiteBoardSignal() {
+    this.openviduSessionService.getWebcamSession().on('signal:openWhiteBoard', (event: SignalEvent) => {
+      if(event.from == undefined) {
+        this.isActive = JSON.parse(event.data).whiteboardActive;
+        this._isActive.next(this.isActive);
+      }
+		});
   }
 }
