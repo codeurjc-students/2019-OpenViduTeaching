@@ -155,6 +155,17 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	@HostListener('window:keydown', ['$event'])
+	onKeyDown(e: KeyboardEvent) {
+		if (e.ctrlKey && e.keyCode == 90) { //Ctrl+Z
+			const whiteboardHistory = this.whiteboardService.getDrawingHistory();
+			this.onWhiteboardDraw('Undo', whiteboardHistory[whiteboardHistory.length-1].UUID);
+		} else if(e.ctrlKey && e.keyCode == 89) { //Ctrl+Y
+			const whiteboardHistory = this.whiteboardService.getDrawingHistory();
+			this.onWhiteboardDraw('Redo', whiteboardHistory[whiteboardHistory.length-1].UUID);
+		}
+	}
+
 	async ngOnInit() {
 		if (!this.userService.isLogged) {
 			this.utilsSrv.showErrorMessage('You need to be logged in to enter a room', 'Rooms can only be accessed with an invite link');
