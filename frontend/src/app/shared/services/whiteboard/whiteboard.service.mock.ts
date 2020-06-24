@@ -1,5 +1,6 @@
 import { Injectable, ElementRef } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { CanvasWhiteboardComponent } from 'ng2-canvas-whiteboard';
 
 @Injectable()
 export class WhiteboardServiceMock {
@@ -12,11 +13,11 @@ export class WhiteboardServiceMock {
 
 	setWhiteboardCanvasRef(whiteboard: ElementRef) {}
 
-	setBigToggleCallback(callback: (event: { element: HTMLElement; connectionId?: string; resetAll?: boolean }) => void) {}
-
 	showWhiteboard() {}
 
 	hideWhiteBoard() {}
 
 	getWhiteboardOptions() {}
+
+	setWhiteboardComponent(whiteboardComponent: CanvasWhiteboardComponent) {}
 }
