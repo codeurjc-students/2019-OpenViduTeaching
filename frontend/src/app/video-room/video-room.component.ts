@@ -36,8 +36,7 @@ import { WhiteboardService } from './../shared/services/whiteboard/whiteboard.se
 import { RaiseHandService } from './../shared/services/raiseHand/raise-hand.service';
 import { NotificationsService } from './../shared/services/notifications/notifications.service';
 import { UserService } from './../shared/services/user/user.service';
-import { CanvasWhiteboardOptions, CanvasWhiteboardUpdate } from 'ng2-canvas-whiteboard';
-import { CanvasWhiteboardUpdateType } from 'ng2-canvas-whiteboard/src/canvas-whiteboard-update.model';
+import { CanvasWhiteboardOptions, CanvasWhiteboardUpdate, CanvasWhiteboardComponent } from 'ng2-canvas-whiteboard';
 
 @Component({
 	selector: 'app-video-room',
@@ -74,7 +73,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		}
 	}
 	private raisedHandsPopup: ElementRef;
-	@ViewChild('canvasWhiteboard', { read: ElementRef }) set canvasWhiteboard(canvasWhiteboard: ElementRef) {
+	@ViewChild('canvasWhiteboard', { read: ElementRef }) set canvasWhiteboardRef(canvasWhiteboard: ElementRef) {
 		if(canvasWhiteboard) {
 			this.whiteboard = canvasWhiteboard;
 			this.updateOpenViduLayout();
@@ -85,6 +84,11 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		}
 	}
 	private whiteboard: ElementRef;
+	@ViewChild('canvasWhiteboard') set canvasWhiteboardComponent(whiteboardComponent: CanvasWhiteboardComponent) {
+		this.whiteboardComponent = whiteboardComponent;
+		this.whiteboardService.setWhiteboardComponent(this.whiteboardComponent);
+	}
+	private whiteboardComponent: CanvasWhiteboardComponent;
 
 	ovSettings: OvSettingsModel;
 	compact = false;

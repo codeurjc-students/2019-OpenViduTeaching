@@ -3,7 +3,7 @@ import { OpenViduSessionService } from './../openvidu-session/openvidu-session.s
 import { UserService } from 'src/app/shared/services/user/user.service';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CanvasWhiteboardOptions, CanvasWhiteboardUpdate, CanvasWhiteboardService } from 'ng2-canvas-whiteboard';
+import { CanvasWhiteboardOptions, CanvasWhiteboardUpdate, CanvasWhiteboardService, CanvasWhiteboardComponent } from 'ng2-canvas-whiteboard';
 import { SignalEvent } from 'openvidu-browser';
 
 @Injectable({
@@ -13,6 +13,8 @@ export class WhiteboardService {
 	private isActive: boolean = true;
 	private _isActive = <BehaviorSubject<boolean>>new BehaviorSubject(false);
 	isWhiteBoardActiveObs: Observable<boolean>;
+
+	private whiteboardComponent: CanvasWhiteboardComponent;
 
 	constructor(
 		private userService: UserService,
@@ -26,7 +28,7 @@ export class WhiteboardService {
 	getWhiteboardOptions(roomName: string): CanvasWhiteboardOptions {
 		return {
 			shapeSelectorEnabled: this.userService.canStream(roomName),
-			drawingEnabled: true,
+			drawingEnabled: this.userService.canStream(roomName),
 			drawButtonEnabled: false,
 			clearButtonEnabled: this.userService.canStream(roomName),
 			clearButtonClass: 'clearButtonClass',
@@ -57,7 +59,11 @@ export class WhiteboardService {
 
 	onDraw(type: string, update?: CanvasWhiteboardUpdate[] | string) {
 		this.signalService
-			.sendSignal(this.openviduSessionService.getSessionId(), 'whiteboardDraw', [], { type: type, update: update, connectionId: this.openviduSessionService.getWebcamSession().connection.connectionId })
+			.sendSignal(this.openviduSessionService.getSessionId(), 'whiteboardDraw', [], {
+				type: type,
+				update: update,
+				connectionId: this.openviduSessionService.getWebcamSession().connection.connectionId
+			})
 			.subscribe((_) => {});
 	}
 
@@ -77,26 +83,34 @@ export class WhiteboardService {
 		});
 		session.on('signal:whiteboardDraw', (event: SignalEvent) => {
 			if (event.from == undefined) {
-        const data = JSON.parse(event.data);
-        if(!this.openviduSessionService.isMyOwnConnection(data.connectionId)) {
-          const type = data.type;
-          const update = data.update;
-          switch (type) {
-            case 'BatchUpdate':
-              this.canvasWhiteboardService.drawCanvas(update);
-              break;
-            case 'Undo':
-              this.canvasWhiteboardService.undoCanvas(update);
-              break;
-            case 'Redo':
-              this.canvasWhiteboardService.redoCanvas(update);
-              break;
-            case 'Clear':
-              this.canvasWhiteboardService.clearCanvas();
-              break;
-          }
-        }
+				const data = JSON.parse(event.data);
+				if (!this.openviduSessionService.isMyOwnConnection(data.connectionId)) {
+					const type = data.type;
+					const update = data.update;
+					switch (type) {
+						case 'BatchUpdate':
+							this.canvasWhiteboardService.drawCanvas(update);
+							break;
+						case 'Undo':
+							this.canvasWhiteboardService.undoCanvas(update);
+							break;
+						case 'Redo':
+							this.canvasWhiteboardService.redoCanvas(update);
+							break;
+						case 'Clear':
+							this.canvasWhiteboardService.clearCanvas();
+							break;
+					}
+				}
 			}
 		});
+	}
+
+	getDrawingHistory(): CanvasWhiteboardUpdate[] {
+		return this.whiteboardComponent.getDrawingHistory();
+	}
+
+	setWhiteboardComponent(whiteboardComponent: CanvasWhiteboardComponent) {
+		this.whiteboardComponent = whiteboardComponent;
 	}
 }
