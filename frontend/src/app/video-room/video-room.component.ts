@@ -11,7 +11,8 @@ import {
 	SessionDisconnectedEvent,
 	PublisherSpeakingEvent,
 	Connection,
-	ConnectionEvent
+	ConnectionEvent,
+	SignalEvent
 } from 'openvidu-browser';
 import { OpenViduLayout, OpenViduLayoutOptions } from '../shared/layout/openvidu-layout';
 import { UserModel } from '../shared/models/user-model';
@@ -530,13 +531,14 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	}
 
 	private subscribeToFirstConnection() {
-		this.session.on('signal:firstConnection', (event: any) => {
+		this.session.on('signal:firstConnection', (event: SignalEvent) => {
 			const connectionId = event.from.connectionId;
 			if (this.oVSessionService.isMyOwnConnection(connectionId)) {
 				return;
 			}
 			const data = JSON.parse(event.from.data.split('%/%')[0]);
 			this.notificationsService.showConnectionPopup(data?.clientData, true, data?.avatar);
+			this.whiteboardService.sendWhiteboardHistorySignal(event.from);
 			this.menuService.updateAssistants();
 		});
 	}
