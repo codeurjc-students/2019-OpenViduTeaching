@@ -17,6 +17,8 @@ export class WhiteboardService {
 	private whiteboardComponent: CanvasWhiteboardComponent;
 
 	private receivedHistory: boolean = false;
+	private history: CanvasWhiteboardUpdate[] = [];
+	private undoHistory: CanvasWhiteboardUpdate[][] = [];
 
 	constructor(
 		private userService: UserService,
@@ -60,6 +62,7 @@ export class WhiteboardService {
 	}
 
 	onDraw(type: string, update?: CanvasWhiteboardUpdate[] | string) {
+		this.updateHistory(type, update);
 		this.signalService
 			.sendSignal(this.openviduSessionService.getSessionId(), 'whiteboardDraw', [], {
 				type: type,
@@ -103,6 +106,7 @@ export class WhiteboardService {
 							this.canvasWhiteboardService.clearCanvas();
 							break;
 					}
+					this.updateHistory(type, update);
 				}
 			}
 		});
@@ -112,23 +116,25 @@ export class WhiteboardService {
 					this.receivedHistory = true;
 					this.isActive = true;
 					this._isActive.next(this.isActive);
-					const history: CanvasWhiteboardUpdate[] = JSON.parse(event.data).history;
-					console.warn(history);
-					setTimeout(() => this.canvasWhiteboardService.drawCanvas(history), 250);
+					const data = JSON.parse(event.data);
+					this.history = data.history;
+					this.undoHistory = data.undoHistory;
+					setTimeout(() => this.canvasWhiteboardService.drawCanvas(this.history), 250);
 				}
 			}
 		});
 	}
 
 	getDrawingHistory(): CanvasWhiteboardUpdate[] {
-		return this.whiteboardComponent.getDrawingHistory();
+		return this.history;
 	}
 
 	sendWhiteboardHistorySignal(connection: Connection) {
 		if (this.isActive && this.userService.canStream(this.openviduSessionService.getSessionId())) {
 			this.signalService
 				.sendSignal(this.openviduSessionService.getSessionId(), 'whiteboardHistory', [connection.connectionId], {
-					history: this.getDrawingHistory()
+					history: this.getDrawingHistory(),
+					undoHistory: this.undoHistory
 				})
 				.subscribe((_) => {});
 		}
@@ -136,5 +142,27 @@ export class WhiteboardService {
 
 	setWhiteboardComponent(whiteboardComponent: CanvasWhiteboardComponent) {
 		this.whiteboardComponent = whiteboardComponent;
+	}
+
+	private updateHistory(type: string, update?: CanvasWhiteboardUpdate[] | string) {
+		switch (type) {
+			case 'BatchUpdate':
+				this.undoHistory = [];
+				this.history = this.history.concat(update as CanvasWhiteboardUpdate[]);
+				break;
+			case 'Undo':
+				const undo = this.history.filter((item) => item.UUID == this.history[this.history.length - 1].UUID);
+				this.undoHistory.push(undo);
+				this.history = this.history.filter((item) => item.UUID != this.history[this.history.length - 1].UUID);
+				break;
+			case 'Redo':
+				const redo = this.undoHistory.pop();
+				this.history = this.history.concat(redo as CanvasWhiteboardUpdate[]);
+				break;
+			case 'Clear':
+				this.undoHistory = [];
+				this.history = [];
+				break;
+		}
 	}
 }
