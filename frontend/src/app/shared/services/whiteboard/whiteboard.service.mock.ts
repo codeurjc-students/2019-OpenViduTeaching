@@ -17,4 +17,6 @@ export class WhiteboardServiceMock {
 	showWhiteboard() {}
 
 	hideWhiteBoard() {}
+
+	getWhiteboardOptions() {}
 }
