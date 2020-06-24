@@ -75,7 +75,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	}
 	private raisedHandsPopup: ElementRef;
 	@ViewChild('canvasWhiteboard', { read: ElementRef }) set canvasWhiteboardRef(canvasWhiteboard: ElementRef) {
-		if(canvasWhiteboard) {
+		if (canvasWhiteboard) {
 			this.whiteboard = canvasWhiteboard;
 			this.updateOpenViduLayout();
 			this.onToggleVideoSize({ element: this.whiteboard.nativeElement, resetAll: true });
@@ -309,10 +309,13 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 			screenPublisher.once('accessAllowed', (event) => {
 				// Listen to event fired when native stop button is clicked
-				screenPublisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
-					this.log.d('Clicked native stop button. Stopping screen sharing');
-					this.toggleScreenShare();
-				});
+				screenPublisher.stream
+					.getMediaStream()
+					.getVideoTracks()[0]
+					.addEventListener('ended', () => {
+						this.log.d('Clicked native stop button. Stopping screen sharing');
+						this.toggleScreenShare();
+					});
 				this.log.d('ACCESS ALOWED screenPublisher');
 				this.oVSessionService.enableScreenUser(screenPublisher);
 				this.oVSessionService.publishScreen();
@@ -655,7 +658,11 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 	private subscribeToRemoteStreamers() {
 		this.remoteStreamersSubscription = this.remoteStreamersService.remoteStreamersObs.subscribe((users) => {
+			const previoudsStreamers = this.remoteStreamers.length;
 			this.remoteStreamers = [...users];
+			if (!this.userService.canStream(this.roomName) && previoudsStreamers > 0 && this.remoteStreamers.length == 0) {
+				this.whiteboardService.hideWhiteBoard();
+			}
 			this.updateOpenViduLayout();
 		});
 	}
@@ -680,7 +687,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.menuToggleSubscription = this.menuService.toggleMenuObs.subscribe((opened) => {
 			const timeout = 0;
 			this.updateOpenViduLayout(timeout);
-			if(this.whiteboardActive) {
+			if (this.whiteboardActive) {
 				this.resize(200);
 			}
 		});
