@@ -37,7 +37,7 @@ At the top right corner the user can open the menu, which contains:
   * The chat for all the assistants of the room.
   * The chat for moderators (only if the user is a moderator).
   * A list of all the assistants of the room, their roles and whether they are connected at the moment or not.
-  * The settings where moderators can get the invite links and start/stop recordings. 
+  * The settings where moderators can get the invite links, start/stop recordings and open the whiteboard.
 ![Menu](/documentation/images/menu.gif)
 In the next gif we see the button that makes the user raise their hand. The button displays a number of the position in the queue of people who are raising their hand. Then we see the actual popup. Moderators can lower the hand of other people. If there are multiple people with their hand raised only the name of the first one is displayed (hence the queue).
 ![Raise hand button](/documentation/images/raiseHand.gif)
@@ -46,8 +46,10 @@ Now we can see the other two kinds of popups: a user who just connected/disconne
 ![Popups](/documentation/images/popups.gif)
 In the next gif we can see how moderators can start and stop a recording.
 ![Recording](/documentation/images/recording.gif)
-In the last gif we can see how to access the previous recordings of a room. It can only be done from the dashboard, or with the URL {roomName}/video/{videoId}
+Here we can see how to access the previous recordings of a room. It can only be done from the dashboard, or with the URL {roomName}/video/{videoId}
 ![Video](/documentation/images/video.gif)
+In the last gif we see how moderators can open, use and close the whiteboard.
+![Whiteboard](/documentation/images/whiteboard.gif)
 
 
 ## Project Roadmap ##
