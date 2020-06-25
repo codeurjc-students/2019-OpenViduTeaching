@@ -31,16 +31,16 @@ export class WhiteboardService {
 
 	getWhiteboardOptions(roomName: string): CanvasWhiteboardOptions {
 		return {
-			shapeSelectorEnabled: this.userService.canStream(roomName),
-			drawingEnabled: this.userService.canStream(roomName),
+			shapeSelectorEnabled: this.userService.isModOfRoom(roomName),
+			drawingEnabled: this.userService.isModOfRoom(roomName),
 			drawButtonEnabled: false,
-			clearButtonEnabled: this.userService.canStream(roomName),
+			clearButtonEnabled: this.userService.isModOfRoom(roomName),
 			clearButtonText: 'Clear',
 			undoButtonText: 'Undo',
-			undoButtonEnabled: this.userService.canStream(roomName),
+			undoButtonEnabled: this.userService.isModOfRoom(roomName),
 			redoButtonText: 'Redo',
-			redoButtonEnabled: this.userService.canStream(roomName),
-			colorPickerEnabled: this.userService.canStream(roomName),
+			redoButtonEnabled: this.userService.isModOfRoom(roomName),
+			colorPickerEnabled: this.userService.isModOfRoom(roomName),
 			saveDataButtonEnabled: true,
 			saveDataButtonText: 'Save',
 			lineWidth: 5,
