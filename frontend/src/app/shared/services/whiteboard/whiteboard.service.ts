@@ -100,7 +100,12 @@ export class WhiteboardService {
 							this.canvasWhiteboardService.undoCanvas(update);
 							break;
 						case 'Redo':
-							this.canvasWhiteboardService.redoCanvas(update);
+							if (this.whiteboardComponent.getDrawingHistory().some((e) => e.UUID == update)) {
+								this.canvasWhiteboardService.redoCanvas(update);
+							} else {
+								const redoBatch = this.undoHistory.find((batch) => batch[0].UUID == update);
+								this.canvasWhiteboardService.drawCanvas(redoBatch);
+							}
 							break;
 						case 'Clear':
 							this.canvasWhiteboardService.clearCanvas();
