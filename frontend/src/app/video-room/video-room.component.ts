@@ -398,6 +398,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			}
 		}
 		this.updateOpenViduLayout();
+		this.resize(200);
 	}
 
 	toolbarMicIconEnabled(): boolean {

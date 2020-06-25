@@ -117,9 +117,14 @@ export class UtilsService {
 	}
 
 	removeAllBigElementClass() {
+		let stay = 0;
 		const elements: HTMLCollectionOf<Element> = document.getElementsByClassName(LayoutBigElement.BIG_ELEMENT_CLASS);
-		while (elements.length > 0) {
-			this.toggleBigElementClass(elements[0]);
+		while (elements.length > stay) {
+			if(!elements[stay].className.includes('whiteboard')) {
+				this.toggleBigElementClass(elements[stay]);
+			} else {
+				stay++;
+			}
 		}
 	}
 

@@ -101,6 +101,7 @@
           <canvas-whiteboard
             #canvasWhiteboard
             *ngIf="whiteboardActive"
+            class="whiteboard"
             [options]="whiteboardOptions"
             (onBatchUpdate)="onWhiteboardDraw('BatchUpdate', $event)"
             (onUndo)="onWhiteboardDraw('Undo', $event)"
