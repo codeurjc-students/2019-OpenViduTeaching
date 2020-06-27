@@ -76,36 +76,45 @@ public class JsonReaderService {
 
 	public void readUsersToRoom(Room room, JSONObject users) throws NotFoundDatabaseException {
 		JSONArray moderators = (JSONArray) users.get("moderators");
-		if(moderators != null) {
+		if (moderators != null) {
 			this.saveRoomToUsers(room, moderators, "moderator");
 		}
 		JSONArray presenters = (JSONArray) users.get("presenters");
-		if(presenters != null) {
+		if (presenters != null) {
 			this.saveRoomToUsers(room, presenters, "presenter");
 		}
 		JSONArray participants = (JSONArray) users.get("participants");
-		if(participants != null) {
+		if (participants != null) {
 			this.saveRoomToUsers(room, participants, "participant");
 		}
 	}
-	
-	private void saveRoomToUsers(Room room, JSONArray users, String role) throws NotFoundDatabaseException{
+
+	private void saveRoomToUsers(Room room, JSONArray users, String role) throws NotFoundDatabaseException {
 		if (users != null && !users.isEmpty()) {
 			for (Object userObject : users) {
 				String userName = (String) ((JSONObject) userObject).get("name");
 				User user = this.userServ.findByName(userName);
-				if(user == null) {
+				if (user == null) {
 					throw new NotFoundDatabaseException(room.getName(), userName);
 				}
 				switch (role) {
 					case "moderator":
-						user.addModdedRoom(room);
+						user.removePresentedRoom(room);
+						user.removeParticipatedRoom(room);
+						if(!room.isModerator(user)) {
+							user.addModdedRoom(room);
+						}
 						break;
 					case "presenter":
-						user.addPresentedRoom(room);
+						user.removeParticipatedRoom(room);
+						if (!room.canStream(user)) {
+							user.addPresentedRoom(room);
+						}
 						break;
 					case "participant":
-						user.addParticipatedRoom(room);
+						if (!room.isInRoom(user)) {
+							user.addParticipatedRoom(room);
+						}
 						break;
 				}
 				this.userServ.save(user);

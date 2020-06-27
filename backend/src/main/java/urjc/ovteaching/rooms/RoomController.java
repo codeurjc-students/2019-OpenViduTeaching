@@ -90,22 +90,21 @@ public class RoomController {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) {
-			
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		if (!room.isModerator(user)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-		} else {
-			try {
-				body = (JSONObject) new JSONParser().parse(body.toString());
-				this.jsonReaderService.readUsersToRoom(room, body);
-			} catch (ParseException e) {
-				System.err.println(e.toString());
-				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			} catch (NotFoundDatabaseException e) {
-				System.err.println("User: " + e.getUserName() + " not found for room: " + e.getRoomName());
-				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-			}
-			
+		}
+		try {
+			body = (JSONObject) new JSONParser().parse(body.toString());
+			this.jsonReaderService.readUsersToRoom(room, body);
+		} catch (ParseException e) {
+			System.err.println(e.toString());
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} catch (NotFoundDatabaseException e) {
+			String message = "User: " + e.getUserName() + " not found";
+			System.err.println(message);
+			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
