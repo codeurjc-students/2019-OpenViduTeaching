@@ -96,7 +96,12 @@ public class OpenViduController {
 		}
 
 		try {
-			String token = this.openViduComponent.generateToken(room, user);
+			String token;
+			if(user.getName().equals("recorder")) {
+				token = "wss://localhost:4443?sessionId=roomA&secret=MY_SECRET&recorder=true";
+			} else {
+				token = this.openViduComponent.generateToken(room, user);
+			}
 			this.openViduComponent.addUserWithTokenToRoom(room, user, token);
 			return new ResponseEntity<>("\"" + token + "\"", HttpStatus.OK);
 		} catch (IOException e1) {

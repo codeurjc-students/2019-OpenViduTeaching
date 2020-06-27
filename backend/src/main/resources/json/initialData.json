@@ -29,6 +29,13 @@
 				"roomA",
 				"roomB"
 			]
+		},
+		{
+			"name": "recorder",
+			"password": "pass",
+			"moddedRooms": [
+				"roomA"
+			]
 		}
 	]
 }

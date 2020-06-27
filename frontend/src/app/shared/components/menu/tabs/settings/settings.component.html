@@ -9,6 +9,7 @@
             Close whiteboard
         </button>
     </div>
+    <br>
     <div id="buttonSection" *ngIf="isRecordingEnabled">
         <button mat-flat-button color="accent" *ngIf="!isBeingRecorded" (click)="startRecording()" [disabled]="changingRecordStatus">
             <mat-icon>videocam</mat-icon>
@@ -20,7 +21,7 @@
         </button>
         <mat-spinner *ngIf="changingRecordStatus" color="accent" [diameter]="40"></mat-spinner>
     </div>
-    <br>
+    <br *ngIf="isRecordingEnabled">
     <div *ngIf="this.userService.isModOfRoom(this.roomName)">
         <b>Invite links:</b>
         <button mat-icon-button (click)="getInviteURL('moderator')">

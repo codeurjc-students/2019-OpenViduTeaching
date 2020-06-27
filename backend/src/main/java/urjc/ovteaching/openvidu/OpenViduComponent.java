@@ -49,6 +49,8 @@ import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.OpenViduRole;
 import io.openvidu.java.client.Recording;
+import io.openvidu.java.client.RecordingLayout;
+import io.openvidu.java.client.RecordingProperties;
 import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 import io.openvidu.java.client.TokenOptions;
@@ -249,11 +251,16 @@ public class OpenViduComponent {
 		if(RECORDING_ENABLED) {
 			try {
 				String sessionId = this.roomIdSession.get(room.getId()).getSessionId();
-				String recordingId = this.openVidu.startRecording(sessionId).getId();
+				RecordingProperties properties = new RecordingProperties.Builder()
+					    .outputMode(Recording.OutputMode.COMPOSED)
+					    .recordingLayout(RecordingLayout.CUSTOM)
+					    .customLayout("http://recorder:pass@localhost:4200/#/" + sessionId)
+					    .build();
+				String recordingId = this.openVidu.startRecording(sessionId, properties).getId();
 				this.roomIdRecordingsId.get(room.getId()).add(recordingId);
 				return recordingId;
 			} catch (OpenViduJavaClientException | OpenViduHttpException e) {
-				System.out.println(e.toString());
+				System.err.println(e.getCause());
 				e.printStackTrace();
 			}
 		}
