@@ -27,6 +27,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import urjc.ovteaching.jsonReader.ConflictDatabaseException;
 import urjc.ovteaching.jsonReader.JsonReaderException;
 import urjc.ovteaching.jsonReader.JsonReaderService;
+import urjc.ovteaching.jsonReader.NotFoundDatabaseException;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
 import urjc.ovteaching.users.UserService;
@@ -80,6 +81,31 @@ public class RoomController {
 			String message = e.getClassName() + " \"" + e.getName() + "\" already found in the database";
 			System.err.println(message);
 			return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+		}
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@PostMapping("/room/{roomName}/users")
+	public ResponseEntity<?> addUserToRoom(@PathVariable String roomName, @RequestBody JSONObject body) {
+		Room room = roomServ.findByName(roomName);
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
+		if (room == null) {
+			
+		}
+		if (!room.isModerator(user)) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		} else {
+			try {
+				body = (JSONObject) new JSONParser().parse(body.toString());
+				this.jsonReaderService.readUsersToRoom(room, body);
+			} catch (ParseException e) {
+				System.err.println(e.toString());
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			} catch (NotFoundDatabaseException e) {
+				System.err.println("User: " + e.getUserName() + " not found for room: " + e.getRoomName());
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
