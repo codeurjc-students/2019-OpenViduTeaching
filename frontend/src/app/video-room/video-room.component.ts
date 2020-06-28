@@ -157,25 +157,35 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 	@HostListener('window:keydown', ['$event'])
 	onKeyDown(e: KeyboardEvent) {
-		if (e.ctrlKey && e.keyCode == 90) { //Ctrl+Z
+		if (e.ctrlKey && e.keyCode == 90) {
+			//Ctrl+Z
 			const whiteboardHistory = this.whiteboardService.getDrawingHistory();
-			this.onWhiteboardDraw('Undo', whiteboardHistory[whiteboardHistory.length-1].UUID);
-		} else if(e.ctrlKey && e.keyCode == 89) { //Ctrl+Y
+			this.onWhiteboardDraw('Undo', whiteboardHistory[whiteboardHistory.length - 1].UUID);
+		}
+		if (e.ctrlKey && e.keyCode == 89) {
+			//Ctrl+Y
 			const whiteboardHistory = this.whiteboardService.getDrawingHistory();
-			this.onWhiteboardDraw('Redo', whiteboardHistory[whiteboardHistory.length-1].UUID);
+			this.onWhiteboardDraw('Redo', whiteboardHistory[whiteboardHistory.length - 1].UUID);
 		}
 	}
 
 	async ngOnInit() {
-		if (!this.userService.isLogged) {
-			this.utilsSrv.showErrorMessage('You need to be logged in to enter a room', 'Rooms can only be accessed with an invite link');
-		}
-		this.route.paramMap.subscribe((params) => {
-			this.roomName = params.get('roomName');
-			this.lightTheme = false;
-			this.ovSettings = new OvSettingsModel().setDefaultTeachingSettings(this.userService, this.roomName);
-			this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());
-			this.whiteboardOptions = this.whiteboardService.getWhiteboardOptions(this.roomName);
+		this.route.queryParamMap.subscribe((params) => {
+			const userName = params.get('user');
+			const password = params.get('pass');
+			if (!!userName && !!password) {
+				if(this.userService.user?.name != userName) {
+					this.userService.logIn(userName, password).subscribe((_) => {
+						window.location.reload();
+					});
+				}
+			} else if (!this.userService.isLogged) {
+				this.utilsSrv.showErrorMessage(
+					'You need to be logged in to enter a room',
+					'Rooms can only be accessed with an invite link'
+				);
+			}
+			this.initSettings();
 		});
 	}
 
@@ -211,6 +221,16 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		if (this.whiteboardActiveSubscription) {
 			this.whiteboardActiveSubscription.unsubscribe();
 		}
+	}
+
+	initSettings() {
+		this.route.paramMap.subscribe((params) => {
+			this.roomName = params.get('roomName');
+			this.lightTheme = false;
+			this.ovSettings = new OvSettingsModel().setDefaultTeachingSettings(this.userService, this.roomName);
+			this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());
+			this.whiteboardOptions = this.whiteboardService.getWhiteboardOptions(this.roomName);
+		});
 	}
 
 	onConfigRoomJoin() {
