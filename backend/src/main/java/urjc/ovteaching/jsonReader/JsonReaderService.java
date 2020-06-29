@@ -88,7 +88,7 @@ public class JsonReaderService {
 		String[] roles = {"ROLE_USER", "ROLE_ADMIN"};
 		User user = new User(userName, password, roles);
 		this.userServ.save(user);
-		this.openviduComponent.setRecorderUser(user);
+		this.openviduComponent.setRecorderUser(userName, password);
 		System.out.println("Saved recorder user: " + userName);
 	}
 
