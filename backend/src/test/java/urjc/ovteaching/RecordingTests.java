@@ -84,13 +84,13 @@ public class RecordingTests {
 	public void startRecording() throws Exception {
 		Room room = this.roomService.findByName("testRoom");
 		given(this.openviduComponent.isBeingRecorded(room)).willReturn(false);
-		given(this.openviduComponent.startRecording(room)).willReturn("testRoom");
+		given(this.openviduComponent.startRecording(room, null)).willReturn("testRoom");
 		
 		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/testRoom/recording/start")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk());
 		
-		verify(openviduComponent).startRecording(room);
+		verify(openviduComponent).startRecording(room, null);
 	}
 	
 	@Test
@@ -101,7 +101,7 @@ public class RecordingTests {
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotImplemented());
 		
-		verify(openviduComponent, never()).startRecording(any());
+		verify(openviduComponent, never()).startRecording(any(), any());
 	}
 	
 	@Test
@@ -110,7 +110,7 @@ public class RecordingTests {
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNotFound());
 		
-		verify(openviduComponent, never()).startRecording(any());
+		verify(openviduComponent, never()).startRecording(any(), any());
 	}
 	
 	@Test
@@ -126,7 +126,7 @@ public class RecordingTests {
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized());
 		
-		verify(openviduComponent, never()).startRecording(room);
+		verify(openviduComponent, never()).startRecording(room, null);
 	}
 	
 	@Test
@@ -138,20 +138,20 @@ public class RecordingTests {
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isConflict());
 		
-		verify(openviduComponent, never()).startRecording(room);
+		verify(openviduComponent, never()).startRecording(room, null);
 	}
 	
 	@Test
 	public void startRecordingOpenViduError() throws Exception {
 		Room room = this.roomService.findByName("testRoom");
 		given(this.openviduComponent.isBeingRecorded(room)).willReturn(false);
-		given(this.openviduComponent.startRecording(room)).willReturn(null);
+		given(this.openviduComponent.startRecording(room, null)).willReturn(null);
 		
 		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/testRoom/recording/start")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isInternalServerError());
 		
-		verify(openviduComponent).startRecording(room);
+		verify(openviduComponent).startRecording(room, null);
 	}
 	
 	@Test
