@@ -79,6 +79,8 @@ public class OpenViduComponent {
 	
 	private HttpClient httpClient;
 
+	private User recorderUser;
+
 	private Map<Long, Session> roomIdSession;
 	private Map<String, Map<Long, String[]>> sessionIdUserIdToken;
 	private Map<Long, List<String>> roomIdRecordingsId;
@@ -242,7 +244,11 @@ public class OpenViduComponent {
 		}
 		return set;
 	}
-	
+
+	public void setRecorderUser(User recorderUser) {
+		this.recorderUser = recorderUser;
+	}
+
 	public boolean isRecordingEnabled() {
 		return RECORDING_ENABLED;
 	}

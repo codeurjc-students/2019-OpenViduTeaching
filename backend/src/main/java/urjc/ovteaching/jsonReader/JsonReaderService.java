@@ -9,6 +9,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import urjc.ovteaching.openvidu.OpenViduComponent;
 import urjc.ovteaching.rooms.Room;
 import urjc.ovteaching.rooms.RoomService;
 import urjc.ovteaching.users.User;
@@ -22,11 +23,15 @@ public class JsonReaderService {
 
 	@Autowired
 	RoomService roomServ;
+	
+	@Autowired
+	OpenViduComponent openviduComponent;
 
 	public void readJson(JSONObject json)
 			throws JsonReaderException, NotFoundDatabaseException, ConflictDatabaseException {
 		this.readRooms((JSONArray) json.get("rooms"));
 		this.readUsers((JSONArray) json.get("users"));
+		this.readRecorder((JSONObject) json.get("recorder"));
 	}
 
 	public void readRooms(JSONArray roomList) throws JsonReaderException, ConflictDatabaseException {
@@ -72,6 +77,19 @@ public class JsonReaderService {
 		} catch (ConflictDatabaseException e) {
 			throw new ConflictDatabaseException(e.getName(), e.getClassName());
 		}
+	}
+	
+	public void readRecorder(JSONObject recorderObject) throws ConflictDatabaseException {
+		String userName = (String) recorderObject.get("name");
+		if (this.userServ.findByName(userName) != null) {
+			throw new ConflictDatabaseException(userName, "User");
+		}
+		String password = (String) recorderObject.get("password");
+		String[] roles = {"ROLE_USER", "ROLE_ADMIN"};
+		User user = new User(userName, password, roles);
+		this.userServ.save(user);
+		this.openviduComponent.setRecorderUser(user);
+		System.out.println("Saved recorder user: " + userName);
 	}
 
 	public void readUsersToRoom(Room room, JSONObject users) throws NotFoundDatabaseException {
