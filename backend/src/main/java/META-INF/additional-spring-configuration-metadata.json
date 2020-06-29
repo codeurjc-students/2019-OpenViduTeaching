@@ -18,5 +18,10 @@
     "name": "OPENVIDU_RECORDING_PATH",
     "type": "java.lang.String",
     "description": "The local absolute path where OpenVidu recordings are stored"
+  },
+  {
+    "name": "OPENVIDU_RECORDING_CUSTOM",
+    "type": "boolean",
+    "description": "Whether or not the custom layout for recording is enabled"
   }
 ]}

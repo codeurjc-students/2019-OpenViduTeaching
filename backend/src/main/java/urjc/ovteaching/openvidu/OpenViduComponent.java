@@ -64,20 +64,20 @@ public class OpenViduComponent {
 
 	@Autowired
 	RoomService roomService;
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
-    ResourceLoader resourceLoader;
-	
+	ResourceLoader resourceLoader;
+
 	private OpenVidu openVidu;
 	private String OPENVIDU_URL;
 	private String SECRET;
 	private boolean RECORDING_ENABLED;
 	private String RECORDING_PATH;
 	private boolean RECORDING_CUSTOM_ENABLED;
-	
+
 	private HttpClient httpClient;
 
 	private String recorderUserName;
@@ -102,10 +102,10 @@ public class OpenViduComponent {
 		this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
 		this.roomIdSession = new ConcurrentHashMap<>();
 		this.sessionIdUserIdToken = new ConcurrentHashMap<>();
-		if(RECORDING_ENABLED) {
+		if (RECORDING_ENABLED) {
 			this.roomIdRecordingsId = new ConcurrentHashMap<>();
 		}
-		
+
 		TrustStrategy trustStrategy = new TrustStrategy() {
 			@Override
 			public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
@@ -136,12 +136,11 @@ public class OpenViduComponent {
 	public String createSession(Room room) throws IOException {
 		System.out.println("Creating session for room: " + room.getName());
 		try {
-			SessionProperties sp = new SessionProperties.Builder()
-					.customSessionId(room.getName()).build();
+			SessionProperties sp = new SessionProperties.Builder().customSessionId(room.getName()).build();
 			Session session = this.openVidu.createSession(sp);
 			this.roomIdSession.put(room.getId(), session);
 			this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
-			if(RECORDING_ENABLED) {
+			if (RECORDING_ENABLED) {
 				this.roomIdRecordingsId.put(room.getId(), new ArrayList<>());
 			}
 			return session.getSessionId();
@@ -174,9 +173,7 @@ public class OpenViduComponent {
 		try {
 			Session session = this.roomIdSession.get(room.getId());
 			OpenViduRole role = this.getRole(user, room);
-			TokenOptions tokenOpts = new TokenOptions.Builder()
-					.role(role)
-					.data("SERVER=" + user.getName()).build();
+			TokenOptions tokenOpts = new TokenOptions.Builder().role(role).data("SERVER=" + user.getName()).build();
 			return session.generateToken(tokenOpts);
 		} catch (OpenViduJavaClientException e) {
 			System.out.println(e.toString());
@@ -207,21 +204,21 @@ public class OpenViduComponent {
 			throw new IOException(e);
 		}
 	}
-	
+
 	private OpenViduRole getRole(User user, Room room) {
 		OpenViduRole role;
-		if(room.isModerator(user)) {
+		if (room.isModerator(user)) {
 			role = OpenViduRole.MODERATOR;
-		} else if(room.isPresenter(user)) {
+		} else if (room.isPresenter(user)) {
 			role = OpenViduRole.PUBLISHER;
-		} else if(room.isParticipant(user)) {
+		} else if (room.isParticipant(user)) {
 			role = OpenViduRole.SUBSCRIBER;
 		} else {
 			role = null;
 		}
 		return role;
 	}
-	
+
 	public String[] removeUser(Room room, User user) {
 		Session session = this.roomIdSession.get(room.getId());
 		return this.sessionIdUserIdToken.get(session.getSessionId()).remove(user.getId());
@@ -236,15 +233,15 @@ public class OpenViduComponent {
 		Session session = this.roomIdSession.remove(room.getId());
 		this.sessionIdUserIdToken.remove(session.getSessionId());
 	}
-	
+
 	public Collection<User> getConnectedAssistants(Room room) {
 		Set<User> set = new HashSet<>();
 		String roomName = room.getName();
 		Map<Long, String[]> userIdMap = sessionIdUserIdToken.get(roomName);
-		if(userIdMap == null) {
+		if (userIdMap == null) {
 			return set;
 		}
-		for(Long userId: userIdMap.keySet()) {
+		for (Long userId : userIdMap.keySet()) {
 			User user = userService.findOne(userId).get();
 			set.add(user);
 		}
@@ -259,16 +256,20 @@ public class OpenViduComponent {
 	public boolean isRecordingEnabled() {
 		return RECORDING_ENABLED;
 	}
-	
-	public String startRecording(Room room) {
-		if(RECORDING_ENABLED) {
+
+	public String startRecording(Room room, String origin) {
+		if (RECORDING_ENABLED) {
 			try {
 				String sessionId = this.roomIdSession.get(room.getId()).getSessionId();
-				RecordingProperties properties = new RecordingProperties.Builder()
-					    .outputMode(Recording.OutputMode.COMPOSED)
-					    .recordingLayout(RecordingLayout.CUSTOM)
-					    .customLayout("http://recorder:pass@localhost:4200/#/" + sessionId)
-					    .build();
+				RecordingProperties properties;
+				if (RECORDING_CUSTOM_ENABLED) {
+					properties = new RecordingProperties.Builder().outputMode(Recording.OutputMode.COMPOSED)
+							.recordingLayout(RecordingLayout.CUSTOM).customLayout(origin + "/#/" + sessionId + "?user="
+									+ recorderUserName + "&pass=" + recorderUserPass)
+							.build();
+				} else {
+					properties = new RecordingProperties.Builder().outputMode(Recording.OutputMode.COMPOSED).build();
+				}
 				String recordingId = this.openVidu.startRecording(sessionId, properties).getId();
 				this.roomIdRecordingsId.get(room.getId()).add(recordingId);
 				return recordingId;
@@ -279,13 +280,13 @@ public class OpenViduComponent {
 		}
 		return null;
 	}
-	
+
 	public boolean isBeingRecorded(Room room) {
 		return RECORDING_ENABLED && this.roomIdSession.get(room.getId()).isBeingRecorded();
 	}
-	
+
 	public String stopRecording(Room room) {
-		if(RECORDING_ENABLED) {
+		if (RECORDING_ENABLED) {
 			try {
 				List<String> recordings = this.roomIdRecordingsId.get(room.getId());
 				String recordingId = recordings.get(recordings.size() - 1);
@@ -297,10 +298,10 @@ public class OpenViduComponent {
 		}
 		return null;
 	}
-	
+
 	public void sendSignal(Room room, JsonArray to, String type, JsonObject data) throws IOException {
 		Session session = this.roomIdSession.get(room.getId());
-		
+
 		HttpPost request = new HttpPost(this.OPENVIDU_URL + "/api/signal");
 
 		JsonObject json = new JsonObject();
@@ -312,7 +313,7 @@ public class OpenViduComponent {
 		StringEntity params = new StringEntity(json.toString());
 		request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 		request.setEntity(params);
-		
+
 		HttpResponse response = this.httpClient.execute(request);
 		try {
 			int statusCode = response.getStatusLine().getStatusCode();
@@ -325,16 +326,16 @@ public class OpenViduComponent {
 			EntityUtils.consumeQuietly(response.getEntity());
 		}
 	}
-	
+
 	public List<Recording> getRecordings(Room room) {
 		List<String> recordingIds = this.roomIdRecordingsId.get(room.getId());
-		if(recordingIds==null) {
+		if (recordingIds == null) {
 			return new ArrayList<>();
 		}
 		List<Recording> recordings = new ArrayList<>();
 		try {
-			for(Recording recording: this.openVidu.listRecordings()) {
-				if(recordingIds.contains(recording.getId())) {
+			for (Recording recording : this.openVidu.listRecordings()) {
+				if (recordingIds.contains(recording.getId())) {
 					recordings.add(recording);
 				}
 			}
@@ -345,9 +346,9 @@ public class OpenViduComponent {
 			return null;
 		}
 	}
-	
+
 	public Resource getVideo(String videoId) throws IOException {
-		if(RECORDING_ENABLED) {
+		if (RECORDING_ENABLED) {
 			return resourceLoader.getResource("file:" + RECORDING_PATH + "/" + videoId + "/" + videoId + ".mp4");
 		}
 		return null;

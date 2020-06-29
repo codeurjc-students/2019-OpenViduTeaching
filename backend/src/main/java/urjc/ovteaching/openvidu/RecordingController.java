@@ -3,6 +3,8 @@ package urjc.ovteaching.openvidu;
 import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -46,7 +48,7 @@ public class RecordingController {
 	 * @return Recording id
 	 */
 	@PostMapping("/room/{roomName}/recording/start")
-	public ResponseEntity<?> startRecording(@PathVariable String roomName) {
+	public ResponseEntity<?> startRecording(@PathVariable String roomName, HttpServletRequest request) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 
@@ -63,8 +65,7 @@ public class RecordingController {
 			// No session created for that room or it is empty or it is already being recorded
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
 		}
-		
-		String recordingId = this.openViduComponent.startRecording(room);
+		String recordingId = this.openViduComponent.startRecording(room, request.getHeader("origin"));
 		if(recordingId==null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
