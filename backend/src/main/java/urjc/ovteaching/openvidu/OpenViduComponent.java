@@ -76,6 +76,7 @@ public class OpenViduComponent {
 	private String SECRET;
 	private boolean RECORDING_ENABLED;
 	private String RECORDING_PATH;
+	private boolean RECORDING_CUSTOM_ENABLED;
 	
 	private HttpClient httpClient;
 
@@ -86,7 +87,10 @@ public class OpenViduComponent {
 	private Map<String, Map<Long, String[]>> sessionIdUserIdToken;
 	private Map<Long, List<String>> roomIdRecordingsId;
 
-	public OpenViduComponent(@Value("${OPENVIDU_SECRET}") String secret, @Value("${OPENVIDU_URL}") String openviduUrl, @Value("${OPENVIDU_RECORDING}") boolean isRecordingEnabled, @Value("${OPENVIDU_RECORDING_PATH}") String recordingPath) {
+	public OpenViduComponent(@Value("${OPENVIDU_SECRET}") String secret, @Value("${OPENVIDU_URL}") String openviduUrl,
+			@Value("${OPENVIDU_RECORDING}") boolean isRecordingEnabled,
+			@Value("${OPENVIDU_RECORDING_PATH}") String recordingPath,
+			@Value("${OPENVIDU_RECORDING_CUSTOM}") boolean isCustomLayoutEnabled) {
 		System.out.println("Starting OpenViduComponent with:");
 		System.out.println("OPENVIDU_URL: " + openviduUrl);
 		System.out.println("OPENVIDU_SECRET: " + secret);
@@ -94,6 +98,7 @@ public class OpenViduComponent {
 		this.OPENVIDU_URL = openviduUrl;
 		this.RECORDING_ENABLED = isRecordingEnabled;
 		this.RECORDING_PATH = recordingPath;
+		this.RECORDING_CUSTOM_ENABLED = isCustomLayoutEnabled;
 		this.openVidu = new OpenVidu(OPENVIDU_URL, SECRET);
 		this.roomIdSession = new ConcurrentHashMap<>();
 		this.sessionIdUserIdToken = new ConcurrentHashMap<>();
