@@ -253,6 +253,15 @@ public class OpenViduComponent {
 		this.recorderUserPass = password;
 	}
 
+	public boolean isRecorderUser(User user) {
+		return user.getName().equals(this.recorderUserName);
+	}
+
+	public String generateRecorderToken(Room room) {
+		return "wss://" + this.OPENVIDU_URL.replace("https://", "").replace("/", "") + "?sessionId="
+				+ this.roomIdSession.get(room.getId()).getSessionId() + "&secret=" + this.SECRET + "&recorder=true";
+	}
+
 	public boolean isRecordingEnabled() {
 		return RECORDING_ENABLED;
 	}

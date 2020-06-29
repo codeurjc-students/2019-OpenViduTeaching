@@ -80,8 +80,8 @@ public class OpenViduController {
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) { // No room with that name
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		if (!room.isInRoom(user)) { // User not in that room
+		}		
+		if (!room.isInRoom(user) && !openViduComponent.isRecorderUser(user)) { // User not in that room
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
@@ -96,9 +96,10 @@ public class OpenViduController {
 		}
 
 		try {
+			
 			String token;
 			if(user.getName().equals("recorder")) {
-				token = "wss://localhost:4443?sessionId=roomA&secret=MY_SECRET&recorder=true";
+				token = this.openViduComponent.generateRecorderToken(room);
 			} else {
 				token = this.openViduComponent.generateToken(room, user);
 			}
