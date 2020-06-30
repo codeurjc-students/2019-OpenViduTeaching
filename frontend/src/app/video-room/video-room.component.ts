@@ -178,6 +178,13 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 					this.userService.logIn(userName, password).subscribe((_) => {
 						window.location.reload();
 					});
+				} else {
+					this.userService.getRecorderName().subscribe((recorderName) => {
+						this.userService.setRecorderName(recorderName);
+						if(this.userService.isRecorder()) {
+							this.setupRecorder();
+						}
+					});
 				}
 			} else if (!this.userService.isLogged) {
 				this.utilsSrv.showErrorMessage(
@@ -230,6 +237,33 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.ovSettings = new OvSettingsModel().setDefaultTeachingSettings(this.userService, this.roomName);
 			this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());
 			this.whiteboardOptions = this.whiteboardService.getWhiteboardOptions(this.roomName);
+		});
+	}
+
+	setupRecorder() {
+		this.route.paramMap.subscribe((params) => {
+			this.roomName = params.get('roomName');
+			this.lightTheme = false;
+			this.ovSettings = new OvSettingsModel().setDefaultRecorderSettings();
+			this.whiteboardOptions = this.whiteboardService.getWhiteboardOptions(this.roomName);
+
+			this.oVSessionService.setSessionId(this.roomName);
+			this.mySessionId = this.oVSessionService.getSessionId();
+
+			this.hasVideoDevices = false;
+			this.hasAudioDevices = false;
+
+			this.subscribeToLocalUsers();
+			this.subscribeToRemoteStreamers();
+			this.subscribeToRemoteUsers();
+
+			setTimeout(() => {
+				this.openviduLayout = new OpenViduLayout();
+				this.openviduLayoutOptions = this.utilsSrv.getOpenviduLayoutOptions();
+				this.openviduLayout.initLayoutContainer(document.getElementById('layout'), this.openviduLayoutOptions);
+				this.checkSizeComponent();
+				this.joinToSession();
+			}, 50);
 		});
 	}
 

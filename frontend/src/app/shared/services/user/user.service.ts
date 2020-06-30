@@ -22,7 +22,9 @@ export class UserService {
 	user: User;
 	auth: string;
 
-	baseURL: string = '/ovTeachingApi';
+	private baseURL: string = '/ovTeachingApi';
+
+	recorderName: string;
 
 	constructor(private http: HttpClient) {
 		let user = JSON.parse(localStorage.getItem('currentUser'));
@@ -84,6 +86,23 @@ export class UserService {
 			}),
 			catchError((error) => this.handleError(error))
 		);
+	}
+
+	getRecorderName(): Observable<string> {
+		return this.http.get(this.baseURL + '/recorderName', { responseType: 'text' }).pipe(
+			map((recorderName) => {
+				return recorderName;
+			}),
+			catchError((error) => this.handleError(error))
+		);
+	}
+
+	setRecorderName(name: string) {
+		this.recorderName = name;
+	}
+
+	isRecorder(): boolean {
+		return !!this.user && !!this.recorderName && this.user?.name == this.recorderName;
 	}
 
 	private handleError(error: any) {

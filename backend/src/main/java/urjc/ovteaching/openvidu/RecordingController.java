@@ -191,4 +191,14 @@ public class RecordingController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	/**
+	 * The recorder userName
+	 * 
+	 * @return the recorder name
+	 */
+	@GetMapping("/recorderName")
+	public ResponseEntity<String> getRecorderName() {
+		return new ResponseEntity<>(openViduComponent.getRecorderName(), HttpStatus.OK);
+	}
 }

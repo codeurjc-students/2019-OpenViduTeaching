@@ -252,6 +252,10 @@ public class OpenViduComponent {
 		this.recorderUserName = userName;
 		this.recorderUserPass = password;
 	}
+	
+	public String getRecorderName() {
+		return this.recorderUserName;
+	}
 
 	public boolean isRecorderUser(User user) {
 		return user.getName().equals(this.recorderUserName);

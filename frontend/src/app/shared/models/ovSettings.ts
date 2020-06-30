@@ -80,4 +80,21 @@ export class OvSettingsModel {
 		};
 		return this;
 	}
+
+	public setDefaultRecorderSettings(): OvSettingsModel {
+		this.ovSettings = {
+			chat: true,
+			autopublish: false,
+			toolbarButtons: {
+				video: false,
+				audio: false,
+				fullscreen: false,
+				screenShare: false,
+				layoutSpeaking: false,
+				exit: false,
+				raiseHand: false
+			}
+		};
+		return this;
+	}
 }

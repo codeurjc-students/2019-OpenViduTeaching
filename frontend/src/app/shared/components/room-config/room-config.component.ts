@@ -342,15 +342,17 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 
 	private handlePublisherError(publisher: Publisher) {
 		publisher.once('accessDenied', (e: any) => {
-			let message: string;
-			if (e.name === 'DEVICE_ACCESS_DENIED') {
-				message = 'Access to media devices was not allowed.';
+			if(!this.userService.isRecorder()) {
+				let message: string;
+				if (e.name === 'DEVICE_ACCESS_DENIED') {
+					message = 'Access to media devices was not allowed.';
+				}
+				if (e.name === 'NO_INPUT_SOURCE_SET') {
+					message = 'No video or audio devices have been found. Please, connect at least one.';
+				}
+				this.utilsSrv.showErrorMessage(e.name.replace(/_/g, ' '), message, true);
+				this.log.e(e.message);
 			}
-			if (e.name === 'NO_INPUT_SOURCE_SET') {
-				message = 'No video or audio devices have been found. Please, connect at least one.';
-			}
-			this.utilsSrv.showErrorMessage(e.name.replace(/_/g, ' '), message, true);
-			this.log.e(e.message);
 		});
 	}
 }
