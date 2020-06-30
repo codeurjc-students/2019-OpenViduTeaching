@@ -317,7 +317,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.log.d('Leaving session...');
 		if (!this.showConfigRoomCard) {
 			this.networkSrv.keepaliveRemoveUser(this.roomName);
-			if (this.localUsers[0].getPositionInHandRaiseQueue() > 0) {
+			if (this.localUsers[0].getPositionInHandRaiseQueue() > 0 && !this.userService.isRecorder()) {
 				this.raiseHandService.keepaliveLowerHand(this.roomName, this.localUsers[0].getConnectionId());
 			}
 		}
@@ -680,21 +680,25 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	}
 
 	private sendNicknameSignal(nickname: string, connection?: Connection) {
-		const signalOptions: SignalOptions = {
-			data: JSON.stringify({ nickname }),
-			type: 'nicknameChanged',
-			to: connection ? [connection] : undefined
-		};
-		this.session.signal(signalOptions);
+		if(!this.userService.isRecorder()) {
+			const signalOptions: SignalOptions = {
+				data: JSON.stringify({ nickname }),
+				type: 'nicknameChanged',
+				to: connection ? [connection] : undefined
+			};
+			this.session.signal(signalOptions);
+		}
 	}
 
 	private sendFirstConnectionSignal() {
-		const signalOptions: SignalOptions = {
-			data: '',
-			type: 'firstConnection',
-			to: undefined
-		};
-		this.session.signal(signalOptions);
+		if(!this.userService.isRecorder()) {
+			const signalOptions: SignalOptions = {
+				data: '',
+				type: 'firstConnection',
+				to: undefined
+			};
+			this.session.signal(signalOptions);
+		}
 	}
 
 	private updateOpenViduLayout(timeout?: number) {
