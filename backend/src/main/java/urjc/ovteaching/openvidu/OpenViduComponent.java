@@ -140,9 +140,6 @@ public class OpenViduComponent {
 			Session session = this.openVidu.createSession(sp);
 			this.roomIdSession.put(room.getId(), session);
 			this.sessionIdUserIdToken.put(session.getSessionId(), new HashMap<>());
-			if (RECORDING_ENABLED) {
-				this.roomIdRecordingsId.put(room.getId(), new ArrayList<>());
-			}
 			return session.getSessionId();
 		} catch (OpenViduJavaClientException | OpenViduHttpException e) {
 			System.out.println(e.toString());
@@ -273,6 +270,9 @@ public class OpenViduComponent {
 	public String startRecording(Room room, String origin) {
 		if (RECORDING_ENABLED) {
 			try {
+				if(this.roomIdRecordingsId.get(room.getId()) == null) {
+					this.roomIdRecordingsId.put(room.getId(), new ArrayList<>());
+				}
 				String sessionId = this.roomIdSession.get(room.getId()).getSessionId();
 				RecordingProperties properties;
 				if (RECORDING_CUSTOM_ENABLED) {
