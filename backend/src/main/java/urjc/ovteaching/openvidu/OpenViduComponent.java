@@ -226,7 +226,7 @@ public class OpenViduComponent {
 
 	public boolean isSessionEmpty(Room room) {
 		Session session = this.roomIdSession.get(room.getId());
-		return this.sessionIdUserIdToken.get(session.getSessionId()).isEmpty();
+		return this.sessionIdUserIdToken.get(session.getSessionId()) == null || this.sessionIdUserIdToken.get(session.getSessionId()).isEmpty();
 	}
 
 	public void removeSession(Room room) {
