@@ -64,4 +64,8 @@ export class UserServiceMock {
 	isInRoom(roomName: string): boolean {
 		return true;
 	}
+
+	isRecorder() {
+		return false;
+	}
 }
