@@ -28,6 +28,7 @@ import urjc.ovteaching.jsonReader.ConflictDatabaseException;
 import urjc.ovteaching.jsonReader.JsonReaderException;
 import urjc.ovteaching.jsonReader.JsonReaderService;
 import urjc.ovteaching.jsonReader.NotFoundDatabaseException;
+import urjc.ovteaching.openvidu.OpenViduComponent;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
 import urjc.ovteaching.users.UserService;
@@ -45,6 +46,9 @@ public class RoomController {
 
 	@Autowired
 	private UserComponent userComponent;
+	
+	@Autowired
+	OpenViduComponent openviduComponent;
 	
 	@Autowired
 	private JsonReaderService jsonReaderService;
@@ -210,7 +214,7 @@ public class RoomController {
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		if (room.isInRoom(user)) {
+		if (room.isInRoom(user) || openviduComponent.isRecorderUser(user)) {
 			Collection<User> connected = this.roomServ.getConnectedAssistants(room);
 			JSONObject response = new JSONObject();
 
@@ -310,7 +314,7 @@ public class RoomController {
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		if (room.isInRoom(user)) {
+		if (room.isInRoom(user) || openviduComponent.isRecorderUser(user)) {
 			this.roomServ.checkConnectedHandRaisedUsers(room);
 			this.roomServ.save(room);
 			return new ResponseEntity<>(room.getHandRaisedUsers(), HttpStatus.OK);
