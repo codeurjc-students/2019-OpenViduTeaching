@@ -263,6 +263,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 				this.openviduLayout.initLayoutContainer(document.getElementById('layout'), this.openviduLayoutOptions);
 				this.checkSizeComponent();
 				this.joinToSession();
+				this.menuService.toggleMenu();
 			}, 50);
 		});
 	}
