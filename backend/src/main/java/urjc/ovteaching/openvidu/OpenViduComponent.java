@@ -223,7 +223,8 @@ public class OpenViduComponent {
 
 	public boolean isSessionEmpty(Room room) {
 		Session session = this.roomIdSession.get(room.getId());
-		return this.sessionIdUserIdToken.get(session.getSessionId()) == null || this.sessionIdUserIdToken.get(session.getSessionId()).isEmpty();
+		return this.sessionIdUserIdToken.get(session.getSessionId()) == null
+				|| this.sessionIdUserIdToken.get(session.getSessionId()).isEmpty();
 	}
 
 	public void removeSession(Room room) {
@@ -249,7 +250,7 @@ public class OpenViduComponent {
 		this.recorderUserName = userName;
 		this.recorderUserPass = password;
 	}
-	
+
 	public String getRecorderName() {
 		return this.recorderUserName;
 	}
@@ -259,8 +260,11 @@ public class OpenViduComponent {
 	}
 
 	public String generateRecorderToken(Room room) {
-		return "wss://" + this.OPENVIDU_URL.replace("https://", "").replace("/", "") + "?sessionId="
+		String token = "wss://" + this.OPENVIDU_URL.replace("https://", "").replace("/", "") + "?sessionId="
 				+ this.roomIdSession.get(room.getId()).getSessionId() + "&secret=" + this.SECRET + "&recorder=true";
+		System.out.println("Generating recorder token:");
+		System.out.println(token);
+		return token;
 	}
 
 	public boolean isRecordingEnabled() {
@@ -270,7 +274,7 @@ public class OpenViduComponent {
 	public String startRecording(Room room, String origin) {
 		if (RECORDING_ENABLED) {
 			try {
-				if(this.roomIdRecordingsId.get(room.getId()) == null) {
+				if (this.roomIdRecordingsId.get(room.getId()) == null) {
 					this.roomIdRecordingsId.put(room.getId(), new ArrayList<>());
 				}
 				String sessionId = this.roomIdSession.get(room.getId()).getSessionId();
@@ -284,6 +288,7 @@ public class OpenViduComponent {
 					properties = new RecordingProperties.Builder().outputMode(Recording.OutputMode.COMPOSED).build();
 				}
 				String recordingId = this.openVidu.startRecording(sessionId, properties).getId();
+				System.out.println("Recording started");
 				this.roomIdRecordingsId.get(room.getId()).add(recordingId);
 				return recordingId;
 			} catch (OpenViduJavaClientException | OpenViduHttpException e) {
@@ -303,7 +308,9 @@ public class OpenViduComponent {
 			try {
 				List<String> recordings = this.roomIdRecordingsId.get(room.getId());
 				String recordingId = recordings.get(recordings.size() - 1);
-				return this.openVidu.stopRecording(recordingId).getId();
+				recordingId = this.openVidu.stopRecording(recordingId).getId();
+				System.out.println("Recording stopped");
+				return recordingId;
 			} catch (OpenViduJavaClientException | OpenViduHttpException e) {
 				System.out.println(e.toString());
 				e.printStackTrace();
