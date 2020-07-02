@@ -92,10 +92,10 @@ export class WhiteboardService {
 		return this.history;
 	}
 
-	sendWhiteboardHistorySignal(connection: Connection) {
+	sendWhiteboardHistorySignal(connectionId: string) {
 		if (this.isActive && this.userService.canStream(this.openviduSessionService.getSessionId())) {
 			this.signalService
-				.sendSignal(this.openviduSessionService.getSessionId(), 'whiteboardHistory', [connection.connectionId], {
+				.sendSignal(this.openviduSessionService.getSessionId(), 'whiteboardHistory', [connectionId], {
 					history: this.getDrawingHistory(),
 					undoHistory: this.undoHistory
 				})

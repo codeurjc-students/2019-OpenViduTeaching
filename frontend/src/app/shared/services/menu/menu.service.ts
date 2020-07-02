@@ -6,6 +6,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { ILogger } from '../../types/logger-type';
 import { LoggerService } from '../logger/logger.service';
 import { MatTabGroup } from '@angular/material/tabs';
+import { WhiteboardService } from '../whiteboard/whiteboard.service';
 
 export interface ConnectedAssistant {
 	name: string;
@@ -53,7 +54,8 @@ export class MenuService {
 	constructor(
 		private loggerSrv: LoggerService,
 		private openviduSessionService: OpenViduSessionService,
-		private roomService: RoomService
+		private roomService: RoomService,
+		private whiteboardService: WhiteboardService
 	) {
 		this.log = this.loggerSrv.get('MenuService');
 		this.toggleMenuObs = this._toggleMenu.asObservable();
@@ -141,6 +143,7 @@ export class MenuService {
 		const session = this.openviduSessionService.getWebcamSession();
 		session.on('recordingStarted', (event: any) => {
 			this.setIsBeingRecorded(true);
+			this.whiteboardService.sendWhiteboardHistorySignal("RECORDER");
 		});
 		session.on('recordingStopped', (event: any) => {
 			this.setIsBeingRecorded(false);
