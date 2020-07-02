@@ -79,7 +79,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.whiteboard = canvasWhiteboard;
 			this.updateOpenViduLayout();
 			this.onToggleVideoSize({ element: this.whiteboard.nativeElement, resetAll: true });
-			this.resize(200);
+			const timeout = this.userService.isRecorder() ? 500 : 200;
+			this.resize(timeout);
 		} else {
 			this.updateOpenViduLayout();
 		}
