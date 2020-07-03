@@ -95,6 +95,15 @@ export class HomeComponent implements OnInit {
 						});
 					}
 				}
+				this.currentVideos.sort((a, b) => {
+					if(a.createdAt < b.createdAt) {
+						return -1;
+					}
+					if(a.createdAt > b.createdAt) {
+						return 1;
+					}
+					return 0;
+				});
 				this.videosDrawer.open();
 			},
 			(error) => console.log(error)
