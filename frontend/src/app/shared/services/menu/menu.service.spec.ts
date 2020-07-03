@@ -7,6 +7,8 @@ import { TestBed } from '@angular/core/testing';
 import { MenuService } from './menu.service';
 import { LoggerService } from '../logger/logger.service';
 import { LoggerServiceMock } from '../logger/logger.service.mock';
+import { WhiteboardService } from '../whiteboard/whiteboard.service';
+import { WhiteboardServiceMock } from '../whiteboard/whiteboard.service.mock';
 
 describe('MenuService', () => {
   let service: MenuService;
@@ -16,7 +18,8 @@ describe('MenuService', () => {
 			providers: [
         { provide: LoggerService, useClass: LoggerServiceMock },
         { provide: RoomService, useClass: RoomServiceMock },
-        { provide: OpenViduSessionService, useClass: OpenViduSessionServiceMock }
+        { provide: OpenViduSessionService, useClass: OpenViduSessionServiceMock },
+        { provide: WhiteboardService, useClass: WhiteboardServiceMock },
 			]
 		});
     service = TestBed.inject(MenuService);

@@ -4,6 +4,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { RaiseHandService } from './raise-hand.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationsServiceMock } from '../notifications/notifications.service.mock';
 
 describe('RaiseHandService', () => {
   let service: RaiseHandService;
@@ -13,6 +15,7 @@ describe('RaiseHandService', () => {
       imports: [HttpClientTestingModule],
       providers: [
         { provide: SignalService, useClass: SignalServiceMock },
+        { provide: NotificationsService, useClass: NotificationsServiceMock },
 			]
     });
     service = TestBed.inject(RaiseHandService);
