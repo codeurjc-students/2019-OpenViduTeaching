@@ -70,5 +70,5 @@
         "start": "ng serve --proxy-config proxy.conf.json",
         "test": "ng test openvidu-teaching --watch=false --code-coverage"
     },
-    "version": "1.1.0"
+    "version": "1.2.0"
 }
