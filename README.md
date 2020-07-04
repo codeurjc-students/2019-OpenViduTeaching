@@ -80,5 +80,5 @@ Note that this roadmap may change throughout development.
 
 For information on how to deploy the app [CLICK HERE](/documentation/deploy.md).\
 For information on how to develop the app [CLICK HERE](/documentation/development.md).\
-For information on the configuration properties [CLICK HERE]
+For information on the configuration properties [CLICK HERE](/documentation/configuration.md).\
 For information on the REST API [CLICK HERE](/documentation/api.md).
