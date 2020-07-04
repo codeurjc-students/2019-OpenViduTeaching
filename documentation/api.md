@@ -19,6 +19,7 @@ This document will explain how is used the Licensoft-Web API.
     * [Add user to room](#add-user-to-room)
     * [Get assistants](#get-assistants)
     * [Create rooms](#create-rooms)
+    * [Add users to room](#add-users-to-room)
     * [Raise hand](#raise-hand)
     * [Lower hand](#lower-hand)
     * [Get hand raised users](#get-hand-raised-users)
@@ -416,6 +417,57 @@ Creates rooms with the specified names. Two rooms cannot have the same name.
                 },
                 {
                     "name": "roomB"
+                }
+            ]
+        }
+        ~~~~
+  - **Response**:
+    200 OK
+
+### Add users to room ###
+Adds already existing users to a room with the specified role for each one of them.
+- **URL**  
+   `/ovTeachingApi/room/{roomName}/users`
+- **Method**  
+    `POST`
+- **Required role**:  
+    System: ADMIN
+    Room: Moderator
+- **Data Params**
+    * Body:
+        ~~~~ typescript
+        {
+            "moderators"?: [
+                {
+                    "name": string
+                }
+            ],
+            "presenters"?: [
+                {
+                    "name": string
+                }
+            ],
+            "participants"?: [
+                {
+                    "name": string
+                }
+            ]
+        }
+        ~~~~
+- **Example**
+  - **Request**:
+    `/ovTeachingApi/room/roomA/users`\
+    Username: teacher
+    Password: pass
+    * Body:
+        ~~~~ typescript
+        {
+            "participants": [
+                {
+                    "name": "participant1"
+                },
+                {
+                    "name": "participant2"
                 }
             ]
         }
