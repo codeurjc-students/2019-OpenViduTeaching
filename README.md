@@ -9,7 +9,7 @@ Check out the [Medium blog](https://medium.com/@diego.mzmn) for updates
 
 - [Introduction](#introduction) 
 - [Project Roadmap](#project-roadmap)
-- [Development & Installation](#development-&-installation)
+- [Development & Installation](#development-and-installation)
 
 ## Introduction ##
 
@@ -76,8 +76,9 @@ In the last gif we see how moderators can open, use and close the whiteboard.
 
 Note that this roadmap may change throughout development.
 
-## Development & Installation ##
+## Development and Installation ##
 
 For information on how to deploy the app [CLICK HERE](/documentation/deploy.md).\
 For information on how to develop the app [CLICK HERE](/documentation/development.md).\
+For information on the configuration properties [CLICK HERE]
 For information on the REST API [CLICK HERE](/documentation/api.md).

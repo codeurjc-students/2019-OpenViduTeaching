@@ -10,46 +10,7 @@ You have four options for deploying the app. However, the first three options ar
 
 	* You can choose your secret however you like. Check the [OpenVidu tutorials](https://openvidu.io/docs/tutorials/) for more info.
 
-	* Data is initialized from a json file. You will have to mount the file into the container and add and enviroment variable with the absolute path to where it was mounted (otherwise it will use the [default file](https://github.com/codeurjc-students/2019-OpenViduTeaching/blob/master/backend/src/main/resources/json/initialData.json)). In the example above we mount it to `/initialData.json` and add `-e initialDataFile="/initialData.json"`.
-	Here is an example of a valid json for the initial rooms and users:
-	~~~~ json
-	{
-		"rooms": [
-			{
-				"name": "roomA"
-			},
-			{
-				"name": "roomB"
-			}
-		],
-		"users": [
-			{
-				"name": "student1",
-				"password": "pass",
-				"participatedRooms": [
-					"roomA"
-				]
-			},
-			{
-				"name": "student2",
-				"password": "pass",
-				"presentedRooms": [
-					"roomB"
-				]
-			},
-			{
-				"name": "teacher",
-				"password": "pass",
-				"moddedRooms": [
-					"roomA",
-					"roomB"
-				]
-			}
-		]
-	}
-	~~~~
-	As you can see, the moddedRooms, presentedRooms and participatedRooms properties are optional. A user can have a different role for each room, so each user can have none, one or multiple rooms of each type in the json.
-
+	* Data is initialized from a json file. You will have to mount the file into the container and add and enviroment variable with the absolute path to where it was mounted (otherwise it will use the [default file](https://github.com/codeurjc-students/2019-OpenViduTeaching/blob/master/backend/src/main/resources/json/initialData.json)). In the example above we mount it to `/initialData.json` and add `-e initialDataFile="/initialData.json"`. Take a look at the [configuration documentation](./configuration.md) for for info.
 
 ### JAR + Openvidu+KMS Docker development container ###
 
@@ -93,5 +54,6 @@ services:
             OPENVIDU_SECRET: ${OPENVIDU_SECRET}
             INITIAL_DATA_FILE: ${DOCKER_INITIAL_FILE_PATH}
             OPENVIDU_RECORDING: ${OPENVIDU_RECORDING}
-            OPENVIDU_RECORDING_PATH: ${OPENVIDU_RECORDING_PATH}
+			OPENVIDU_RECORDING_PATH: ${OPENVIDU_RECORDING_PATH}
+			OPENVIDU_RECORDING_CUSTOM: ${OPENVIDU_RECORDING_CUSTOM}
 ````
