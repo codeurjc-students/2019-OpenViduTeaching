@@ -266,6 +266,10 @@ public class OpenViduComponent {
 		System.out.println(token);
 		return token;
 	}
+	
+	public boolean isCustomRecordingLayoutEnabled() {
+		return RECORDING_CUSTOM_ENABLED;
+	}
 
 	public boolean isRecordingEnabled() {
 		return RECORDING_ENABLED;

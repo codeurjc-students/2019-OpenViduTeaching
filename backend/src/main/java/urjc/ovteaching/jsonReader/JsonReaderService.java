@@ -31,7 +31,9 @@ public class JsonReaderService {
 			throws JsonReaderException, NotFoundDatabaseException, ConflictDatabaseException {
 		this.readRooms((JSONArray) json.get("rooms"));
 		this.readUsers((JSONArray) json.get("users"));
-		this.readRecorder((JSONObject) json.get("recorder"));
+		if(openviduComponent.isRecordingEnabled() && openviduComponent.isCustomRecordingLayoutEnabled()) {
+			this.readRecorder((JSONObject) json.get("recorder"));
+		}
 	}
 
 	public void readRooms(JSONArray roomList) throws JsonReaderException, ConflictDatabaseException {
