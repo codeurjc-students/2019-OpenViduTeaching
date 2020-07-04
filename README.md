@@ -65,14 +65,14 @@ In the last gif we see how moderators can open, use and close the whiteboard.
 	* Pop up to get the moderator's attention
 - [X] Basic session recording
 	* Video only recordings with composed layout
-- [ ] Full fledged session recording including chat
-	* Chat messages will be displayed at the time they were posted, with links to the time offset in the video player
-- [ ] Document sharing/presentation
-- [ ] Settings
-- [ ] Whiteboard sharing 
-- [ ] Polls/quizzes
-- [ ] Mood/status sharing
-	* Users may display their mood for a brief time
+- [X] Whiteboard
+  * A whiteboard where moderators can draw and all other assistants will see it
+- [X] Full fledged session recording including chat, whiteboard, popups...
+	* Using the external custom layout for OpenVidu recordings
+- [X] Complete API to allow for integrations with other systems
+- [ ] Invite links don't require creating a new account
+- [ ] Subtle indications of a user speaking
+- [ ] Configurable colors and logo
 
 Note that this roadmap may change throughout development.
 
