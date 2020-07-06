@@ -88,7 +88,7 @@ public class JsonReaderService {
 		}
 		String password = (String) recorderObject.get("password");
 		String[] roles = {"ROLE_USER", "ROLE_ADMIN"};
-		User user = new User(userName, password, roles);
+		User user = new User(userName, password, false, roles);
 		this.userServ.save(user);
 		this.openviduComponent.setRecorderUser(userName, password);
 		System.out.println("Saved recorder user: " + userName);
@@ -164,7 +164,7 @@ public class JsonReaderService {
 		if (moddedRooms != null && !moddedRooms.isEmpty()) {
 			roles[1] = "ROLE_ADMIN";
 		}
-		User user = new User(userName, password, roles);
+		User user = new User(userName, password, false, roles);
 
 		if (moddedRooms != null && !moddedRooms.isEmpty()) {
 			for (String moddedName : moddedRooms) {

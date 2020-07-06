@@ -15,6 +15,7 @@ import javax.persistence.ManyToMany;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import urjc.ovteaching.rooms.Room;
@@ -50,14 +51,18 @@ public class User {
 	@JsonView(WithRooms.class)
 	@ManyToMany
 	private List<Room> presentedRooms;
+	
+	@JsonIgnore
+	private boolean isTemporal;
 
-	public User(String name, String password, String... roles) {
+	public User(String name, String password, boolean isTemporal, String... roles) {
 		this.name = name;
 		this.passwordHash = new BCryptPasswordEncoder().encode(password);
 		this.roles = new ArrayList<>(Arrays.asList(roles));
 		this.moddedRooms = new ArrayList<>();
 		this.participatedRooms = new ArrayList<>();
 		this.presentedRooms = new ArrayList<>();
+		this.isTemporal = isTemporal;
 	}
 
 	protected User() {
@@ -127,6 +132,10 @@ public class User {
 
 	public Collection<Room> getPresentedRooms() {
 		return presentedRooms;
+	}
+	
+	public boolean isTemporal() {
+		return this.isTemporal;
 	}
 
 	@Override

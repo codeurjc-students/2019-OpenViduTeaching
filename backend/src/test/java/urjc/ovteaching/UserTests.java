@@ -50,8 +50,8 @@ public class UserTests {
 
 	@Before
 	public void initialize() {
-		User user1 = new User("test", "pass", "ROLE_ADMIN", "ROLE_USER");
-		User user2 = new User("test2", "pass", "ROLE_USER");
+		User user1 = new User("test", "pass", false, "ROLE_ADMIN", "ROLE_USER");
+		User user2 = new User("test2", "pass", false, "ROLE_USER");
 		List<User> l = new ArrayList<>();
 		l.add(user2);
 		l.add(user1);
@@ -63,7 +63,7 @@ public class UserTests {
 
 	@Test
 	public void testLogIn() throws Exception {
-		User user = new User("test", "pass", "ROLE_ADMIN", "ROLE_USER");
+		User user = new User("test", "pass", false, "ROLE_ADMIN", "ROLE_USER");
 		given(this.userComponent.isLoggedUser()).willReturn(true);
 		given(this.userComponent.getLoggedUser()).willReturn(user);
 
@@ -84,7 +84,7 @@ public class UserTests {
 
 	@Test
 	public void testLogOut() throws Exception {
-		User user = new User("test", "pass", "ROLE_ADMIN", "ROLE_USER");
+		User user = new User("test", "pass", false, "ROLE_ADMIN", "ROLE_USER");
 		given(this.userComponent.isLoggedUser()).willReturn(true);
 		given(this.userComponent.getLoggedUser()).willReturn(user);
 
@@ -134,7 +134,7 @@ public class UserTests {
 	
 	@Test
 	public void getUserRooms() throws Exception {
-		User user = new User("test", "pass", "ROLE_ADMIN", "ROLE_USER");
+		User user = new User("test", "pass", false, "ROLE_ADMIN", "ROLE_USER");
 		user.addModdedRoom(new Room("roomTest1"));
 		user.addModdedRoom(new Room("roomTest2"));
 		
@@ -154,7 +154,7 @@ public class UserTests {
 	
 	@Test
 	public void getUserRoomsNotFound() throws Exception {
-		User user = new User("test", "pass", "ROLE_ADMIN", "ROLE_USER");
+		User user = new User("test", "pass", false, "ROLE_ADMIN", "ROLE_USER");
 		user.addModdedRoom(new Room("roomTest1"));
 		user.addModdedRoom(new Room("roomTest2"));
 		

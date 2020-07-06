@@ -94,7 +94,7 @@ public class RoomService {
 		Iterator<JSONObject> it = room.getHandRaisedUsers().iterator();
 		while(it.hasNext()) {
 			JSONObject nextUser = it.next();
-			User fakeUser = new User((String) nextUser.get("username"), "pass", "USER_ROLE");
+			User fakeUser = new User((String) nextUser.get("username"), "pass", false, "USER_ROLE");
 			if(!this.openviduComponent.getConnectedAssistants(room).contains(fakeUser)) {
 				it.remove();
 			}

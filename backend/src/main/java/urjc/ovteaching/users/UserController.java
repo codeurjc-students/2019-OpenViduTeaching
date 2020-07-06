@@ -121,7 +121,7 @@ public class UserController {
 	public ResponseEntity<User> register(@PathVariable String user, @PathVariable String pass, HttpServletRequest request) {
 		User newUser = userServ.findByName(user);
 		if (newUser == null) {
-			newUser = userServ.save(new User(user, pass, "ROLE_USER"));
+			newUser = userServ.save(new User(user, pass, true, "ROLE_USER"));
 			try {
 				request.login(user, pass);
 			} catch (ServletException e) {

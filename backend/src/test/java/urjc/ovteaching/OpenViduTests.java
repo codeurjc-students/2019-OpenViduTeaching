@@ -64,7 +64,7 @@ public class OpenViduTests {
 
 	@Before
 	public void initialize() {
-		User user = new User("test", "pass", "ROLE_ADMIN", "ROLE_USER");
+		User user = new User("test", "pass", false, "ROLE_ADMIN", "ROLE_USER");
 		Room room = new Room("testRoom");
 		user.addModdedRoom(room);
 		room.getModerators().add(user);

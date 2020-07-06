@@ -54,7 +54,7 @@ public class RoomTests {
 
 	@Before
 	public void initialize() {
-		User user = new User("test", "pass", "ROLE_ADMIN", "ROLE_USER");
+		User user = new User("test", "pass", false, "ROLE_ADMIN", "ROLE_USER");
 		Room room = new Room("testRoom");
 		user.addModdedRoom(room);
 		room.getModerators().add(user);
@@ -217,7 +217,7 @@ public class RoomTests {
 	
 	@Test
 	public void logUserInRoomMakeModeratorAndAdmin() throws Exception {
-		User user = new User("testMod", "pass", "ROLE_USER");
+		User user = new User("testMod", "pass", false, "ROLE_USER");
 		Room room = this.roomService.findByName("otherRoom");
 		user.addParticipatedRoom(room);
 		room.getParticipants().add(user);
@@ -297,10 +297,10 @@ public class RoomTests {
 	@Test
 	public void getAssistants() throws Exception {
 		Room room = this.roomService.findByName("testRoom");
-		User presenter = new User("testPresenter", "pass", "ROLE_USER");
+		User presenter = new User("testPresenter", "pass", false, "ROLE_USER");
 		presenter.addPresentedRoom(room);
 		room.getPresenters().add(presenter);
-		User participant = new User("testParticipant", "pass", "ROLE_USER");
+		User participant = new User("testParticipant", "pass", false, "ROLE_USER");
 		participant.addParticipatedRoom(room);
 		room.getParticipants().add(participant);
 		
