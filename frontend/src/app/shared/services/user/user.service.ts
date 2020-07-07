@@ -11,6 +11,7 @@ export interface User {
 	moddedRooms: Room[];
 	presentedRooms: Room[];
 	participatedRooms: Room[];
+	isTemporal: boolean;
 }
 
 @Injectable({

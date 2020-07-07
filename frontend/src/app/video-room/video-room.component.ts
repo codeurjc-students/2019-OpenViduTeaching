@@ -318,7 +318,14 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	leaveSession() {
 		this.log.d('Leaving session...');
 		if (!this.showConfigRoomCard) {
-			this.networkSrv.keepaliveRemoveUser(this.roomName);
+			const removePromise = this.networkSrv.keepaliveRemoveUser(this.roomName);
+			if(!!removePromise) {
+				removePromise.then(() => {
+					if(this.userService.user.isTemporal) {
+						this.userService.removeCurrentUser();
+					}
+				});
+			}
 			if (this.localUsers[0].getPositionInHandRaiseQueue() > 0 && !this.userService.isRecorder()) {
 				this.raiseHandService.keepaliveLowerHand(this.roomName, this.localUsers[0].getConnectionId());
 			}

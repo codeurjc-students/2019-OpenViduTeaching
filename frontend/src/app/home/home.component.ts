@@ -47,7 +47,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	loggedIn() {
-		if (this.userSrv.isLogged) {
+		if (this.userSrv.isLogged && !this.userSrv.user.isTemporal) {
 			this.getRooms();
 			this.checkIsRecordingEnabled();
 		}
