@@ -321,7 +321,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			const removePromise = this.networkSrv.keepaliveRemoveUser(this.roomName);
 			if(!!removePromise) {
 				removePromise.then(() => {
-					if(this.userService.user.isTemporal) {
+					if(this.userService.user.isTemporary) {
 						this.userService.removeCurrentUser();
 					}
 				});

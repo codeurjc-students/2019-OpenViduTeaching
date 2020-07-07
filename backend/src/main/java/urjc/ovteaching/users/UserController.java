@@ -113,7 +113,7 @@ public class UserController {
 		} else {
 			session.invalidate();
 			User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
-			if(user.isTemporal()) {
+			if(user.isTemporary()) {
 				this.userServ.delete(user);
 			}
 			return new ResponseEntity<>(true, HttpStatus.OK);

@@ -61,7 +61,7 @@ public class User {
 		this.moddedRooms = new ArrayList<>();
 		this.participatedRooms = new ArrayList<>();
 		this.presentedRooms = new ArrayList<>();
-		this.isTemporal = isTemporal;
+		this.isTemporary = isTemporary;
 	}
 
 	protected User() {
@@ -133,8 +133,16 @@ public class User {
 		return presentedRooms;
 	}
 	
-	public boolean isTemporal() {
-		return this.isTemporal;
+	public boolean isInAnotherRoom(Room room) {
+		int size = this.participatedRooms.size();
+		if(size>0) {
+			
+		}
+		return false;
+	}
+	
+	public boolean isTemporary() {
+		return this.isTemporary;
 	}
 
 	@Override
