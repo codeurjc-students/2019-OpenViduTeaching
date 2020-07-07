@@ -111,11 +111,11 @@ public class UserController {
 		if (!userComponent.isLoggedUser()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		} else {
-			session.invalidate();
 			User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 			if(user.isTemporary()) {
 				this.userServ.delete(user);
 			}
+			session.invalidate();
 			return new ResponseEntity<>(true, HttpStatus.OK);
 		}
 	}
