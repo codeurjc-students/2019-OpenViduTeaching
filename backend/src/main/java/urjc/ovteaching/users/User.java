@@ -52,9 +52,9 @@ public class User {
 	private List<Room> presentedRooms;
 	
 	@JsonView(WithRooms.class)
-	private boolean isTemporal;
+	private boolean isTemporary;
 
-	public User(String name, String password, boolean isTemporal, String... roles) {
+	public User(String name, String password, boolean isTemporary, String... roles) {
 		this.name = name;
 		this.passwordHash = new BCryptPasswordEncoder().encode(password);
 		this.roles = new ArrayList<>(Arrays.asList(roles));
