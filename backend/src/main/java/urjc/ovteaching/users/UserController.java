@@ -112,6 +112,10 @@ public class UserController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		} else {
 			session.invalidate();
+			User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
+			if(user.isTemporal()) {
+				this.userServ.delete(user);
+			}
 			return new ResponseEntity<>(true, HttpStatus.OK);
 		}
 	}
