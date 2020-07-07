@@ -25,6 +25,7 @@ import urjc.ovteaching.jsonReader.ConflictDatabaseException;
 import urjc.ovteaching.jsonReader.JsonReaderException;
 import urjc.ovteaching.jsonReader.JsonReaderService;
 import urjc.ovteaching.jsonReader.NotFoundDatabaseException;
+import urjc.ovteaching.jsonReader.TemporaryUserException;
 import urjc.ovteaching.rooms.Room;
 
 @RequestMapping("/ovTeachingApi")
@@ -89,6 +90,10 @@ public class UserController {
 			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
 		} catch (ConflictDatabaseException e) {
 			String message = e.getClassName() + " \"" + e.getName() + "\" already found in the database";
+			System.err.println(message);
+			return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+		} catch (TemporaryUserException e) {
+			String message = "User: " + e.getUserName() + " was created temporarily and cannot be added to more than one room";
 			System.err.println(message);
 			return new ResponseEntity<>(message, HttpStatus.CONFLICT);
 		}

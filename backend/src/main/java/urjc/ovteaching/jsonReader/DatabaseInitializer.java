@@ -1,5 +1,6 @@
 package urjc.ovteaching.jsonReader;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
@@ -7,6 +8,7 @@ import javax.annotation.PostConstruct;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
@@ -41,7 +43,8 @@ public class DatabaseInitializer {
 			System.err.println("Room not found: " + e.getRoomName() + " for user: " + e.getUserName());
 		} catch (ConflictDatabaseException e) {
 			System.err.println(e.getClassName() + " \"" + e.getName() + "\" already found in the database");
-		} catch (Exception e) {
+		} catch (IOException | ParseException | TemporaryUserException e) {
+			System.err.println(e.toString());
 			e.printStackTrace();
 		}
 	}

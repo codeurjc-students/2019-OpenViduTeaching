@@ -28,6 +28,7 @@ import urjc.ovteaching.jsonReader.ConflictDatabaseException;
 import urjc.ovteaching.jsonReader.JsonReaderException;
 import urjc.ovteaching.jsonReader.JsonReaderService;
 import urjc.ovteaching.jsonReader.NotFoundDatabaseException;
+import urjc.ovteaching.jsonReader.TemporaryUserException;
 import urjc.ovteaching.openvidu.OpenViduComponent;
 import urjc.ovteaching.users.User;
 import urjc.ovteaching.users.UserComponent;
@@ -109,6 +110,10 @@ public class RoomController {
 			String message = "User: " + e.getUserName() + " not found";
 			System.err.println(message);
 			return new ResponseEntity<>(message, HttpStatus.NOT_FOUND);
+		} catch (TemporaryUserException e) {
+			String message = "User: " + e.getUserName() + " was created temporarily and cannot be added to more than one room";
+			System.err.println(message);
+			return new ResponseEntity<>(message, HttpStatus.CONFLICT);
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

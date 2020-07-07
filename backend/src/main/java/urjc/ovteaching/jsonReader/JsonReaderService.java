@@ -23,15 +23,15 @@ public class JsonReaderService {
 
 	@Autowired
 	RoomService roomServ;
-	
+
 	@Autowired
 	OpenViduComponent openviduComponent;
 
 	public void readJson(JSONObject json)
-			throws JsonReaderException, NotFoundDatabaseException, ConflictDatabaseException {
+			throws JsonReaderException, NotFoundDatabaseException, ConflictDatabaseException, TemporaryUserException {
 		this.readRooms((JSONArray) json.get("rooms"));
 		this.readUsers((JSONArray) json.get("users"));
-		if(openviduComponent.isRecordingEnabled() && openviduComponent.isCustomRecordingLayoutEnabled()) {
+		if (openviduComponent.isRecordingEnabled() && openviduComponent.isCustomRecordingLayoutEnabled()) {
 			this.readRecorder((JSONObject) json.get("recorder"));
 		}
 	}
@@ -58,7 +58,7 @@ public class JsonReaderService {
 	}
 
 	public void readUsers(JSONArray userList)
-			throws JsonReaderException, NotFoundDatabaseException, ConflictDatabaseException {
+			throws JsonReaderException, NotFoundDatabaseException, ConflictDatabaseException, TemporaryUserException {
 		try {
 			if (userList != null) {
 				Set<User> users = new HashSet<>();
@@ -66,6 +66,9 @@ public class JsonReaderService {
 					User user = getUserObject((JSONObject) userObject);
 					if (users.contains(user)) {
 						throw new ConflictDatabaseException(user.getName(), "User");
+					}
+					if (user.isTemporary()) {
+						throw new TemporaryUserException(user.getName());
 					}
 					users.add(user);
 				}
@@ -80,21 +83,21 @@ public class JsonReaderService {
 			throw new ConflictDatabaseException(e.getName(), e.getClassName());
 		}
 	}
-	
+
 	public void readRecorder(JSONObject recorderObject) throws ConflictDatabaseException {
 		String userName = (String) recorderObject.get("name");
 		if (this.userServ.findByName(userName) != null) {
 			throw new ConflictDatabaseException(userName, "User");
 		}
 		String password = (String) recorderObject.get("password");
-		String[] roles = {"ROLE_USER", "ROLE_ADMIN"};
+		String[] roles = { "ROLE_USER", "ROLE_ADMIN" };
 		User user = new User(userName, password, false, roles);
 		this.userServ.save(user);
 		this.openviduComponent.setRecorderUser(userName, password);
 		System.out.println("Saved recorder user: " + userName);
 	}
 
-	public void readUsersToRoom(Room room, JSONObject users) throws NotFoundDatabaseException {
+	public void readUsersToRoom(Room room, JSONObject users) throws NotFoundDatabaseException, TemporaryUserException {
 		JSONArray moderators = (JSONArray) users.get("moderators");
 		if (moderators != null) {
 			this.saveRoomToUsers(room, moderators, "moderator");
@@ -109,7 +112,8 @@ public class JsonReaderService {
 		}
 	}
 
-	private void saveRoomToUsers(Room room, JSONArray users, String role) throws NotFoundDatabaseException {
+	private void saveRoomToUsers(Room room, JSONArray users, String role)
+			throws NotFoundDatabaseException, TemporaryUserException {
 		if (users != null && !users.isEmpty()) {
 			for (Object userObject : users) {
 				String userName = (String) ((JSONObject) userObject).get("name");
@@ -117,25 +121,28 @@ public class JsonReaderService {
 				if (user == null) {
 					throw new NotFoundDatabaseException(room.getName(), userName);
 				}
+				if (user.isTemporary()) {
+					throw new TemporaryUserException(userName);
+				}
 				switch (role) {
-					case "moderator":
-						user.removePresentedRoom(room);
-						user.removeParticipatedRoom(room);
-						if(!room.isModerator(user)) {
-							user.addModdedRoom(room);
-						}
-						break;
-					case "presenter":
-						user.removeParticipatedRoom(room);
-						if (!room.canStream(user)) {
-							user.addPresentedRoom(room);
-						}
-						break;
-					case "participant":
-						if (!room.isInRoom(user)) {
-							user.addParticipatedRoom(room);
-						}
-						break;
+				case "moderator":
+					user.removePresentedRoom(room);
+					user.removeParticipatedRoom(room);
+					if (!room.isModerator(user)) {
+						user.addModdedRoom(room);
+					}
+					break;
+				case "presenter":
+					user.removeParticipatedRoom(room);
+					if (!room.canStream(user)) {
+						user.addPresentedRoom(room);
+					}
+					break;
+				case "participant":
+					if (!room.isInRoom(user)) {
+						user.addParticipatedRoom(room);
+					}
+					break;
 				}
 				this.userServ.save(user);
 			}
