@@ -171,6 +171,9 @@ public class RoomController {
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+		if (user.isTemporary() && user.isInAnotherRoom(room)) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 		if (room.isModerator(user)) {
 			// Automatically enter if already a mod
 			return new ResponseEntity<>(HttpStatus.OK);

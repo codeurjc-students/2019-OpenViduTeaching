@@ -134,10 +134,24 @@ public class User {
 	}
 	
 	public boolean isInAnotherRoom(Room room) {
-		int size = this.participatedRooms.size();
-		if(size>0) {
-			
+		for(Room participatedRoom : this.participatedRooms) {
+			if(!participatedRoom.equals(room)) {
+				return true;
+			}
 		}
+		
+		for(Room presentedRoom : this.presentedRooms) {
+			if(!presentedRoom.equals(room)) {
+				return true;
+			}
+		}
+		
+		for(Room moddedRoom : this.moddedRooms) {
+			if(!moddedRoom.equals(room)) {
+				return true;
+			}
+		}
+		
 		return false;
 	}
 	
