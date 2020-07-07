@@ -36,20 +36,16 @@ export class InviteComponent implements OnInit {
     if(this.userSrv.isLogged) { //User is logged
       this.loading = true;
       this.userName = this.userSrv.user.name;
-      if(this.userSrv.isModOfRoom(this.roomName)) { //Direct access if already a mod
-        this.navigate();
-      } else {
-        this.roomSrv.enterRoom(this.code).subscribe( //Update user if they are not in the room or mod
-          user => {
-            this.userSrv.saveUser(user);
-            this.navigate();
-          },
-          error => {
-            this.loading = false;
-            console.log(error)
-          }
-        );
-      }
+      this.roomSrv.enterRoom(this.code).subscribe( //Update user in case the role changed
+        user => {
+          this.userSrv.saveUser(user);
+          this.navigate();
+        },
+        error => {
+          this.loading = false;
+          console.error(error)
+        }
+      );
     } else { //User is not logged
       if(this.userName == null || this.userName == '') {
         this.userErrorMsg = 'You must enter a username';
@@ -67,7 +63,7 @@ export class InviteComponent implements OnInit {
               },
               error => {
                 this.loading = false;
-                console.log(error)
+                console.error(error)
               }
             );
           },
@@ -93,7 +89,7 @@ export class InviteComponent implements OnInit {
       },
       error => {
         this.router.navigate(['/']);
-        console.log(error);
+        console.error(error);
       }
     );
   }
