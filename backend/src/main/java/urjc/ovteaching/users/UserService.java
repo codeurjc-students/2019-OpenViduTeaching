@@ -29,8 +29,8 @@ public class UserService {
 		return userRep.saveAll(users);
 	}
 
-	public void delete(long id) {
-		userRep.deleteById(id);
+	public void delete(User user) {
+		userRep.deleteById(user.getId());
 	}
 	
 	public User findByName(String name) {

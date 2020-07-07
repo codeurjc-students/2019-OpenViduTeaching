@@ -150,6 +150,9 @@ public class OpenViduController {
 				// The last user has left the room
 				this.openViduComponent.removeSession(room);
 			}
+			if(user.isTemporal()) {
+				this.userServ.delete(user);
+			}
 			this.roomServ.checkConnectedHandRaisedUsers(room);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} else {

@@ -46,10 +46,10 @@ public class RoomController {
 
 	@Autowired
 	private UserComponent userComponent;
-	
+
 	@Autowired
 	OpenViduComponent openviduComponent;
-	
+
 	@Autowired
 	private JsonReaderService jsonReaderService;
 
@@ -69,7 +69,7 @@ public class RoomController {
 		roomServ.addRoomWithMod(room, user);
 		return new ResponseEntity<>(room, HttpStatus.CREATED);
 	}
-	
+
 	@PostMapping("/rooms")
 	public ResponseEntity<?> addRooms(@RequestBody JSONObject body) {
 		try {
@@ -88,9 +88,9 @@ public class RoomController {
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/room/{roomName}/users")
-	public ResponseEntity<?> addUserToRoom(@PathVariable String roomName, @RequestBody JSONObject body) {
+	public ResponseEntity<?> addUsersToRoom(@PathVariable String roomName, @RequestBody JSONObject body) {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room == null) {
@@ -172,21 +172,21 @@ public class RoomController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		if (room.isModerator(user)) {
-			//Automatically enter if already a mod 
+			// Automatically enter if already a mod
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		if (code.equals(room.getPresenterInviteCode()) && room.isPresenter(user)) {
-			//Automatically enter as presenter if already a presenter 
+			// Automatically enter as presenter if already a presenter
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		if (code.equals(room.getParticipantInviteCode()) && (room.isParticipant(user) || room.isPresenter(user))) {
-			//Automatically enter if already in it
+			// Automatically enter if already in it
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		
+
 		if (code.equals(room.getParticipantInviteCode())) {
 			user.addParticipatedRoom(room);
-		} else if(code.equals(room.getModeratorInviteCode())){
+		} else if (code.equals(room.getModeratorInviteCode())) {
 			roomServ.makeModerator(user, room);
 			if (!user.getRoles().contains("ROLE_ADMIN")) {
 				// Makes user admin if they weren't
@@ -250,7 +250,7 @@ public class RoomController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 	}
-	
+
 	/**
 	 * Makes the user raise their hand
 	 * 
@@ -268,7 +268,7 @@ public class RoomController {
 			handRaisedUser.put("username", user.getName());
 			this.roomServ.checkConnectedHandRaisedUsers(room);
 			Integer position = room.addHandRaisedUser(handRaisedUser);
-			if(position.equals(-1)) {
+			if (position.equals(-1)) {
 				return new ResponseEntity<>(HttpStatus.CONFLICT);
 			}
 			this.roomServ.save(room);
@@ -277,7 +277,7 @@ public class RoomController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 	}
-	
+
 	/**
 	 * Makes the user lower their hand
 	 * 
@@ -293,7 +293,7 @@ public class RoomController {
 		if (room.isInRoom(user)) {
 			boolean wasRemoved = room.removeHandRaisedUser(body);
 			this.roomServ.save(room);
-			if(wasRemoved) {
+			if (wasRemoved) {
 				return new ResponseEntity<>(HttpStatus.OK);
 			}
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -301,7 +301,7 @@ public class RoomController {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 	}
-	
+
 	/**
 	 * Gets the users who are raising their hand in that room
 	 * 
