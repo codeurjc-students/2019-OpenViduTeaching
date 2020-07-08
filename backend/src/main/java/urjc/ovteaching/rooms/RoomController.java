@@ -137,16 +137,17 @@ public class RoomController {
 		Room room = roomServ.findByName(roomName);
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		if (room != null) {
-			if (!room.isModerator(user)) {
+			if (!room.isModerator(user) || user.isTemporary()) {
 				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-			} else {
-				if (role.equals("participant")) {
-					return new ResponseEntity<>(room.getParticipantInviteCode(), HttpStatus.OK);
-				} else if (role.equals("moderator")) {
-					return new ResponseEntity<>(room.getModeratorInviteCode(), HttpStatus.OK);
-				} else if (role.equals("presenter")) {
-					return new ResponseEntity<>(room.getPresenterInviteCode(), HttpStatus.OK);
-				}
+			}
+			if (role.equals("participant")) {
+				return new ResponseEntity<>(room.getParticipantInviteCode(), HttpStatus.OK);
+			}
+			if (role.equals("moderator")) {
+				return new ResponseEntity<>(room.getModeratorInviteCode(), HttpStatus.OK);
+			}
+			if (role.equals("presenter")) {
+				return new ResponseEntity<>(room.getPresenterInviteCode(), HttpStatus.OK);
 			}
 		}
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -22,7 +22,7 @@
         <mat-spinner *ngIf="changingRecordStatus" color="accent" [diameter]="40"></mat-spinner>
     </div>
     <br *ngIf="isRecordingEnabled">
-    <div *ngIf="this.userService.isModOfRoom(this.roomName)">
+    <div *ngIf="userService.user.isTemporary">
         <b>Invite links:</b>
         <button mat-icon-button (click)="getInviteURL('moderator')">
             <mat-icon color="accent" matTooltip="Invite URL for moderators">link</mat-icon>
