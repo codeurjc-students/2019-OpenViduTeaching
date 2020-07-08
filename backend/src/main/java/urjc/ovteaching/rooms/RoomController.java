@@ -67,12 +67,19 @@ public class RoomController {
 		}
 		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
 		Room room = new Room(roomName);
+		if (user.isTemporary()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 		roomServ.addRoomWithMod(room, user);
 		return new ResponseEntity<>(room, HttpStatus.CREATED);
 	}
 
 	@PostMapping("/rooms")
 	public ResponseEntity<?> addRooms(@RequestBody JSONObject body) {
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
+		if (user.isTemporary()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 		try {
 			body = (JSONObject) new JSONParser().parse(body.toString());
 			this.jsonReaderService.readRooms((JSONArray) body.get("rooms"));
@@ -97,7 +104,7 @@ public class RoomController {
 		if (room == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		if (!room.isModerator(user)) {
+		if (!room.isModerator(user) || user.isTemporary()) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		try {

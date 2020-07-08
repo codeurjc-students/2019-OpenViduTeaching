@@ -75,6 +75,10 @@ public class UserController {
 	
 	@PostMapping("/users")
 	public ResponseEntity<?> addUsers(@RequestBody JSONObject body) {
+		User user = userServ.findByName(this.userComponent.getLoggedUser().getName());
+		if (user.isTemporary()) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 		try {
 			body = (JSONObject) new JSONParser().parse(body.toString());
 			this.jsonReaderService.readUsers((JSONArray) body.get("users"));
