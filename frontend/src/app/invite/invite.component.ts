@@ -13,7 +13,6 @@ export class InviteComponent implements OnInit {
   code: string;
   roomName: string;
   userName: string;
-  password: string;
   nameTaken: boolean = false;
   userErrorMsg: string;
   loading: boolean = false;
@@ -49,15 +48,15 @@ export class InviteComponent implements OnInit {
     } else { //User is not logged
       if(this.userName == null || this.userName == '') {
         this.userErrorMsg = 'You must enter a username';
-      } else if(this.password == null) {
-        this.userErrorMsg = 'You must enter a password';
       } else {
         this.loading = true;
-        this.userSrv.register(this.userName,this.password).subscribe(
+        const password = Array(10).fill("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").map((x) => x[Math.floor(Math.random() * x.length)]).join('');
+        console.error(password);
+        this.userSrv.register(this.userName, password).subscribe(
           (_) => {
             this.roomSrv.enterRoom(this.code).subscribe(
               user => {
-                let auth = window.btoa(this.userName + ':' + this.password);
+                let auth = window.btoa(this.userName + ':' + password);
                 this.userSrv.saveUser(user, auth);
                 this.navigate();
               },

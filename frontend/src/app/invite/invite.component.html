@@ -9,21 +9,16 @@
         <div>
             <div *ngIf="!isLogged()">
                 <login-component></login-component><p id="loginMsg"> to enter the room</p>
-                <p>or create an account:</p>
+                <p>or enter without an account:</p>
                 <mat-form-field appearance="outline" color="primary">
                     <mat-label>Username</mat-label>
                     <input matInput [(ngModel)]="userName" (keypress)="eventKeyPress($event)">
                     <mat-hint *ngIf=this.userErrorMsg id="userErrorMsg">{{userErrorMsg}}</mat-hint>
                 </mat-form-field>
                 <div></div>
-                <mat-form-field appearance="outline" color="primary">
-                    <mat-label>Password</mat-label>
-                    <input matInput [(ngModel)]="password" (keypress)="eventKeyPress($event)" type="password">
-                </mat-form-field>
-                <div></div>
             </div>
             <ng-container *ngIf="!loading">
-                <button mat-flat-button  color="accent" (click)="enterRoom()" [disabled]="!isLogged() && (!userName || !password)" id="accessButton">Access room</button>
+                <button mat-flat-button  color="accent" (click)="enterRoom()" [disabled]="!isLogged() && !userName" id="accessButton">Access room</button>
             </ng-container>
             <mat-spinner color="accent" *ngIf="loading" id="loadingSpinner"></mat-spinner>
         </div>
