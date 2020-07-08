@@ -26,7 +26,8 @@ export class RoomServiceMock {
 			authdata: window.btoa("teacher:pass"),
 			moddedRooms: [{ name: "roomA" }, { name: "roomB" }],
 			presentedRooms: [],
-			participatedRooms: []
+			participatedRooms: [],
+			isTemporary: false
 		};
 		return of(newUser);
 	}

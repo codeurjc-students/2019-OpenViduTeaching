@@ -12,7 +12,8 @@ export class UserServiceMock {
 		authdata: window.btoa('teacher:pass'),
 		moddedRooms: [{ name: 'roomA' }, { name: 'roomB' }],
 		presentedRooms: [],
-		participatedRooms: []
+		participatedRooms: [],
+		isTemporary: false
 	};
 
 	constructor() {}
@@ -24,7 +25,8 @@ export class UserServiceMock {
 			authdata: window.btoa(user + ':' + pass),
 			moddedRooms: [{ name: 'roomA' }, { name: 'roomB' }],
 			presentedRooms: [],
-			participatedRooms: []
+			participatedRooms: [],
+			isTemporary: false
 		};
 		return of(newUser);
 	}
@@ -40,7 +42,8 @@ export class UserServiceMock {
 			authdata: window.btoa(userName + ':' + pass),
 			moddedRooms: [{ name: 'roomA' }, { name: 'roomB' }],
 			presentedRooms: [],
-			participatedRooms: []
+			participatedRooms: [],
+			isTemporary: false
 		};
 		return of(newUser);
 	}
