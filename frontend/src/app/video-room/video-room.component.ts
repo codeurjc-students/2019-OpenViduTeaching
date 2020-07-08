@@ -329,6 +329,10 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			if (this.localUsers[0].getPositionInHandRaiseQueue() > 0 && !this.userService.isRecorder()) {
 				this.raiseHandService.keepaliveLowerHand(this.roomName, this.localUsers[0].getConnectionId());
 			}
+		} else {
+			if(this.userService.user.isTemporary) {
+				this.userService.keepAliveLogOut();
+			}
 		}
 		this.oVSessionService.disconnect();
 		this.router.navigate(['']);

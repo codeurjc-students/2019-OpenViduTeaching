@@ -61,6 +61,20 @@ export class UserService {
 		);
 	}
 
+	keepAliveLogOut() {
+		if (this.isLogged) {
+			let headers = new Headers();
+			headers.set('Authorization', `Basic ${this.user.authdata}`);
+			fetch(this.baseURL + '/logOut', {
+				method: 'GET',
+				headers: headers,
+				keepalive: true
+			}).then(() => {
+				this.removeCurrentUser();
+			});
+		}
+	}
+
 	register(userName: string, pass: string) {
 		return this.http.get<User>(this.baseURL + '/register/' + userName + '/' + pass, {}).pipe(
 			map((user) => {

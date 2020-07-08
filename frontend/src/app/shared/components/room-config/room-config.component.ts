@@ -231,6 +231,9 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 	}
 
 	close() {
+		if(this.userService.user.isTemporary) {
+			this.userService.keepAliveLogOut();
+		}
 		this.leaveSession.emit();
 		this.showConfigCard = false;
 	}
