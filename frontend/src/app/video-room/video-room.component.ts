@@ -298,6 +298,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.subscribeToStreamPropertyChange();
 		this.subscribeToNicknameChanged();
 		this.subscribeToFirstConnection();
+		this.subscribeToSpeechDetection();
 		this.menuService.subscribeToChangeRecordingStatus();
 		this.menuService.setMenuSidenav(this.menuSidenav);
 		this.assistantsChatService.subscribeToChat('chat');
@@ -425,17 +426,14 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.isAutoLayout = !this.isAutoLayout;
 
 			this.log.d('Automatic Layout ', this.isAutoLayout ? 'Disabled' : 'Enabled');
-			if (this.isAutoLayout) {
-				this.subscribeToSpeechDetection();
+			if (!this.isAutoLayout) {
+				this.resetAllBigElements();
+				this.updateOpenViduLayout();
 				return;
 			}
-			this.log.d('Unsubscribe to speech detection');
-			this.session.off('publisherStartSpeaking');
-			this.resetAllBigElements();
-			this.updateOpenViduLayout();
-			return;
+		} else {
+			this.log.w('Screen is enabled. Speaker layout has been rejected');
 		}
-		this.log.w('Screen is enabled. Speech detection has been rejected');
 	}
 
 	onReplaceScreenTrack(event) {
@@ -630,14 +628,22 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		// Has been mandatory change the user zoom property here because of
 		// zoom icons and cannot handle publisherStartSpeaking event in other component
 		this.session.on('publisherStartSpeaking', (event: PublisherSpeakingEvent) => {
+			const elem = event.connection.stream.streamManager.videos[0].video;
+			const element = this.utilsSrv.getHTMLElementByClassName(elem, LayoutType.ROOT_CLASS);
+			element.classList.add('OT_speaking');
+
 			const someoneIsSharingScreen = this.remoteStreamersService.someoneIsSharingScreen();
-			if (!this.oVSessionService.isScreenShareEnabled() && !someoneIsSharingScreen) {
-				const elem = event.connection.stream.streamManager.videos[0].video;
-				const element = this.utilsSrv.getHTMLElementByClassName(elem, LayoutType.ROOT_CLASS);
+			if (this.isAutoLayout && !this.oVSessionService.isScreenShareEnabled() && !someoneIsSharingScreen) {
 				this.resetAllBigElements();
 				this.remoteStreamersService.setUserZoom(event.connection.connectionId, true);
 				this.onToggleVideoSize({ element });
 			}
+		});
+		this.session.on('publisherStopSpeaking', (event: PublisherSpeakingEvent) => {
+			const elem = event.connection.stream.streamManager.videos[0].video;
+			const element = this.utilsSrv.getHTMLElementByClassName(elem, LayoutType.ROOT_CLASS);
+			element.classList.remove('OT_speaking');
+			this.resize(200);
 		});
 	}
 
