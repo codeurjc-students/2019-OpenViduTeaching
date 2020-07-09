@@ -27,6 +27,8 @@ export class UserService {
 
 	recorderName: string;
 
+	mustRemoveTempUser: boolean = true;
+
 	constructor(private http: HttpClient) {
 		let user = JSON.parse(localStorage.getItem('currentUser'));
 		if (user) {

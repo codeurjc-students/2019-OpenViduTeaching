@@ -330,7 +330,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 				this.raiseHandService.keepaliveLowerHand(this.roomName, this.localUsers[0].getConnectionId());
 			}
 		} else {
-			if(this.userService.user.isTemporary) {
+			if(this.userService.user.isTemporary && this.userService.mustRemoveTempUser) {
 				this.userService.keepAliveLogOut();
 			}
 		}

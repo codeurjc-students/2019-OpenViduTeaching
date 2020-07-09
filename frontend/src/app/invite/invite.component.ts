@@ -77,6 +77,7 @@ export class InviteComponent implements OnInit {
 
   navigate() {
     this.router.navigate(['/', this.roomName]).then(() => {
+      this.userSrv.mustRemoveTempUser = false;
 			window.location.reload();
 		});
   }
