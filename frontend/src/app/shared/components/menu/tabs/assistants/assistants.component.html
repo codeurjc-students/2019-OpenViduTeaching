@@ -16,6 +16,10 @@
                             <b *ngIf="mod.name===localUser.name">{{mod.name}}</b>
                             <mat-icon matListIcon *ngIf="mod.name!==localUser.name">person_outline</mat-icon>
                             <p *ngIf="mod.name!==localUser.name">{{mod.name}}</p>
+                            <span class="fill-space"></span>
+                            <mat-icon *ngIf="mod.isAudioActive() && !mod.isSpeaking()">mic</mat-icon>
+                            <mat-icon *ngIf="mod.isAudioActive() && mod.isSpeaking()" color="accent">mic</mat-icon>
+                            <mat-icon *ngIf="!mod.isAudioActive()" color="warn">mic_off</mat-icon>
                         </mat-list-item>
                     </div>
             
@@ -28,6 +32,10 @@
                             <b *ngIf="pres.name===localUser.name">{{pres.name}}</b>
                             <mat-icon matListIcon *ngIf="pres.name!==localUser.name">person_outline</mat-icon>
                             <p *ngIf="pres.name!==localUser.name">{{pres.name}}</p>
+                            <span class="fill-space"></span>
+                            <mat-icon *ngIf="pres.isAudioActive() && !pres.isSpeaking()">mic</mat-icon>
+                            <mat-icon *ngIf="pres.isAudioActive() && pres.isSpeaking()" color="accent">mic</mat-icon>
+                            <mat-icon *ngIf="!pres.isAudioActive()" color="warn">mic_off</mat-icon>
                         </mat-list-item>
                     </div>
             
