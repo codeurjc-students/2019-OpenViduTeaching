@@ -20,6 +20,8 @@
                             <mat-icon *ngIf="mod.isAudioActive() && !mod.isSpeaking()">mic</mat-icon>
                             <mat-icon *ngIf="mod.isAudioActive() && mod.isSpeaking()" color="accent">mic</mat-icon>
                             <mat-icon *ngIf="!mod.isAudioActive()" color="warn">mic_off</mat-icon>
+                            <mat-icon *ngIf="mod.isVideoActive()">videocam</mat-icon>
+                            <mat-icon *ngIf="!mod.isVideoActive()" color="warn">videocam_off</mat-icon>
                         </mat-list-item>
                     </div>
             
@@ -36,6 +38,8 @@
                             <mat-icon *ngIf="pres.isAudioActive() && !pres.isSpeaking()">mic</mat-icon>
                             <mat-icon *ngIf="pres.isAudioActive() && pres.isSpeaking()" color="accent">mic</mat-icon>
                             <mat-icon *ngIf="!pres.isAudioActive()" color="warn">mic_off</mat-icon>
+                            <mat-icon *ngIf="pres.isVideoActive()">videocam</mat-icon>
+                            <mat-icon *ngIf="!pres.isVideoActive()" color="warn">videocam_off</mat-icon>
                         </mat-list-item>
                     </div>
             
