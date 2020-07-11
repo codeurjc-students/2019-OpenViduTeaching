@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
 import { UserModel } from '../../models/user-model';
 import { StreamEvent, Subscriber } from 'openvidu-browser';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class RemoteStreamersServiceMock {
-	constructor() {}
+	private _remoteStreamers = <BehaviorSubject<UserModel[]>>new BehaviorSubject([]);
+	remoteStreamersObs: Observable<UserModel[]>;
+	
+	constructor() {
+		this.remoteStreamersObs = this._remoteStreamers.asObservable();
+	}
 
 	updateStreamers() {}
 
