@@ -31,6 +31,11 @@ export class UserModel {
 	positionInHandRaiseQueue: number;
 
 	/**
+	 * Whether the user is speaking at the moment or not
+	 */
+	speaking: boolean;
+
+	/**
 	 * @hidden
 	 */
 	videoAvatar: HTMLCanvasElement;
@@ -48,17 +53,13 @@ export class UserModel {
 	/**
 	 * @hidden
 	 */
-	constructor(
-		connectionId?: string,
-		streamManager?: StreamManager,
-		nickname?: string,
-		name?: string
-	) {
+	constructor(connectionId?: string, streamManager?: StreamManager, nickname?: string, name?: string) {
 		this.connectionId = connectionId || '';
 		this.nickname = nickname || 'OpenVidu';
 		this.streamManager = streamManager || null;
 		this.name = name || this.nickname;
 		this.positionInHandRaiseQueue = 0;
+		this.speaking = false;
 	}
 
 	/**
@@ -117,6 +118,13 @@ export class UserModel {
 	 */
 	public getPositionInHandRaiseQueue(): number {
 		return this.positionInHandRaiseQueue;
+	}
+
+	/**
+	 * Return whether the user is speaking at the moment or not
+	 */
+	public isSpeaking(): boolean {
+		return this.speaking;
 	}
 
 	/**
@@ -189,6 +197,14 @@ export class UserModel {
 		this.positionInHandRaiseQueue = positionInHandRaiseQueue;
 	}
 
+	/**
+	 * Set whether the user is speaking at the moment or not
+	 * @param isSpeaking true if they are speaking, false otherwise
+	 */
+	public setIsSpeaking(isSpeaking: boolean) {
+		this.speaking = isSpeaking;
+	}
+
 	public isVideoSizeBig(): boolean {
 		return this.videoSizeBig;
 	}
@@ -204,7 +220,7 @@ export class UserModel {
 	 * @hidden
 	 */
 	public setUserAvatar(img?: string): Promise<any> {
-		return new Promise(resolve => {
+		return new Promise((resolve) => {
 			if (!img) {
 				this.createVideoAvatar();
 				const video = <HTMLVideoElement>document.getElementById('video-' + this.getStreamManager().stream.streamId);

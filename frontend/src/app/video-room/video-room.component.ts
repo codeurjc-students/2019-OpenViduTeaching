@@ -629,6 +629,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		// Has been mandatory change the user zoom property here because of
 		// zoom icons and cannot handle publisherStartSpeaking event in other component
 		this.session.on('publisherStartSpeaking', (event: PublisherSpeakingEvent) => {
+			const user = this.remoteStreamersService.getRemoteStreamerByConnectionId(event.connection.connectionId);
+			user.setIsSpeaking(true);
+
 			const elem = event.connection.stream.streamManager.videos[0].video;
 			const element = this.utilsSrv.getHTMLElementByClassName(elem, LayoutType.ROOT_CLASS);
 			element.classList.add('OT_speaking');
@@ -641,6 +644,9 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			}
 		});
 		this.session.on('publisherStopSpeaking', (event: PublisherSpeakingEvent) => {
+			const user = this.remoteStreamersService.getRemoteStreamerByConnectionId(event.connection.connectionId);
+			user.setIsSpeaking(false);
+
 			const elem = event.connection.stream.streamManager.videos[0].video;
 			const element = this.utilsSrv.getHTMLElementByClassName(elem, LayoutType.ROOT_CLASS);
 			element.classList.remove('OT_speaking');
