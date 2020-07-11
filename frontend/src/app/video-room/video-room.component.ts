@@ -575,6 +575,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 			const subscriber: Subscriber = this.session.subscribe(event.stream, undefined);
 			this.remoteStreamersService.add(event, subscriber);
+			this.menuService.updateAssistants();
 		});
 	}
 

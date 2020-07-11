@@ -1,3 +1,5 @@
+import { OpenViduSessionServiceMock } from './../../../../services/openvidu-session/openvidu-session.service.mock';
+import { OpenViduSessionService } from './../../../../services/openvidu-session/openvidu-session.service';
 import { RemoteUsersServiceMock } from './../../../../services/remote-users/remote-users.service.mock';
 import { RemoteUsersService } from './../../../../services/remote-users/remote-users.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
@@ -18,7 +20,8 @@ describe('AssistantsComponent', () => {
       providers: [
         { provide: UserService, useClass: UserServiceMock },
         { provide: MenuService, useClass: MenuServiceMock },
-        { provide: RemoteUsersService, useClass: RemoteUsersServiceMock }
+        { provide: RemoteUsersService, useClass: RemoteUsersServiceMock },
+        { provide: OpenViduSessionService, useClass: OpenViduSessionServiceMock },
       ],
       declarations: [ AssistantsComponent ]
     })

@@ -1,3 +1,4 @@
+import { RemoteStreamersService } from './../../../../services/remote-streamers/remote-streamers.service';
 import { OpenViduSessionService } from './../../../../services/openvidu-session/openvidu-session.service';
 import { MenuService } from 'src/app/shared/services/menu/menu.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
@@ -24,12 +25,14 @@ export class AssistantsComponent implements OnInit {
 	assistantsDisconnectedCount: Number;
 
 	private remoteUsers: UserModel[] = [];
+	private remoteStreamers: UserModel[] = [];
 	localUser: UserModel;
 
 	constructor(
 		private userService: UserService,
 		private menuService: MenuService,
 		private remoteUsersService: RemoteUsersService,
+		private remoteStreamersService: RemoteStreamersService,
 		private ovSessionService: OpenViduSessionService
 	) {}
 
@@ -52,7 +55,7 @@ export class AssistantsComponent implements OnInit {
 				this.participantsDisconnected = [];
 
 				for (let moderator of assistants.moderators) {
-					const mod = this.remoteUsers.find((user) => user.name === moderator.name);
+					const mod = this.remoteStreamers.find((user) => user.name === moderator.name);
 					if (moderator.name === this.userService.user.name) {
 						this.moderatorsConnected.push(this.localUser);
 					} else if (moderator.connected && !!mod) {
@@ -63,7 +66,7 @@ export class AssistantsComponent implements OnInit {
 				}
 
 				for (let presenter of assistants.presenters) {
-					const pres = this.remoteUsers.find((user) => user.name === presenter.name);
+					const pres = this.remoteStreamers.find((user) => user.name === presenter.name);
 					if (presenter.name === this.userService.user.name) {
 						this.presentersConnected.push(this.localUser);
 					} else if (presenter.name === this.userService.user.name || (presenter.connected && !!pres)) {
@@ -96,8 +99,11 @@ export class AssistantsComponent implements OnInit {
 	}
 
 	subscribeToUsers() {
-		this.remoteUsersService.remoteUsersObs.subscribe((streamers) => {
-			this.remoteUsers = streamers;
+		this.remoteUsersService.remoteUsersObs.subscribe((users) => {
+			this.remoteUsers = users;
+		});
+		this.remoteStreamersService.remoteStreamersObs.subscribe((streamers) => {
+			this.remoteStreamers = streamers;
 		});
 		this.ovSessionService.OVUsers.subscribe((users) => {
 			this.localUser = users[0];
