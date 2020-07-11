@@ -1,93 +1,106 @@
-import { RemoteUsersService } from './../../../../services/remote-users/remote-users.service';
+import { OpenViduSessionService } from './../../../../services/openvidu-session/openvidu-session.service';
 import { MenuService } from 'src/app/shared/services/menu/menu.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { UserModel } from 'src/app/shared/models/user-model';
+import { RemoteUsersService } from 'src/app/shared/services/remote-users/remote-users.service';
 
 @Component({
-  selector: 'app-assistants',
-  templateUrl: './assistants.component.html',
-  styleUrls: ['./assistants.component.css']
+	selector: 'app-assistants',
+	templateUrl: './assistants.component.html',
+	styleUrls: ['./assistants.component.css']
 })
 export class AssistantsComponent implements OnInit {
+	loading: boolean;
 
-  userName: string;
+	moderatorsConnected: UserModel[] = [];
+	presentersConnected: UserModel[] = [];
+	participantsConnected: string[] = [];
+	assistantsConnectedCount: Number;
 
-  loading: boolean;
+	moderatorsDisconnected: string[] = [];
+	presentersDisconnected: string[] = [];
+	participantsDisconnected: string[] = [];
+	assistantsDisconnectedCount: Number;
 
-  constructor(
-    private userService: UserService,
-    private menuService: MenuService,
-    private remoteUsersService: RemoteUsersService
-  ) { }
+	private remoteUsers: UserModel[] = [];
+	localUser: UserModel;
 
-  moderatorsConnected: string[] = [];
-  participantsConnected: string[] = [];
-  presentersConnected: string[] = [];
-  assistantsConnectedCount: Number;
+	constructor(
+		private userService: UserService,
+		private menuService: MenuService,
+		private remoteUsersService: RemoteUsersService,
+		private ovSessionService: OpenViduSessionService
+	) {}
 
-  moderatorsDisconnected: string[] = [];
-  participantsDisconnected: string[] = [];
-  presentersDisconnected: string[] = [];
-  assistantsDisconnectedCount: Number;
+	ngOnInit() {
+		this.subscribeToAssistants();
+		this.subscribeToUsers();
+	}
 
-  private remoteUsers: UserModel[] = [];
+	subscribeToAssistants() {
+		this.menuService.updateAssistants();
+		this.loading = true;
+		this.menuService.assistantsObs.subscribe(
+			(assistants) => {
+				this.moderatorsConnected = [];
+				this.presentersConnected = [];
+				this.participantsConnected = [];
 
-  ngOnInit() {
-    this.userName = this.userService.user.name;
-    this.subscribeToAssistants();
-    this.subscribeToRemoteUsers();
-  }
+				this.moderatorsDisconnected = [];
+				this.presentersDisconnected = [];
+				this.participantsDisconnected = [];
 
-  subscribeToAssistants() {
-    this.menuService.updateAssistants();
-    this.loading = true;
-    this.menuService.assistantsObs.subscribe(
-      assistants => {
-        this.moderatorsConnected = [];
-        this.participantsConnected = [];
-        this.presentersConnected = [];
+				for (let moderator of assistants.moderators) {
+					const mod = this.remoteUsers.find((user) => user.name === moderator.name);
+					if (moderator.name === this.userService.user.name) {
+						this.moderatorsConnected.push(this.localUser);
+					} else if (moderator.connected && !!mod) {
+						this.moderatorsConnected.push(mod);
+					} else {
+						this.moderatorsDisconnected.push(moderator.name);
+					}
+				}
 
-        this.moderatorsDisconnected = [];
-        this.participantsDisconnected = [];
-        this.presentersDisconnected = [];
+				for (let presenter of assistants.presenters) {
+					const pres = this.remoteUsers.find((user) => user.name === presenter.name);
+					if (presenter.name === this.userService.user.name) {
+						this.presentersConnected.push(this.localUser);
+					} else if (presenter.name === this.userService.user.name || (presenter.connected && !!pres)) {
+						this.presentersConnected.push(pres);
+					} else {
+						this.presentersDisconnected.push(presenter.name);
+					}
+				}
 
-        for(let moderator of assistants.moderators) {
-          if(moderator.name===this.userService.user.name || (moderator.connected && this.remoteUsers.some((user) => user.name === moderator.name))) {
-            this.moderatorsConnected.push(moderator.name);
-          } else {
-            this.moderatorsDisconnected.push(moderator.name);
-          }
-        }
+				for (let participant of assistants.participants) {
+					if (
+						participant.name === this.userService.user.name ||
+						(participant.connected && !!this.remoteUsers.some((user) => user.name === participant.name))
+					) {
+						this.participantsConnected.push(participant.name);
+					} else {
+						this.participantsDisconnected.push(participant.name);
+					}
+				}
 
-        for(let participant of assistants.participants) {
-          if(participant.name===this.userService.user.name || (participant.connected && this.remoteUsers.some((user) => user.name === participant.name))) {
-            this.participantsConnected.push(participant.name);
-          } else {
-            this.participantsDisconnected.push(participant.name);
-          }
-        }
+				this.assistantsConnectedCount =
+					this.moderatorsConnected.length + this.participantsConnected.length + this.presentersConnected.length;
+				this.assistantsDisconnectedCount =
+					this.moderatorsDisconnected.length + this.participantsDisconnected.length + this.presentersDisconnected.length;
 
-        for(let presenter of assistants.presenters) {
-          if(presenter.name===this.userService.user.name || (presenter.connected && this.remoteUsers.some((user) => user.name === presenter.name))) {
-            this.presentersConnected.push(presenter.name);
-          } else {
-            this.presentersDisconnected.push(presenter.name);
-          }
-        }
+				this.loading = false;
+			},
+			(error) => console.log(error)
+		);
+	}
 
-        this.assistantsConnectedCount = this.moderatorsConnected.length + this.participantsConnected.length + this.presentersConnected.length;
-        this.assistantsDisconnectedCount = this.moderatorsDisconnected.length + this.participantsDisconnected.length + this.presentersDisconnected.length;
-
-        this.loading = false;
-      },
-      error => console.log(error)
-    );
-  }
-
-  subscribeToRemoteUsers() {
-    this.remoteUsersService.remoteUsersObs.subscribe((users) => {
-      this.remoteUsers = users;
-    });
-  }
+	subscribeToUsers() {
+		this.remoteUsersService.remoteUsersObs.subscribe((streamers) => {
+			this.remoteUsers = streamers;
+		});
+		this.ovSessionService.OVUsers.subscribe((users) => {
+			this.localUser = users[0];
+		});
+	}
 }

@@ -547,6 +547,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			}
 
 			this.remoteUsersService.add(event);
+			this.menuService.updateAssistants();
 		});
 	}
 
@@ -619,7 +620,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			const data = JSON.parse(event.from.data.split('%/%')[0]);
 			this.notificationsService.showConnectionPopup(data?.clientData, true, data?.avatar);
 			this.whiteboardService.sendWhiteboardHistorySignal(event.from.connectionId);
-			this.menuService.updateAssistants();
 		});
 	}
 

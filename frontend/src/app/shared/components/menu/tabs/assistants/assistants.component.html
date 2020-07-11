@@ -12,10 +12,10 @@
                     <div *ngIf="this.moderatorsConnected.length>0">
                         <h1 mat-subheader>Moderators</h1>
                         <mat-list-item *ngFor="let mod of this.moderatorsConnected">
-                            <mat-icon matListIcon *ngIf="mod===userName">person</mat-icon>
-                            <b *ngIf="mod===userName">{{mod}}</b>
-                            <mat-icon matListIcon *ngIf="mod!==userName">person_outline</mat-icon>
-                            <p *ngIf="mod!==userName">{{mod}}</p>
+                            <mat-icon matListIcon *ngIf="mod.name===localUser.name">person</mat-icon>
+                            <b *ngIf="mod.name===localUser.name">{{mod.name}}</b>
+                            <mat-icon matListIcon *ngIf="mod.name!==localUser.name">person_outline</mat-icon>
+                            <p *ngIf="mod.name!==localUser.name">{{mod.name}}</p>
                         </mat-list-item>
                     </div>
             
@@ -24,10 +24,10 @@
                     <div *ngIf="this.presentersConnected.length>0">
                         <h1 mat-subheader>Presenters</h1>
                         <mat-list-item *ngFor="let pres of this.presentersConnected">
-                            <mat-icon matListIcon *ngIf="pres===userName">person</mat-icon>
-                            <b *ngIf="pres===userName">{{pres}}</b>
-                            <mat-icon matListIcon *ngIf="pres!==userName">person_outline</mat-icon>
-                            <p *ngIf="pres!==userName">{{pres}}</p>
+                            <mat-icon matListIcon *ngIf="pres.name===localUser.name">person</mat-icon>
+                            <b *ngIf="pres.name===localUser.name">{{pres.name}}</b>
+                            <mat-icon matListIcon *ngIf="pres.name!==localUser.name">person_outline</mat-icon>
+                            <p *ngIf="pres.name!==localUser.name">{{pres.name}}</p>
                         </mat-list-item>
                     </div>
             
@@ -38,10 +38,10 @@
                     <div *ngIf="this.participantsConnected.length>0">
                         <h1 mat-subheader>Participants</h1>
                         <mat-list-item *ngFor="let part of this.participantsConnected">
-                            <mat-icon matListIcon *ngIf="part===userName">person</mat-icon>
-                            <b *ngIf="part===userName">{{part}}</b>
-                            <mat-icon matListIcon *ngIf="part!==userName">person_outline</mat-icon>
-                            <p *ngIf="part!==userName">{{part}}</p>
+                            <mat-icon matListIcon *ngIf="part===localUser.name">person</mat-icon>
+                            <b *ngIf="part===localUser.name">{{part}}</b>
+                            <mat-icon matListIcon *ngIf="part!==localUser.name">person_outline</mat-icon>
+                            <p *ngIf="part!==localUser.name">{{part}}</p>
                         </mat-list-item>
                     </div>
                 </mat-list>
