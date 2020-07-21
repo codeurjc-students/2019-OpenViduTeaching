@@ -140,7 +140,9 @@ export class HomeComponent implements OnInit {
 		this.roomSrv.createRoom(this.newRoom).subscribe(
 			(room) => {
 				this.dialogRef.close('Room created');
-				this.userSrv.user.moddedRooms.push(room);
+				const user = this.userSrv.user;
+				user.moddedRooms.push(room);
+				this.userSrv.saveUser(user);
 				this.goToRoom(room.name);
 			},
 			(error) => console.error(error)
