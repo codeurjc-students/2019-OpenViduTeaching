@@ -55,7 +55,7 @@ public class Room {
 		this.codeModerator = UUID.randomUUID().toString();
 		this.codePresenter = UUID.randomUUID().toString();
 		this.handRaisedUsers = new LinkedList<>();
-		this.name = name;
+		this.name = name.replaceAll("\\s+","_");
 	}
 
 	protected Room() {

@@ -55,7 +55,7 @@ public class User {
 	private boolean isTemporary;
 
 	public User(String name, String password, boolean isTemporary, String... roles) {
-		this.name = name;
+		this.name = name.replaceAll("\\s+","_");
 		this.passwordHash = new BCryptPasswordEncoder().encode(password);
 		this.roles = new ArrayList<>(Arrays.asList(roles));
 		this.moddedRooms = new ArrayList<>();
