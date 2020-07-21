@@ -123,10 +123,7 @@ export class HomeComponent implements OnInit {
 	}
 
 	openAddRoomDialog() {
-		this.dialogRef = this.dialog.open(this.addRoomDialog, {
-			width: '50%',
-			height: '60%'
-		});
+		this.dialogRef = this.dialog.open(this.addRoomDialog);
 	}
 
 	eventKeyPress(event: any) {
@@ -137,17 +134,18 @@ export class HomeComponent implements OnInit {
 	}
 
 	createRoom() {
-		this.roomSrv.createRoom(this.newRoom).subscribe(
-			(room) => {
-				this.dialogRef.close('Room created');
-				const user = this.userSrv.user;
-				user.moddedRooms.push(room);
-				this.userSrv.saveUser(user);
-				this.goToRoom(room.name);
-			},
-			(error) => console.error(error)
-		);
-		this.newRoom;
+		if(!!this.newRoom) {
+			this.roomSrv.createRoom(this.newRoom).subscribe(
+				(room) => {
+					this.dialogRef.close('Room created');
+					const user = this.userSrv.user;
+					user.moddedRooms.push(room);
+					this.userSrv.saveUser(user);
+					this.goToRoom(room.name);
+				},
+				(error) => console.error(error)
+			);
+		}
 	}
 
 	isLogged(): boolean {

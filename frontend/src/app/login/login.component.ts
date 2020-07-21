@@ -23,10 +23,7 @@ export class LoginComponent {
   ) {}
 
 	openLoginDialog() {
-		this.dialogRef = this.dialog.open(this.loginDialog, {
-			width: '50%',
-			height: '50%'
-		});
+		this.dialogRef = this.dialog.open(this.loginDialog);
 	}
 
 	openSnackBar(message: string, action: string) {
