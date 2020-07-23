@@ -12,7 +12,7 @@ import { Component, Input } from '@angular/core';
 			</div>
 		</div>
 	`,
-	styleUrls: ['./toolbar.component.css']
+	styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarLogoComponent {
 	@Input() lightTheme: boolean;

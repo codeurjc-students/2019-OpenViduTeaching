@@ -9,7 +9,7 @@ import { ChatService } from 'src/app/shared/services/chat/chat.service';
 @Component({
 	selector: 'chat-component',
 	templateUrl: './chat.component.html',
-	styleUrls: ['./chat.component.css']
+	styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, OnDestroy {
 	@ViewChild('chatScroll') chatScroll: ElementRef;

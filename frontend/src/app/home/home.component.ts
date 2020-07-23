@@ -12,7 +12,7 @@ import { RecordingService } from '../shared/services/recording/recording.service
 @Component({
 	selector: 'app-home',
 	templateUrl: './home.component.html',
-	styleUrls: ['./home.component.css']
+	styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
 	public version = require('../../../package.json').version;

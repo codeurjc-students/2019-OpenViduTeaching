@@ -6,7 +6,7 @@ import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-invite-link',
   templateUrl: './invite-link.component.html',
-  styleUrls: ['./invite-link.component.css']
+  styleUrls: ['./invite-link.component.scss']
 })
 export class InviteLinkComponent implements OnInit {
 

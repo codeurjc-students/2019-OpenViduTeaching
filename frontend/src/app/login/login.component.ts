@@ -7,7 +7,7 @@ import { UserService } from '../shared/services/user/user.service';
 @Component({
 	selector: 'login-component',
 	templateUrl: './login.component.html',
-	styleUrls: ['./login.component.css']
+	styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
 	@ViewChild('loginDialog') loginDialog: TemplateRef<any>;

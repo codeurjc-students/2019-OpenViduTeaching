@@ -20,7 +20,7 @@ import { UserService } from '../../services/user/user.service';
 @Component({
 	selector: 'app-room-config',
 	templateUrl: './room-config.component.html',
-	styleUrls: ['./room-config.component.css']
+	styleUrls: ['./room-config.component.scss']
 })
 export class RoomConfigComponent implements OnInit, OnDestroy {
 
