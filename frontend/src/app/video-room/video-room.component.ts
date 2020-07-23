@@ -46,8 +46,14 @@ import { CanvasWhiteboardOptions, CanvasWhiteboardUpdate, CanvasWhiteboardCompon
 	animations: [
 		trigger('popup', [
 			transition(':enter', [
-				style({ transform: 'scale(0.1)', opacity: 0 }),
-				animate('0.75s cubic-bezier(.8, -0.6, 0.26, 1.6)', style({ transform: 'scale(1)', opacity: 1 }))
+				style({
+					transform: 'scale(0.1)', opacity: 0
+				}),
+				animate('0.75s cubic-bezier(.8, -0.6, 0.26, 1.6)',
+					style({
+						transform: 'scale(1)', opacity: 1
+					})
+				)
 			]),
 			transition(':leave', [
 				style({ transform: 'scale(1)', opacity: 1, height: '*' }),
@@ -57,7 +63,10 @@ import { CanvasWhiteboardOptions, CanvasWhiteboardUpdate, CanvasWhiteboardCompon
 						transform: 'scale(0.1)',
 						opacity: 0,
 						height: '0px',
-						margin: '0px'
+						'margin-top': '0px',
+						'margin-bottom': '0px',
+						'margin-right': '0px',
+						'margin-left': '0px',
 					})
 				)
 			])
