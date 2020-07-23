@@ -202,5 +202,10 @@
   "defaultProject": "openvidu-teaching",
   "cli": {
     "analytics": "f17912cf-0c44-4f6a-b9f7-5beff4709cd8"
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
   }
 }
