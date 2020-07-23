@@ -4,7 +4,7 @@ import { UserModel } from '../../models/user-model';
 @Component({
 	selector: 'app-footer',
 	templateUrl: './footer.component.html',
-	styleUrls: ['./footer.component.scss']
+	styleUrls: ['./footer.component.css']
 })
 export class FooterComponent implements OnInit {
 	@Input() lightTheme: boolean;

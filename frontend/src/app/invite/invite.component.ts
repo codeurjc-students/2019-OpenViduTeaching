@@ -6,7 +6,7 @@ import { UserService } from '../shared/services/user/user.service';
 @Component({
   selector: 'app-invite',
   templateUrl: './invite.component.html',
-  styleUrls: ['./invite.component.scss']
+  styleUrls: ['./invite.component.css']
 })
 export class InviteComponent implements OnInit {
 

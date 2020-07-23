@@ -42,7 +42,7 @@ import { CanvasWhiteboardOptions, CanvasWhiteboardUpdate, CanvasWhiteboardCompon
 @Component({
 	selector: 'app-video-room',
 	templateUrl: './video-room.component.html',
-	styleUrls: ['./video-room.component.scss'],
+	styleUrls: ['./video-room.component.css'],
 	animations: [
 		trigger('popup', [
 			transition(':enter', [

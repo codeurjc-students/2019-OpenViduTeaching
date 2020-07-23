@@ -11,7 +11,7 @@ import { VideoType } from '../../types/video-type';
 			[muted]="mutedSound"
 		></video>
 	`,
-	styleUrls: ['./stream.component.scss']
+	styleUrls: ['./stream.component.css']
 })
 export class OpenViduVideoComponent implements AfterViewInit {
 

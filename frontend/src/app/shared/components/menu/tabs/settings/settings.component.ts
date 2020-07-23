@@ -10,7 +10,7 @@ import { MenuService } from 'src/app/shared/services/menu/menu.service';
 @Component({
 	selector: 'app-settings',
 	templateUrl: './settings.component.html',
-	styleUrls: ['./settings.component.scss']
+	styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
 	roomName: string;

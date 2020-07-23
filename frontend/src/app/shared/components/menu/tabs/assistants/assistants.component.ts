@@ -9,7 +9,7 @@ import { RemoteUsersService } from 'src/app/shared/services/remote-users/remote-
 @Component({
 	selector: 'app-assistants',
 	templateUrl: './assistants.component.html',
-	styleUrls: ['./assistants.component.scss']
+	styleUrls: ['./assistants.component.css']
 })
 export class AssistantsComponent implements OnInit {
 	loading: boolean;

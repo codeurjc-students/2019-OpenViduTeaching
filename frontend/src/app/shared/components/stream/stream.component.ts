@@ -8,7 +8,7 @@ import { VideoSizeIcon, VideoFullscreenIcon } from '../../types/icon-type';
 
 @Component({
 	selector: 'stream-component',
-	styleUrls: ['./stream.component.scss'],
+	styleUrls: ['./stream.component.css'],
 	templateUrl: './stream.component.html'
 })
 export class StreamComponent implements OnInit {

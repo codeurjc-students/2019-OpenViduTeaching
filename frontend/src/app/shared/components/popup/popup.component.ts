@@ -5,7 +5,7 @@ import { UserService } from '../../services/user/user.service';
 @Component({
   selector: 'popup-component',
   templateUrl: './popup.component.html',
-  styleUrls: ['./popup.component.scss']
+  styleUrls: ['./popup.component.css']
 })
 export class PopupComponent implements OnInit {
 
