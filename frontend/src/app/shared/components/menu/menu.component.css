@@ -12,3 +12,11 @@
 	padding: 0 1em!important;
 	margin: 0 0!important;
 }
+
+::ng-deep.mat-tab-header {
+	background-color: var(--header-color) !important;
+}
+
+::ng-deep.mat-ink-bar {
+	background-color: var(--ink-bar-color) !important;
+}

@@ -1,7 +1,7 @@
 import { MenuService } from 'src/app/shared/services/menu/menu.service';
 import { OpenViduSessionService } from './../../services/openvidu-session/openvidu-session.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
-import { Component, OnInit, Input, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, AfterViewInit, HostBinding, ElementRef } from '@angular/core';
 import { MatTabGroup } from '@angular/material/tabs';
 import { OvSettingsModel } from '../../models/ovSettings';
 import { Subscription } from 'rxjs';
@@ -28,14 +28,29 @@ export class MenuComponent implements OnInit, AfterViewInit {
   constructor(
     private openviduSessionService: OpenViduSessionService,
     public userService: UserService,
-    public menuService: MenuService
+    public menuService: MenuService,
+    private elementRef: ElementRef
   ) {
     this.assistantMessagesSubscription = this.menuService.assistantMessagesUnreadObs.subscribe((num) => {
 			this.newMessagesAssistants = num;
     });
     this.moderatorMessagesSubscription = this.menuService.moderatorMessagesUnreadObs.subscribe((num) => {
 			this.newMessagesModerators = num;
-		});
+    });
+  }
+
+  private setColors() {
+    let headerColor: string;
+    let inkBarColor: string;
+    if(this.lightTheme) {
+      headerColor = '#b8b8b8';
+      inkBarColor = '#3d3d3d';
+    } else {
+      headerColor = '#dfdfdf';
+      inkBarColor = '#000000';
+    }
+    this.elementRef.nativeElement.style.setProperty('--header-color', headerColor);
+    this.elementRef.nativeElement.style.setProperty('--ink-bar-color', inkBarColor);
   }
 
   ngOnInit(): void {
@@ -44,5 +59,6 @@ export class MenuComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.menuService.setMenuTabGroup(this.tabGroup);
+    this.setColors();
   }
 }
