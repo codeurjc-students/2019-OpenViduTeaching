@@ -61,7 +61,8 @@
           [color]="notification.color"
           [isRaiseHand]="false"
           [roomName]="this.mySessionId"
-          [connectionId]="undefined">
+          [connectionId]="undefined"
+          [lightTheme]="lightTheme">
         </popup-component>
 
         <popup-component
@@ -77,7 +78,8 @@
           [color]="'accent'"
           [isRaiseHand]="true"
           [roomName]="this.mySessionId"
-          [connectionId]="this.notificationsService.handRaisedUsers[0].connectionId">
+          [connectionId]="this.notificationsService.handRaisedUsers[0].connectionId"
+          [lightTheme]="lightTheme">
         </popup-component>
 
         <div id="layout" class="bounds" [class.boundsLight]="lightTheme">
