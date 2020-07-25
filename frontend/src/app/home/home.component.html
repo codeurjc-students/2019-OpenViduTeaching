@@ -94,7 +94,7 @@
 		</div>
 
 		<ng-template #addRoomDialog let-dialogRef="dialogRef" id="addRoomDialog">
-			<mat-form-field appearance="outline" color="primary" class="dialogCentered">
+			<mat-form-field appearance="outline" class="dialogCentered">
 				<mat-label>Room name</mat-label>
 				<input matInput [(ngModel)]="newRoom"  (keypress)="eventKeyPress($event)">
 			</mat-form-field>

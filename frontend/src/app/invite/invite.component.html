@@ -10,7 +10,7 @@
             <div *ngIf="!isLogged()">
                 <login-component></login-component><p id="loginMsg"> to enter the room</p>
                 <p>or enter without an account:</p>
-                <mat-form-field appearance="outline" color="primary">
+                <mat-form-field appearance="outline">
                     <mat-label>Username</mat-label>
                     <input matInput [(ngModel)]="userName" (keypress)="eventKeyPress($event)">
                     <mat-hint *ngIf=this.userErrorMsg id="userErrorMsg">{{userErrorMsg}}</mat-hint>
