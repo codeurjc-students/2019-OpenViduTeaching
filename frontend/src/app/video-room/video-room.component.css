@@ -290,7 +290,7 @@
 }
 
 .OT_publisher.OT_speaking {
-  border-color: rgb(255, 193, 7);
+  border-color: var(--accent-color);
   border-width: thick;
   border-style: solid;
 }

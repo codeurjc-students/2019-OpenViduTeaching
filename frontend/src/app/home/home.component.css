@@ -59,12 +59,8 @@ login-component {
   margin:5% auto;
 }
 
-.invitePresenter {
-  color: rgb(6, 211, 98);
-}
-
 .addRoomButton {
-  background-color: rgb(6, 211, 98);
+  background-color: var(--primary-color);
 }
 
 .dialogCentered {
@@ -83,7 +79,7 @@ login-component {
 }
 
 #drawerTitle{
-  color: rgb(255, 193, 7);
+  color: var(--primary-color);
 }
 
 #noVideosMessage {

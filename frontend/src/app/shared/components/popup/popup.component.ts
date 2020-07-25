@@ -40,8 +40,8 @@ export class PopupComponent implements OnInit {
 			this.backgroundColor = '#ffffff';
 			this.letterColor = 'rgba(0, 0, 0, 0.87)';
 		} else if (this.color === 'accent') {
-			this.backgroundColor = 'rgb(255, 193, 7)';
-			this.letterColor = 'rgb(0, 0, 0)';
+			this.backgroundColor = 'var(--accent-color)';
+			this.letterColor = 'rgb(0, 0, 0)'; //TODO
 		}
 	}
 
