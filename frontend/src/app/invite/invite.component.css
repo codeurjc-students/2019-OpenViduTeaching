@@ -1,5 +1,5 @@
 #background {
-    background-color: #333333;
+    background-color: #494949;
     width: 100%;
     height: 100%;
 }
@@ -25,7 +25,8 @@
 #roomName {
     display: inline-block;
     font-family: 'Ubuntu', sans-serif;
-    background-color: #494949;
+    background-color: #b8b8b8;
+    color: #333333;
     font-size: 200%;
     margin-bottom: 5%;
     padding-right: 2%;
