@@ -1,3 +1,4 @@
+import { ColorService } from './../shared/services/color/color.service';
 import { Component, HostListener, OnDestroy, OnInit, ViewChild, Inject, ViewChildren, ElementRef, QueryList } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -145,6 +146,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		public notificationsService: NotificationsService,
 		private raiseHandService: RaiseHandService,
 		private whiteboardService: WhiteboardService,
+		private colorService: ColorService,
+		private elementRef: ElementRef,
 		@Inject('assistantsChatService') private assistantsChatService: ChatService,
 		@Inject('moderatorsChatService') private moderatorsChatService: ChatService,
 		private userService: UserService
@@ -243,7 +246,25 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	initSettings() {
 		this.route.paramMap.subscribe((params) => {
 			this.roomName = params.get('roomName');
-			this.lightTheme = false;
+			this.colorService.getTheme().subscribe((theme) => {
+				this.lightTheme = theme.lightTheme;
+
+				this.elementRef.nativeElement.style.setProperty('--primary-r', theme.primary_r);
+				this.elementRef.nativeElement.style.setProperty('--primary-g', theme.primary_g);
+				this.elementRef.nativeElement.style.setProperty('--primary-b', theme.primary_b);
+
+				this.elementRef.nativeElement.style.setProperty('--accent-r', theme.accent_r);
+				this.elementRef.nativeElement.style.setProperty('--accent-g', theme.accent_g);
+				this.elementRef.nativeElement.style.setProperty('--accent-b', theme.accent_b);
+
+				this.elementRef.nativeElement.style.setProperty('--warn-r', theme.warn_r);
+				this.elementRef.nativeElement.style.setProperty('--warn-g', theme.warn_g);
+				this.elementRef.nativeElement.style.setProperty('--warn-b', theme.warn_b);
+
+				this.elementRef.nativeElement.style.setProperty('--primary-color', 'rgb(var(--primary-r), var(--primary-g), var(--primary-b))');
+				this.elementRef.nativeElement.style.setProperty('--accent-color', 'rgb(var(--accent-r), var(--accent-g), var(--accent-b))');
+				this.elementRef.nativeElement.style.setProperty('--warn-color', 'rgb(var(--warn-r), var(--warn-g), var(--warn-b))');
+			});
 			this.ovSettings = new OvSettingsModel().setDefaultTeachingSettings(this.userService, this.roomName);
 			this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());
 			this.whiteboardOptions = this.whiteboardService.getWhiteboardOptions(this.roomName);
