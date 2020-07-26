@@ -8,7 +8,7 @@ import { UserService } from '../../services/user/user.service';
 	styleUrls: ['./popup.component.css']
 })
 
-export class PopupComponent implements OnInit {
+export class PopupComponent {
 	@Input() subtitle: string;
 	@Input() userName: string;
 	@Input() userAvatar: string;
@@ -26,24 +26,6 @@ export class PopupComponent implements OnInit {
 		public userService: UserService,
 		private raiseHandService: RaiseHandService
 	) {}
-
-	ngOnInit() {
-		if (this.color === 'dark') {
-			if (this.lightTheme) {
-				this.backgroundColor = '#b8b8b8';
-				this.letterColor = '#3d3d3d';
-			} else {
-				this.backgroundColor = '#333333';
-				this.letterColor = '#ffffff';
-			}
-		} else if (this.color === 'light') {
-			this.backgroundColor = '#ffffff';
-			this.letterColor = 'rgba(0, 0, 0, 0.87)';
-		} else if (this.color === 'accent') {
-			this.backgroundColor = 'var(--accent-color)';
-			this.letterColor = 'rgb(0, 0, 0)'; //TODO
-		}
-	}
 
 	sendSignalLowerHand() {
 		this.raiseHandService.sendSignalLowerYourHand(this.connectionId);

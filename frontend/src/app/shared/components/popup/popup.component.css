@@ -1,0 +1,24 @@
+.darkLightTheme {
+	background-color: #b8b8b8;
+	color: #3d3d3d;
+}
+
+.darkDarkTheme {
+	background-color: #333333;
+	color: #ffffff;
+}
+
+.light {
+	background-color: #ffffff;
+	color: rgba(0, 0, 0, 0.87);
+}
+
+.accent {
+	background-color: var(--accent-color);
+	--r: calc(var(--accent-r) * 0.2126);
+	--g: calc(var(--accent-g) * 0.7152);
+	--b: calc(var(--accent-b) * 0.0722);
+	--sum: calc(var(--r) + var(--g) + var(--b));
+	--perceived-lightness: calc(var(--sum) / 255);
+	color: hsl(0, 0%, calc((var(--perceived-lightness) - var(--threshold)) * -10000000%));
+}

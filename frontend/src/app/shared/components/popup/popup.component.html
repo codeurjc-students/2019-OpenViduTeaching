@@ -1,4 +1,8 @@
-<mat-card [style.backgroundColor]="this.backgroundColor" [style.color]="this.letterColor">
+<mat-card
+[class.darkLightTheme]="color === 'dark' && lightTheme"
+[class.darkDarkTheme]="color === 'dark' && !lightTheme"
+[class.light]="color === 'light'"
+[class.accent]="color === 'accent'">
     <mat-card-header>
         <img mat-card-avatar [src]="this.userAvatar">
         <mat-card-title>{{this.userName}}</mat-card-title>
