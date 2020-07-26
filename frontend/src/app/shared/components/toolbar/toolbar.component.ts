@@ -1,5 +1,5 @@
 import { RaiseHandService } from './../../services/raiseHand/raise-hand.service';
-import { Component, OnInit, Input, EventEmitter, Output, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, HostListener, OnDestroy, ElementRef } from '@angular/core';
 import { UtilsService } from '../../services/utils/utils.service';
 import { VideoFullscreenIcon } from '../../types/icon-type';
 import { OvSettingsModel } from '../../models/ovSettings';
@@ -43,7 +43,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 	constructor(
 		private utilsSrv: UtilsService,
 		private menuService: MenuService,
-		private raiseHandService: RaiseHandService
+		private raiseHandService: RaiseHandService,
+		private elementRef: ElementRef
 	) {
 		this.menuServiceSubscription = this.menuService.totalMessagesUnreadObs.subscribe((num) => {
 			this.newMessagesNum = num;
@@ -64,9 +65,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		if (this.lightTheme) {
 			this.logoUrl += 'openvidu_logo_grey.png';
+			this.elementRef.nativeElement.style.setProperty('--raiseHandColor', '#000000');
 			return;
 		}
 		this.logoUrl += 'openvidu_logo.png';
+		this.elementRef.nativeElement.style.setProperty('--raiseHandColor', '#ffffff');
 	}
 
 	ngOnDestroy() {

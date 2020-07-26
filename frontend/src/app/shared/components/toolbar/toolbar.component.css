@@ -26,9 +26,19 @@
   display: inline-flex;
 }
 
-#raise_hand {
-  max-width: 50%;
-  max-height: 50%;
+.raise_hand {
+  max-width: 70%;
+  max-height: 70%;
+  padding-top: 7%;
+  padding-right: 7%;
+}
+
+#raise {
+  fill: var(--raiseHandColor);
+}
+
+#lower {
+  fill: var(--accent-color);
 }
 
 ::ng-deep #raise_hand_button > .mat-badge-content {

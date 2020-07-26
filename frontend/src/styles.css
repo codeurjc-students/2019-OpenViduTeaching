@@ -771,11 +771,21 @@ textarea.cdk-textarea-autosize-measuring {
 
 .mat-badge-accent .mat-badge-content {
   background: var(--accent-color);
-  color: white; }
+  --r: calc(var(--accent-r) * 0.2126);
+	--g: calc(var(--accent-g) * 0.7152);
+	--b: calc(var(--accent-b) * 0.0722);
+	--sum: calc(var(--r) + var(--g) + var(--b));
+	--perceived-lightness: calc(var(--sum) / 255);
+	color: hsl(0, 0%, calc((var(--perceived-lightness) - var(--threshold)) * -10000000%)); }
 
 .mat-badge-warn .mat-badge-content {
-  color: white;
-  background: var(--warn-color); }
+  background: var(--warn-color);
+  --r: calc(var(--warn-r) * 0.2126);
+	--g: calc(var(--warn-g) * 0.7152);
+	--b: calc(var(--warn-b) * 0.0722);
+	--sum: calc(var(--r) + var(--g) + var(--b));
+	--perceived-lightness: calc(var(--sum) / 255);
+	color: hsl(0, 0%, calc((var(--perceived-lightness) - var(--threshold)) * -10000000%)); }
 
 .mat-badge {
   position: relative; }
