@@ -1,3 +1,4 @@
+import { ColorService } from './../shared/services/color/color.service';
 import { WhiteboardServiceMock } from './../shared/services/whiteboard/whiteboard.service.mock';
 import { WhiteboardService } from './../shared/services/whiteboard/whiteboard.service';
 import { RaiseHandServiceMock } from './../shared/services/raiseHand/raise-hand.service.mock';
@@ -22,6 +23,7 @@ import { UtilsServiceMock } from '../shared/services/utils/utils.service.mock';
 import { RemoteStreamersServiceMock } from '../shared/services/remote-streamers/remote-streamers.service.mock';
 import { UserService } from '../shared/services/user/user.service';
 import { ChatServiceMock } from '../shared/services/chat/chat.service.mock';
+import { ColorServiceMock } from '../shared/services/color/color.service.mock';
 
 describe('VideoRoomComponent unit test', () => {
 	let component: VideoRoomComponent;
@@ -42,7 +44,8 @@ describe('VideoRoomComponent unit test', () => {
 				{ provide: 'assistantsChatService', useClass: ChatServiceMock },
 				{ provide: 'moderatorsChatService', useClass: ChatServiceMock },
 				{ provide: RaiseHandService, useClass: RaiseHandServiceMock },
-				{ provide: WhiteboardService, useClass: WhiteboardServiceMock }
+				{ provide: WhiteboardService, useClass: WhiteboardServiceMock },
+				{ provide: ColorService, useClass: ColorServiceMock },
 			],
 			imports: [RouterTestingModule.withRoutes([])]
 		}).compileComponents();
