@@ -1,20 +1,4 @@
 :root {
-  --primary-r: 6;
-  --primary-g: 211;
-  --primary-b: 98;
-
-  --accent-r: 255;
-  --accent-g: 193;
-  --accent-b: 7;
-
-  --warn-r: 255;
-  --warn-g: 0;
-  --warn-b: 0;
-
-  --primary-color: rgb(var(--primary-r), var(--primary-g), var(--primary-b));
-  --accent-color: rgb(var(--accent-r), var(--accent-g), var(--accent-b));
-  --warn-color: rgb(var(--warn-r), var(--warn-g), var(--warn-b));
-
   --threshold: 0.5;
 }
 
