@@ -98,7 +98,11 @@ login-component {
   max-width: 700px;
   width: 75%;
   margin: auto;
-  background: rgba(221, 221, 221, 0.856);
+  background: var(--card-color);
+}
+
+.mat-subheader, ::ng-deep.mat-list-text > a > .mat-button-wrapper, .participantLink {
+  color: var(--letter-color) !important;
 }
 
 /* Extra small devices (phones, 600px and down) */

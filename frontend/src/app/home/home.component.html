@@ -53,7 +53,7 @@
 							<mat-icon color="primary" matTooltip="Invite URL for presenters">link</mat-icon>
 						</button>
 						<button mat-icon-button (click)="getInviteURL(mod.name,'participant')">
-							<mat-icon matTooltip="Invite URL for participants">link</mat-icon>
+							<mat-icon matTooltip="Invite URL for participants" class="participantLink">link</mat-icon>
 						</button>
 						<button mat-icon-button (click)="openVideos(mod.name)" *ngIf="isRecordingEnabled">
 							<mat-icon matTooltip="See recorded videos">video_library</mat-icon>

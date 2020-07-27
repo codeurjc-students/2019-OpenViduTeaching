@@ -30,6 +30,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 	private roomInputOpen: boolean;
 	private newRoom: string;
 
+	private lightTheme: boolean;
+
 	@ViewChild('addRoomDialog') addRoomDialog: TemplateRef<any>;
 	dialogRef: MatDialogRef<any, any>;
 	@ViewChild('videosDrawer') videosDrawer: MatDrawer;
@@ -51,6 +53,19 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
 	ngAfterViewInit() {
 		this.colorService.getTheme().subscribe((theme) => {
+			this.lightTheme = theme.lightTheme;
+			let cardColor: string;
+			let letterColor: string;
+			if (this.lightTheme) {
+				cardColor = 'rgba(221, 221, 221, 0.856)';
+				letterColor = '#000000'
+			} else {
+				cardColor = 'rgba(73, 73, 73, 0.856)'
+				letterColor = '#dfdfdf'
+			}
+			this.elementRef.nativeElement.style.setProperty('--card-color', cardColor);
+			this.elementRef.nativeElement.style.setProperty('--letter-color', letterColor);
+
 			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--primary-r', theme.primary_r);
 			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--primary-g', theme.primary_g);
 			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--primary-b', theme.primary_b);
@@ -119,10 +134,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 					}
 				}
 				this.currentVideos.sort((a, b) => {
-					if(a.createdAt < b.createdAt) {
+					if (a.createdAt < b.createdAt) {
 						return -1;
 					}
-					if(a.createdAt > b.createdAt) {
+					if (a.createdAt > b.createdAt) {
 						return 1;
 					}
 					return 0;
@@ -157,7 +172,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 	}
 
 	createRoom() {
-		if(!!this.newRoom) {
+		if (!!this.newRoom) {
 			this.roomSrv.createRoom(this.newRoom).subscribe(
 				(room) => {
 					this.dialogRef.close('Room created');
