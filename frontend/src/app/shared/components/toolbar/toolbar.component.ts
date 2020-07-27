@@ -36,7 +36,7 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 	private menuServiceSubscription: Subscription;
 
 	fullscreenIcon = VideoFullscreenIcon.BIG;
-	logoUrl = 'https://raw.githubusercontent.com/OpenVidu/openvidu-call/master/openvidu-call-front/src/assets/images/';
+	logoUrl = 'assets/images/';
 
 	participantsNames: string[] = [];
 
@@ -64,11 +64,11 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		if (this.lightTheme) {
-			this.logoUrl += 'openvidu_logo_grey.png';
+			this.logoUrl += 'dark_logo.png';
 			this.elementRef.nativeElement.style.setProperty('--raiseHandColor', '#000000');
 			return;
 		}
-		this.logoUrl += 'openvidu_logo.png';
+		this.logoUrl += 'logo.png';
 		this.elementRef.nativeElement.style.setProperty('--raiseHandColor', '#ffffff');
 	}
 
