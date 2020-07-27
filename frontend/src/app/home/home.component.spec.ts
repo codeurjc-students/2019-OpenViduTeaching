@@ -1,3 +1,4 @@
+import { ColorService } from './../shared/services/color/color.service';
 import { RoomServiceMock } from 'src/app/shared/services/room/room.service.mock';
 import { RoomService } from './../shared/services/room/room.service';
 import { RecordingService } from './../shared/services/recording/recording.service';
@@ -10,6 +11,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { RecordingServiceMock } from '../shared/services/recording/recording.service.mock';
 import { UserService } from '../shared/services/user/user.service';
 import { UserServiceMock } from '../shared/services/user/user.service.mock';
+import { ColorServiceMock } from '../shared/services/color/color.service.mock';
 
 describe('HomeComponent', () => {
 	let component: HomeComponent;
@@ -22,6 +24,7 @@ describe('HomeComponent', () => {
 				{ provide: RecordingService, useClass: RecordingServiceMock },
 				{ provide: UserService, useClass: UserServiceMock },
 				{ provide: RoomService, useClass: RoomServiceMock },
+				{ provide: ColorService, useClass: ColorServiceMock }
 			],
 			imports: [RouterTestingModule.withRoutes([]), MatSnackBarModule, MatDialogModule]
 		}).compileComponents();

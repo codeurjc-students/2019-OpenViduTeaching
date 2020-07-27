@@ -1,3 +1,5 @@
+import { ColorServiceMock } from './../shared/services/color/color.service.mock';
+import { ColorService } from './../shared/services/color/color.service';
 import { RoomServiceMock } from 'src/app/shared/services/room/room.service.mock';
 import { RoomService } from 'src/app/shared/services/room/room.service';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
@@ -17,6 +19,7 @@ describe('InviteComponent', () => {
       providers: [
         { provide: RoomService, useClass: RoomServiceMock },
         { provide: UserService, useClass: UserServiceMock },
+        { provide: ColorService, useClass: ColorServiceMock }
 			],
       declarations: [ InviteComponent ]
     })
