@@ -249,21 +249,21 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.colorService.getTheme().subscribe((theme) => {
 				this.lightTheme = theme.lightTheme;
 
-				this.elementRef.nativeElement.style.setProperty('--primary-r', theme.primary_r);
-				this.elementRef.nativeElement.style.setProperty('--primary-g', theme.primary_g);
-				this.elementRef.nativeElement.style.setProperty('--primary-b', theme.primary_b);
+				this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--primary-r', theme.primary_r);
+				this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--primary-g', theme.primary_g);
+				this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--primary-b', theme.primary_b);
 
-				this.elementRef.nativeElement.style.setProperty('--accent-r', theme.accent_r);
-				this.elementRef.nativeElement.style.setProperty('--accent-g', theme.accent_g);
-				this.elementRef.nativeElement.style.setProperty('--accent-b', theme.accent_b);
+				this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--accent-r', theme.accent_r);
+				this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--accent-g', theme.accent_g);
+				this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--accent-b', theme.accent_b);
 
-				this.elementRef.nativeElement.style.setProperty('--warn-r', theme.warn_r);
-				this.elementRef.nativeElement.style.setProperty('--warn-g', theme.warn_g);
-				this.elementRef.nativeElement.style.setProperty('--warn-b', theme.warn_b);
+				this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--warn-r', theme.warn_r);
+				this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--warn-g', theme.warn_g);
+				this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--warn-b', theme.warn_b);
 
-				this.elementRef.nativeElement.style.setProperty('--primary-color', 'rgb(var(--primary-r), var(--primary-g), var(--primary-b))');
-				this.elementRef.nativeElement.style.setProperty('--accent-color', 'rgb(var(--accent-r), var(--accent-g), var(--accent-b))');
-				this.elementRef.nativeElement.style.setProperty('--warn-color', 'rgb(var(--warn-r), var(--warn-g), var(--warn-b))');
+				this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--primary-color', 'rgb(var(--primary-r), var(--primary-g), var(--primary-b))');
+				this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--accent-color', 'rgb(var(--accent-r), var(--accent-g), var(--accent-b))');
+				this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--warn-color', 'rgb(var(--warn-r), var(--warn-g), var(--warn-b))');
 			});
 			this.ovSettings = new OvSettingsModel().setDefaultTeachingSettings(this.userService, this.roomName);
 			this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { ColorService } from './../shared/services/color/color.service';
+import { Component, OnInit, AfterViewInit, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RoomService } from '../shared/services/room/room.service';
 import { UserService } from '../shared/services/user/user.service';
@@ -8,7 +9,7 @@ import { UserService } from '../shared/services/user/user.service';
   templateUrl: './invite.component.html',
   styleUrls: ['./invite.component.css']
 })
-export class InviteComponent implements OnInit {
+export class InviteComponent implements OnInit, AfterViewInit {
 
   code: string;
   roomName: string;
@@ -20,6 +21,8 @@ export class InviteComponent implements OnInit {
   constructor(
     private roomSrv: RoomService,
     private userSrv: UserService,
+    private colorService: ColorService,
+    private elementRef: ElementRef,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -29,6 +32,26 @@ export class InviteComponent implements OnInit {
       this.code = params.get("code");
     });
     this.checkRoom();
+  }
+
+  ngAfterViewInit() {
+    this.colorService.getTheme().subscribe((theme) => {
+			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--primary-r', theme.primary_r);
+			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--primary-g', theme.primary_g);
+			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--primary-b', theme.primary_b);
+
+			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--accent-r', theme.accent_r);
+			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--accent-g', theme.accent_g);
+			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--accent-b', theme.accent_b);
+
+			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--warn-r', theme.warn_r);
+			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--warn-g', theme.warn_g);
+			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--warn-b', theme.warn_b);
+
+			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--primary-color', 'rgb(var(--primary-r), var(--primary-g), var(--primary-b))');
+			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--accent-color', 'rgb(var(--accent-r), var(--accent-g), var(--accent-b))');
+			this.elementRef.nativeElement.ownerDocument.body.style.setProperty('--warn-color', 'rgb(var(--warn-r), var(--warn-g), var(--warn-b))');
+		});
   }
 
   enterRoom() {
