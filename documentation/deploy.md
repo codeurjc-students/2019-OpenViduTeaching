@@ -38,7 +38,7 @@ From version 2.13.0 of OpenVidu a production docker compose solution was introdu
 * You will also have to add the `LOCAL_INITIAL_FILE_PATH` and `DOCKER_INITIAL_FILE_PATH` variables to the .env file (exactly the same as with the previous docker compose option). These variables have to be the absolute path to the file with the name of the file: `/path/to/initialData.json`. The file has to be in the `LOCAL_INITIAL_FILE_PATH` and it will be put into `DOCKER_INITIAL_FILE_PATH` inside the container. You won't need the file after the app starts and it is probably safest that you delete it.
 * Your docker-compose.override.yml file will have to look like this:
 ```` yml
-version: '3.1'
+version: "3.7"
 
 services:
     app:
@@ -46,14 +46,25 @@ services:
         restart: on-failure
         volumes:
             - ${LOCAL_INITIAL_FILE_PATH}:${DOCKER_INITIAL_FILE_PATH}
-            - ${OPENVIDU_RECORDING_PATH}:${OPENVIDU_RECORDING_PATH}
+            - ${LOCAL_ASSETS_FOLDER}:${DOCKER_ASSETS_FOLDER}
         ports:
             - "5442:8080"
         environment:
-            OPENVIDU_URL: https://${DOMAIN_OR_PUBLIC_IP}
+            OPENVIDU_URL: https://${DOMAIN_OR_PUBLIC_IP}:4443/
             OPENVIDU_SECRET: ${OPENVIDU_SECRET}
             INITIAL_DATA_FILE: ${DOCKER_INITIAL_FILE_PATH}
+            ASSETS_FOLDER: ${DOCKER_ASSETS_FOLDER}
             OPENVIDU_RECORDING: ${OPENVIDU_RECORDING}
-			OPENVIDU_RECORDING_PATH: ${OPENVIDU_RECORDING_PATH}
-			OPENVIDU_RECORDING_CUSTOM: ${OPENVIDU_RECORDING_CUSTOM}
+            OPENVIDU_RECORDING_PATH: ${OPENVIDU_RECORDING_PATH}
+            OPENVIDU_RECORDING_CUSTOM: ${OPENVIDU_RECORDING_CUSTOM}
+            PRIMARY_R: ${PRIMARY_R}
+            PRIMARY_G: ${PRIMARY_G}
+            PRIMARY_B: ${PRIMARY_B}
+            ACCENT_R: ${ACCENT_R}
+            ACCENT_G: ${ACCENT_G}
+            ACCENT_B: ${ACCENT_B}
+            WARN_R: ${WARN_R}
+            WARN_G: ${WARN_G}
+            WARN_B: ${WARN_B}
+            LIGHT_THEME: ${LIGHT_THEME}
 ````
