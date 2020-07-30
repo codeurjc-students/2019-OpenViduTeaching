@@ -16,7 +16,7 @@ export class AppComponent {
 	) {
 		this.matIconRegistry.addSvgIcon(
 			"raise_hand",
-			this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/images/raise_hand.svg")
+			this.domSanitizer.bypassSecurityTrustResourceUrl("../assets/raise_hand.svg")
 		);
 	}
 }
