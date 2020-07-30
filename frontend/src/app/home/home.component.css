@@ -26,6 +26,8 @@
 #header_img {
   max-width: 200px;
   margin-right: 10px;
+  margin-top: 10px;
+  max-height: 5em;
 }
 
 .ovVersion {
@@ -37,6 +39,7 @@
 
 .ovLogo {
   margin: auto;
+  max-height: 15em;
 }
 
 login-component {

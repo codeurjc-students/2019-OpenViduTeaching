@@ -96,6 +96,8 @@
 
 #header_img {
   max-width: 150px;
+  max-height: 100%;
+  margin-left: 0.5em;
 }
 
 #sessionInfo {
