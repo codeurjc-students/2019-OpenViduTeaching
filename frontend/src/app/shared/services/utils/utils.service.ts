@@ -3,12 +3,14 @@ import { OpenViduLayoutOptions } from '../../layout/openvidu-layout';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { DialogErrorComponent } from '../../components/dialog-error/dialog-error.component';
 import { LayoutBigElement } from '../../types/layout-type';
+import { NgxLinkifyOptions } from '../../types/linkify-type';
+import linkifyStr from 'linkifyjs/string';
+
 
 @Injectable({
 	providedIn: 'root'
 })
 export class UtilsService {
-
 	private dialogRef: MatDialogRef<DialogErrorComponent, any>;
 
 	constructor(public dialog: MatDialog) {}
@@ -120,7 +122,7 @@ export class UtilsService {
 		let stay = 0;
 		const elements: HTMLCollectionOf<Element> = document.getElementsByClassName(LayoutBigElement.BIG_ELEMENT_CLASS);
 		while (elements.length > stay) {
-			if(!elements[stay].className.includes('whiteboard')) {
+			if (!elements[stay].className.includes('whiteboard')) {
 				this.toggleBigElementClass(elements[stay]);
 			} else {
 				stay++;
@@ -128,6 +130,9 @@ export class UtilsService {
 		}
 	}
 
+	linkify(text: string, options?: NgxLinkifyOptions): string {
+		return linkifyStr(text, options);
+	}
 
 	private isAndroid(): boolean {
 		return /\b(\w*Android\w*)\b/.test(navigator.userAgent) && /\b(\w*Mobile\w*)\b/.test(navigator.userAgent);

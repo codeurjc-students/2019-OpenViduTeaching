@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './/app-routing.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CanvasWhiteboardModule } from 'ng2-canvas-whiteboard';
 
@@ -146,8 +145,7 @@ import { ErrorInterceptor } from 'src/interceptors/error.interceptor';
 		AppRoutingModule,
 		HttpClientModule,
 		FlexLayoutModule,
-		CanvasWhiteboardModule,
-		NgxLinkifyjsModule.forRoot()
+		CanvasWhiteboardModule
 	],
 	entryComponents: [DialogErrorComponent],
 	providers: [
