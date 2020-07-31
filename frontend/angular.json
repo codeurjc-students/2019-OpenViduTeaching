@@ -35,7 +35,8 @@
             ],
             "allowedCommonJsDependencies": [
               "linkifyjs",
-              "openvidu-browser"
+              "openvidu-browser",
+              "lodash"
             ]
           },
           "configurations": {
