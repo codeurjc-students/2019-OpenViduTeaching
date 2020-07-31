@@ -8,12 +8,14 @@
 
 .mat-card {
     background-color: #696969;
+    min-height: fit-content;
+    min-width: fit-content;
 }
 
 ::ng-deep .mat-dialog-container {
     background-color: #494949;
-    height: fit-content !important;
-    width: fit-content !important;
+    min-height: fit-content !important;
+    min-width: fit-content !important;
     margin: auto auto;
 }
 
