@@ -13,12 +13,17 @@ Check out the [Medium blog](https://medium.com/@diego.mzmn) for updates
 
 ## Introduction ##
 
-This app is a fork of [OpenViduCall](https://github.com/OpenVidu/openvidu-call). In addition to everything to what Call offers there are a few new functionalities and restrictions that make it suited for online teaching:
-  * Login/logout/register in the app.
+This app is a fork of [OpenVidu Call](https://github.com/OpenVidu/openvidu-call). In addition to everything to what Call offers there are a few new functionalities and restrictions that make it suited for online teaching:
+  * Login/logout.
   * User roles for each room: Moderator, presenter and participant.
   * Invite links.
-  * Chat for all assistans and chat for moderators only.
-  * Abilty too see all assistants in a room.
+  * Chat for all assistants and chat for moderators only.
+  * Ability too see all assistants in a room.
+  * Ability to raise the hand.
+  * Whiteboard.
+  * Session recording.
+  * REST API to facilitate integration with other systems.
+  * Configurable colors and images.
 
 In the app there are 2 user roles: Admins and users. Currently the only thing that only admins can do is create rooms.\
 Rooms are where the videoconference/classes will take place. For each room there are 3 user roles: Moderators, presenters and participants. Moderators and presenters can stream (publish) video and audio, participants can only watch and listen (subscribe) to it. A user who is moderator of at least one room is admin in the system. The following animations explain in detail how to use these functionalities, and who can do each of them.
@@ -48,8 +53,10 @@ In the next gif we can see how moderators can start and stop a recording.
 ![Recording](/documentation/images/recording.gif)
 Here we can see how to access the previous recordings of a room. It can only be done from the dashboard, or with the URL {roomName}/video/{videoId}
 ![Video](/documentation/images/video.gif)
-In the last gif we see how moderators can open, use and close the whiteboard.
+In this gif we see how moderators can open, use and close the whiteboard.
 ![Whiteboard](/documentation/images/whiteboard.gif)
+Lastly, we see the border that appears when someone is speaking, as well as the mic color changing in the assistants tab. If the cam or mic were to be off the icons would indicate it too.
+![Speaking](/documentation/images/speaking.gif)
 
 
 ## Project Roadmap ##
@@ -70,9 +77,10 @@ In the last gif we see how moderators can open, use and close the whiteboard.
 - [X] Full fledged session recording including chat, whiteboard, popups...
 	* Using the external custom layout for OpenVidu recordings
 - [X] Complete API to allow for integrations with other systems
-- [ ] Invite links don't require creating a new account
-- [ ] Subtle indications of a user speaking
-- [ ] Configurable colors and logo
+- [X] Invite links don't require creating a new account
+- [X] Subtle indications of a user speaking
+- [X] Configurable colors and logo
+- [ ] Actual moderation and role changes
 
 Note that this roadmap may change throughout development.
 
