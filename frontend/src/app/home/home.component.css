@@ -7,19 +7,8 @@
   color: #fff;
 }
 
-#header, .footer {
+#header {
   background-color: transparent;
-  color: #ffffff;
-}
-
-.footer {
-  position: absolute;
-  bottom: 0;
-  font-size: 9px;
-  height: auto;
-}
-
-.footer a {
   color: #ffffff;
 }
 
@@ -109,7 +98,7 @@ login-component {
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
-  #header_img, .ovVersion, .footer {
+  #header_img, .ovVersion {
     display: none;
   }
   .ovLogo {
