@@ -284,12 +284,15 @@ public class OpenViduComponent {
 				String sessionId = this.roomIdSession.get(room.getId()).getSessionId();
 				RecordingProperties properties;
 				if (RECORDING_CUSTOM_ENABLED) {
-					properties = new RecordingProperties.Builder().outputMode(Recording.OutputMode.COMPOSED)
-							.recordingLayout(RecordingLayout.CUSTOM).customLayout(origin + "/#/" + sessionId + "?user="
-									+ recorderUserName + "&pass=" + recorderUserPass)
+					properties = new RecordingProperties.Builder()
+							.outputMode(Recording.OutputMode.COMPOSED)
+							.recordingLayout(RecordingLayout.CUSTOM)
+							.customLayout(origin + "/#/" + sessionId 
+								+ "?user=" + recorderUserName + "&pass=" + recorderUserPass)
 							.build();
 				} else {
-					properties = new RecordingProperties.Builder().outputMode(Recording.OutputMode.COMPOSED).build();
+					properties = new RecordingProperties.Builder()
+							.outputMode(Recording.OutputMode.COMPOSED).build();
 				}
 				String recordingId = this.openVidu.startRecording(sessionId, properties).getId();
 				System.out.println("Recording started");

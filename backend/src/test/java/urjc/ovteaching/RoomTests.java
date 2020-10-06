@@ -3,7 +3,9 @@ package urjc.ovteaching;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -13,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +27,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import urjc.ovteaching.jsonReader.ConflictDatabaseException;
+import urjc.ovteaching.jsonReader.JsonReaderException;
+import urjc.ovteaching.jsonReader.JsonReaderService;
+import urjc.ovteaching.jsonReader.NotFoundDatabaseException;
+import urjc.ovteaching.jsonReader.TemporaryUserException;
 import urjc.ovteaching.rooms.Room;
 import urjc.ovteaching.rooms.RoomController;
 import urjc.ovteaching.rooms.RoomService;
@@ -50,7 +58,10 @@ public class RoomTests {
 	private RoomService roomService;
 	
 	@MockBean
-	private UserService userService;  
+	private UserService userService;
+	
+	@MockBean
+	private JsonReaderService jsonReaderService;
 
 	@Before
 	public void initialize() {
@@ -80,6 +91,19 @@ public class RoomTests {
 		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/testRoom")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isConflict());
+	}
+	
+	@Test
+	public void createNewRoomTemporary() throws Exception {
+		User temp = new User("temp", "pass", true, "ROLE_ADMIN", "ROLE_USER");
+		
+		given(this.userComponent.isLoggedUser()).willReturn(true);
+		given(this.userComponent.getLoggedUser()).willReturn(temp);
+		given(this.userService.findByName("temp")).willReturn(temp);
+		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/newRoom")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized());
 	}
 	
 	@Test
@@ -295,6 +319,26 @@ public class RoomTests {
 	}
 	
 	@Test
+	public void logUserInRoomTemporaryInAnotherRoom() throws Exception {
+		User temp = new User("temp", "pass", true, "ROLE_ADMIN", "ROLE_USER");
+		Room room = this.roomService.findByName("testRoom");
+		temp.addModdedRoom(room);
+		room.getModerators().add(temp);
+		
+		given(this.userComponent.isLoggedUser()).willReturn(true);
+		given(this.userComponent.getLoggedUser()).willReturn(temp);
+		given(this.userService.findByName("temp")).willReturn(temp);
+		
+		Room otherRoom = this.roomService.findByName("otherRoom");
+		String code = otherRoom.getParticipantInviteCode();
+		given(this.roomService.findByInviteCode(code)).willReturn(otherRoom);
+		
+		mvc.perform(MockMvcRequestBuilders.put("/ovTeachingApi/room/" + code + "/user")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized());
+	}
+	
+	@Test
 	public void getAssistants() throws Exception {
 		Room room = this.roomService.findByName("testRoom");
 		User presenter = new User("testPresenter", "pass", false, "ROLE_USER");
@@ -453,5 +497,219 @@ public class RoomTests {
 		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/otherRoom/raiseHand")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isUnauthorized());
+	}
+	
+	@Test
+	public void createRooms() throws Exception {		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/rooms")
+				.content("{" + 
+						"    \"rooms\": [" + 
+						"        {" + 
+						"            \"name\": \"roomA\"" + 
+						"        }," + 
+						"        {" + 
+						"            \"name\": \"roomB\"" + 
+						"        }" + 
+						"    ]" + 
+						"}")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+		
+		verify(jsonReaderService).readRooms(any());
+	}
+	
+	@Test
+	public void createRoomsJsonReaderException() throws Exception {
+		Mockito.doThrow(new JsonReaderException(new Exception())).when(jsonReaderService).readRooms(any());
+		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/rooms")
+				.content("{" + 
+						"    \"rooms\": [" + 
+						"        {" + 
+						"            \"name\": \"roomA\"" + 
+						"        }," + 
+						"        {" + 
+						"            \"name\": \"roomB\"" + 
+						"        }" + 
+						"    ]" + 
+						"}")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest());
+		
+		verify(jsonReaderService).readRooms(any());
+	}
+	
+	@Test
+	public void createRoomsParseException() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/rooms")
+				.content("{")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest());
+		
+		verify(jsonReaderService, never()).readRooms(any());
+	}
+	
+	@Test
+	public void createRoomsConflictDatabaseException() throws Exception {
+		Mockito.doThrow(new ConflictDatabaseException("roomA", "Room")).when(jsonReaderService).readRooms(any());
+		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/rooms")
+				.content("{" + 
+						"    \"rooms\": [" + 
+						"        {" + 
+						"            \"name\": \"roomA\"" + 
+						"        }," + 
+						"        {" + 
+						"            \"name\": \"roomB\"" + 
+						"        }" + 
+						"    ]" + 
+						"}")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(content().string("Room \"roomA\" already found in the database"));
+		
+		verify(jsonReaderService).readRooms(any());
+	}
+	
+	@Test
+	public void createRoomsTemporaryUser() throws Exception {
+		User temp = new User("temp", "pass", true, "ROLE_ADMIN", "ROLE_USER");
+		
+		given(this.userComponent.isLoggedUser()).willReturn(true);
+		given(this.userComponent.getLoggedUser()).willReturn(temp);
+		given(this.userService.findByName("temp")).willReturn(temp);
+		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/rooms")
+				.content("{" + 
+						"    \"rooms\": [" + 
+						"        {" + 
+						"            \"name\": \"roomA\"" + 
+						"        }," + 
+						"        {" + 
+						"            \"name\": \"roomB\"" + 
+						"        }" + 
+						"    ]" + 
+						"}")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized());
+		
+		verify(jsonReaderService, never()).readRooms(any());
+	}
+	
+	@Test
+	public void addUsersToRoom() throws Exception {		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/testRoom/users")
+				.content("{" + 
+						"    \"participants\": [" + 
+						"        {" + 
+						"            \"name\": \"participant1\"" + 
+						"        }," + 
+						"        {" + 
+						"            \"name\": \"participant2\"" + 
+						"        }" + 
+						"    ]" + 
+						"}")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+		
+		verify(jsonReaderService).readUsersToRoom(any(), any());
+	}
+	
+	@Test
+	public void addUsersToRoomParseException() throws Exception {		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/testRoom/users")
+				.content("{")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest());
+		
+		verify(jsonReaderService, never()).readUsersToRoom(any(), any());
+	}
+	
+	@Test
+	public void addUsersToRoomNotFoundException() throws Exception {
+		Mockito.doThrow(new NotFoundDatabaseException("testRoom", "participant1")).when(jsonReaderService).readUsersToRoom(any(), any());
+		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/testRoom/users")
+				.content("{" + 
+						"    \"participants\": [" + 
+						"        {" + 
+						"            \"name\": \"participant1\"" + 
+						"        }," + 
+						"        {" + 
+						"            \"name\": \"participant2\"" + 
+						"        }" + 
+						"    ]" + 
+						"}")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound())
+				.andExpect(content().string("User: participant1 not found"));
+		
+		verify(jsonReaderService).readUsersToRoom(any(), any());
+	}
+	
+	@Test
+	public void addUsersToRoomTemporaryUserException() throws Exception {
+		Mockito.doThrow(new TemporaryUserException("participant1")).when(jsonReaderService).readUsersToRoom(any(), any());
+		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/testRoom/users")
+				.content("{" + 
+						"    \"participants\": [" + 
+						"        {" + 
+						"            \"name\": \"participant1\"" + 
+						"        }," + 
+						"        {" + 
+						"            \"name\": \"participant2\"" + 
+						"        }" + 
+						"    ]" + 
+						"}")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isConflict())
+				.andExpect(content().string("User: participant1 was created temporarily and cannot be added to more than one room"));
+		
+		verify(jsonReaderService).readUsersToRoom(any(), any());
+	}
+	
+	@Test
+	public void addUsersToRoomNotFound() throws Exception {		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/nonExistant/users")
+				.content("{" + 
+						"    \"participants\": [" + 
+						"        {" + 
+						"            \"name\": \"participant1\"" + 
+						"        }," + 
+						"        {" + 
+						"            \"name\": \"participant2\"" + 
+						"        }" + 
+						"    ]" + 
+						"}")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNotFound());
+		
+		verify(jsonReaderService, never()).readUsersToRoom(any(), any());
+	}
+	
+	@Test
+	public void addUsersToRoomTemporaryUser() throws Exception {
+		User temp = new User("temp", "pass", true, "ROLE_ADMIN", "ROLE_USER");
+		
+		given(this.userComponent.isLoggedUser()).willReturn(true);
+		given(this.userComponent.getLoggedUser()).willReturn(temp);
+		given(this.userService.findByName("temp")).willReturn(temp);
+		
+		mvc.perform(MockMvcRequestBuilders.post("/ovTeachingApi/room/testRoom/users")
+				.content("{" + 
+						"    \"participants\": [" + 
+						"        {" + 
+						"            \"name\": \"participant1\"" + 
+						"        }," + 
+						"        {" + 
+						"            \"name\": \"participant2\"" + 
+						"        }" + 
+						"    ]" + 
+						"}")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isUnauthorized());
+		
+		verify(jsonReaderService, never()).readUsersToRoom(any(), any());
 	}
 }

@@ -96,9 +96,8 @@ public class OpenViduController {
 		}
 
 		try {
-			
 			String token;
-			if(user.getName().equals("recorder")) {
+			if(this.openViduComponent.isRecorderUser(user)) {
 				token = this.openViduComponent.generateRecorderToken(room);
 			} else {
 				token = this.openViduComponent.generateToken(room, user);

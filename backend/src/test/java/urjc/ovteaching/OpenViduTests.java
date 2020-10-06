@@ -282,6 +282,27 @@ public class OpenViduTests {
 	}
 	
 	@Test
+	public void getTokenRecorder() throws Exception {
+		Room room = this.roomService.findByName("testRoom");
+		User user = this.userComponent.getLoggedUser();
+		String token = "testToken";
+		
+		given(this.openviduComponent.isSessionCreated(room)).willReturn(true);
+		given(this.openviduComponent.isRecorderUser(user)).willReturn(true);
+		given(this.openviduComponent.generateRecorderToken(room)).willReturn(token);
+		
+		mvc.perform(MockMvcRequestBuilders.get("/ovTeachingApi/room/testRoom/token")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().string("\"" + token + "\""));
+		
+		verify(openviduComponent, never()).createSession(any());
+		verify(openviduComponent, never()).generateToken(any(), any());
+		verify(openviduComponent).generateRecorderToken(room);
+		verify(openviduComponent).addUserWithTokenToRoom(room, user, token);
+	}
+	
+	@Test
 	public void removeUser() throws Exception {
 		Room room = this.roomService.findByName("testRoom");
 		User user = this.userComponent.getLoggedUser();
@@ -372,6 +393,31 @@ public class OpenViduTests {
 		verify(openviduComponent).removeUser(room, user);
 		verify(openviduComponent, never()).isSessionEmpty(room);
 		verify(openviduComponent, never()).removeSession(room);
+	}
+	
+	@Test
+	public void removeUserTemporary() throws Exception {
+		Room room = this.roomService.findByName("testRoom");
+		User temp = new User("temp", "pass", true, "ROLE_ADMIN", "ROLE_USER");
+		temp.addModdedRoom(room);
+		room.getModerators().add(temp);
+		
+		given(this.userComponent.isLoggedUser()).willReturn(true);
+		given(this.userComponent.getLoggedUser()).willReturn(temp);
+		given(this.userService.findByName("temp")).willReturn(temp);
+		
+		given(this.openviduComponent.isSessionCreated(room)).willReturn(true);
+		given(this.openviduComponent.removeUser(room, temp)).willReturn(new String[] {"testToken", "testCamToken"});
+		given(this.openviduComponent.isSessionEmpty(room)).willReturn(false);
+		
+		mvc.perform(MockMvcRequestBuilders.delete("/ovTeachingApi/room/testRoom/user")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+		
+		verify(openviduComponent).removeUser(room, temp);
+		verify(openviduComponent, never()).removeSession(any());
+		verify(userService).delete(temp);
+		verify(roomService).checkConnectedHandRaisedUsers(room);
 	}
 	
 	@Test
